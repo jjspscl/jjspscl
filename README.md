@@ -1,5 +1,10 @@
 ### Hi there 👋
 
+## Stats
+[![jjspscl stats](https://github-readme-stats.vercel.app/api?username=jjspscl&count_private=true&theme=dracula)](https://github.com/jjspscl/github-readme-stats)    
+[![jjspscl stats](https://github-readme-stats.vercel.app/api/top-langs/?username=jjspscl&count_private=true&layout=compact&theme=dracula)](https://github.com/jjspscl/github-readme-stats)
+
+
 <!--
 **jjspscl/jjspscl** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
 
