@@ -1,0 +1,17 @@
+---
+import Container from '../components/Container.vue'
+import Scaffold from '../components/Scaffold.vue';
+import Home from '../templates/Home.astro';
+
+---
+<Scaffold>
+	<Home>
+		<h1 class:list={["maragsa", "full-name"]}>JOSHUA PASCUAL</h1>
+		<h1 class="maragsa">L</h1>
+		<h1 class="kagitingan">FULL-STACK DEVELOPER • COMPUTER ENGINEER</h1>
+		<Container client:idle/>
+	</Home>
+</Scaffold>
+
+<style lang="scss" scoped>
+</style>

@@ -1,0 +1,12 @@
+---
+const { id } = Astro.params;
+
+export const getStaticPaths = async () => {
+    return [{
+        params: {id: 'BLOG'}
+    }]
+}
+---
+
+<h1>{id}</h1>
+<!-- <p>{JSON.stringify(blogs)}</p> -->

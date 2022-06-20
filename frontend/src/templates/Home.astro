@@ -1,0 +1,44 @@
+---
+import { colors } from '../styles'
+---
+<div class="home-container">
+    <slot/>
+</div>
+<style define:vars={{ 
+    backgroundColor: colors.rangoonGreen 
+}} lang="scss">
+@import '../styles/colors.scss';
+
+@font-face {
+    font-family: 'Quiapo';
+    src: url('fonts/Quiapo.ttf')
+}
+
+@font-face {
+    font-family: 'Kagitingan';
+    src: url('fonts/Kagitingan.otf')
+}
+
+@font-face {
+    font-family: 'Maragsa';
+    src: url('fonts/Maragsa.woff2')
+}
+
+:global(.quiapo) {
+    font-family: 'Quiapo';
+}
+
+:global(.kagitingan) {
+    font-family: 'Kagitingan';
+}
+
+:global(.maragsa) {
+    font-family: 'Maragsa';
+    font-size: 10rem;
+}
+
+.home-container {
+    background-color: $RANGOON-GREEN;
+}
+</style>
+
