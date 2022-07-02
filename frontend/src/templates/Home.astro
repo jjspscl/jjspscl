@@ -1,28 +1,11 @@
 ---
-import { colors } from '../styles'
 ---
 <div class="home-container">
     <slot/>
 </div>
-<style define:vars={{ 
-    backgroundColor: colors.rangoonGreen 
-}} lang="scss">
+<style lang="scss">
 @import '../styles/colors.scss';
-
-@font-face {
-    font-family: 'Quiapo';
-    src: url('fonts/Quiapo.ttf')
-}
-
-@font-face {
-    font-family: 'Kagitingan';
-    src: url('fonts/Kagitingan.otf')
-}
-
-@font-face {
-    font-family: 'Maragsa';
-    src: url('fonts/Maragsa.woff2')
-}
+@import '../styles/fonts.scss';
 
 :global(.quiapo) {
     font-family: 'Quiapo';
@@ -39,6 +22,8 @@ import { colors } from '../styles'
 
 .home-container {
     background-color: $RANGOON-GREEN;
+    min-height: 100vh;
+    width: 100%;
 }
 </style>
 

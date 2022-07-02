@@ -1,12 +1,12 @@
 {
     "env": {
-        "browser": true,
-        "es2021": true
+        "browser": true
     },
     "extends": [
         "eslint:recommended",
         "plugin:vue/essential",
-        "plugin:@typescript-eslint/recommended"
+        "astro",
+        "plugin:@typescript-eslint/eslint-recommended"
     ],
     "parserOptions": {
         "ecmaVersion": "latest",
@@ -18,10 +18,7 @@
         "@typescript-eslint"
     ],
     "rules": {
-        "indent": [
-            "error",
-            "tab"
-        ],
+        "indent": "error",
         "linebreak-style": [
             "error",
             "unix"
@@ -33,6 +30,8 @@
         "semi": [
             "error",
             "always"
-        ]
+        ],
+        "max-len": "off",
+        "vue/multi-word-component-names": "off"
     }
 }

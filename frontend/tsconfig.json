@@ -6,6 +6,7 @@
     "module": "ESNext",
     "resolveJsonModule": true,
     "isolatedModules": true,
+    "jsx": "preserve",
     "types": [
       "vite/client"
     ]
