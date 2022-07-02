@@ -1,10 +1,22 @@
+<script lang="ts">
+import { ref, HTMLAttributes } from "vue";
+
+export default {
+  setup() {
+    const lang = ref<HTMLAttributes["lang"]>("tl");
+
+    return { lang };
+  }
+};
+</script>
+
 <template>
-    <html lang="en">
+    <html :lang="lang">
 
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width" />
-        <title>Astro</title>
+        <title>JOSHUA PASCUAL</title>
     </head>
 
 

@@ -21,10 +21,10 @@
     "eslint-plugin-vue": "^9.1.1",
     "prettier": "^2.7.1",
     "prettier-plugin-astro": "^0.1.1",
-    "sass": "^1.52.3",
-    "vue": "^3.2.33"
+    "sass": "^1.52.3"
   },
   "dependencies": {
-    "axios": "^0.27.2"
+    "axios": "^0.27.2",
+    "vue": "^3.2.33"
   }
 }
