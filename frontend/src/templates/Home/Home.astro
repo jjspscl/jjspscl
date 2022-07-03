@@ -1,6 +1,9 @@
 ---
+import HomeHeader from "./components/HomeHeader.vue";
+
 ---
 <div class="home-container">
+    <HomeHeader client:only/>
     <slot/>
 </div>
 
@@ -23,17 +26,26 @@
 }
 
 .home-container {
-    background-color: $RANGOON-GREEN;
     min-height: 100vh;
     width: 100%;
 }
 
+:global(.home-section) {
+    min-height: 100vh;
+}
+.home-section {
+    &h1 {
+        font-size: 50px;
+    }
+}
+
+html, body {
+  width: 100%;
+  overflow-x: hidden;
+}
+
 // MOBILE
 @media (max-width: 800px) {
-  html, body {
-    width: 100%;
-    overflow-x: hidden;
-  }
 }
 </style>
 

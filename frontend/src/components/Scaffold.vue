@@ -26,7 +26,9 @@ export default {
 
     </html>
 </template>
-<style>
+<style lang="scss">
+    @import '../styles/colors.scss';
+
     * {
         margin: 0;
         padding: 0;
@@ -34,6 +36,25 @@ export default {
         outline: 0;
         font-size: 100%;
         vertical-align: baseline;
-        background: transparent;
+        scrollbar-color: yellow;
+        background-color: transparent;
     }
+
+    html, body {
+        scroll-behavior: smooth;
+    }
+
+    a {
+        text-decoration: none;
+        color: inherit;
+    }
+
+   @media screen and (prefers-color-scheme: dark) {
+       :root {
+           color-scheme: dark;
+        }
+        html, body {
+            background-color: $RANGOON-GREEN;
+        }
+   }
 </style>

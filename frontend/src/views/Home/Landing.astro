@@ -4,28 +4,29 @@ import SubTitle from "./components/SubTitle.astro";
 
 
 ---
-<div class="landing-section">
+<section id="home" class:list={["home-section", "landing-section"]}>
     <div class="title-container">
         <MyNameTitle/>
         <SubTitle/>
     </div>
-</div>
+</section>
 
 <style scoped>
 .landing-section {
     display: flex;
-    min-height: 100vh;
     text-align: center;
 }
+
 .title-container {
-    padding-top: 20%;
+    /* padding-top: 20%; */
+    margin: auto;
     min-width: 100vw;
 }
 
 /* MOBILE */
 @media (max-width: 800px) {
     .title-container {
-       padding-top: 40vh;
+        margin: 35vh auto;
     }
 }
 </style>
