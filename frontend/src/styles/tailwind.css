@@ -1,0 +1,29 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    @font-face {
+        font-family: 'Kagitingan';
+        src: url('/fonts/Kagitingan.otf') format('otf');
+        font-weight: normal;
+        font-style: normal;
+        font-display: swap;
+    }
+
+    @font-face {
+        font-family: 'Maragsa';
+        src: url('/fonts/Marags.otf') format('otf');
+        font-weight: normal;
+        font-style: normal;
+        font-display: swap;
+    }
+
+    @font-face {
+        font-family: 'Quiapo';
+        src: url('/fonts/Quiapo.ttf');
+        font-weight: normal;
+        font-style: normal;
+        font-display: swap;
+    }
+}

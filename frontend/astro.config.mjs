@@ -32,7 +32,7 @@ export default defineConfig({
     sitemap(), 
     vue(),
     tailwind({
-      applyBaseStyles: true,
+      applyBaseStyles: false,
     }),
     storyblok({
         accessToken: import.meta.env.PUBLIC_STORYBLOK_TOKEN,
