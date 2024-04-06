@@ -9,7 +9,7 @@ import vue from "@astrojs/vue";
 // https://astro.build/config
 export default defineConfig({
   site: 'https://jjspscl.com',
-  output: "server",
+  output: "hybrid",
   adapter: cloudflare({
     imageService: 'cloudflare'
   }),
@@ -19,6 +19,9 @@ export default defineConfig({
     ],
     server: {
       https: true
+    },
+    build: {
+      minify: true,
     }
   },
   i18n: {
