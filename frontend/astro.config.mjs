@@ -32,7 +32,7 @@ export default defineConfig({
       applyBaseStyles: true,
     }),
     storyblok({
-        accessToken: 'Nky702assFDlL2pvSZEIhAtt',
+        accessToken: import.meta.env.PUBLIC_STORYBLOK_TOKEN,
         components: {
           'article': "components/storyblok/Article",
         }
