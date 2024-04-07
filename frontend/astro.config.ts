@@ -26,6 +26,9 @@ export default defineConfig({
     // },
     build: {
       minify: true,
+    },
+    ssr: {
+      target: 'webworker'
     }
   },
   i18n: {
