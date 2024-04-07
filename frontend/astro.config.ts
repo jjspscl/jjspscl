@@ -1,5 +1,5 @@
 import { defineConfig } from 'astro/config';
-import basicSsl from '@vitejs/plugin-basic-ssl'
+// import basicSsl from '@vitejs/plugin-basic-ssl'
 import sitemap from '@astrojs/sitemap';
 import storyblok from '@storyblok/astro';
 import cloudflare from "@astrojs/cloudflare";
@@ -39,7 +39,7 @@ export default defineConfig({
       applyBaseStyles: false,
     }),
     storyblok({
-      accessToken: env.STORYBLOK_TOKEN,
+      accessToken: env.STORYBLOK_TOKEN as string,
       components: {
         'article': "components/storyblok/blog/Article",
       },
