@@ -1,0 +1,35 @@
+---
+import { useStoryblokApi } from "@storyblok/astro";
+import ArticleCard from "@components/blog/ArticleCard.astro";
+
+export const prerender = false;
+const storyblokApi = useStoryblokApi();
+const language = Astro.url.searchParams.get("lang") as string;
+const { data } = await storyblokApi.get(`cdn/stories`, {
+  version: import.meta.env.DEV ? "draft" : "published",
+  starts_with: "blog/",
+  content_type: "article",
+  language
+  // page: parseInt(page),
+  // per_page: 5,
+});
+
+const articles = data.stories;
+---
+
+<section class="">
+  <h2 class="text-6xl font-maragsa text-white font-bold mb-12">Blog</h2>
+  <ul class="grid grid-cols-1 gap-6">
+    {
+      articles?.length > 0 &&
+        articles.map((article: any) => {
+          article.content.slug = article.slug;
+          return (
+            <li>
+              <ArticleCard data={article} />
+            </li>
+          );
+        })
+    }
+  </ul>
+</section>

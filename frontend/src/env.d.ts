@@ -1,7 +1,7 @@
 /// <reference types="astro/client" />
 
 interface ImportMetaEnv {
-  readonly PUBLIC_STORYBLOK_TOKEN: string;
+  readonly STORYBLOK_TOKEN: string;
 }
 
 interface ImportMeta {

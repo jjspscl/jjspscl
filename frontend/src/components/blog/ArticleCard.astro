@@ -1,0 +1,46 @@
+---
+import * as time from "@utils/time"
+interface Props {
+  data: {
+    content: {
+      title: string;
+      headline: string;
+      slug: string;
+      image: {
+        filename: string;
+        alt: string;
+      };
+    };
+    published_at: string;
+  };
+}
+
+const { data } = Astro.props;
+const article = data?.content;
+const published_at = time.formatISO(data.published_at, "DD MMMM, YYYY");
+---
+
+<article
+  class="column feature rounded text-white"
+  transition:name={article.slug}
+>
+  <div class="p-4">
+    <p class="text-sm">
+      {published_at}
+    </p>
+    <h1 class="text-2xl font-kagitingan lg:text-3xl">
+      {article.title}
+    </h1>
+    <p class="leading-relaxed line-clamp-2">
+      {article.headline}
+    </p>
+    <a
+      href={`/blog/${article.slug}`}
+      class="font-semibold text-blue-600 hover:underline"
+      title="read more"
+      data-astro-prefetch
+    >
+      Read More »
+    </a>
+  </div>
+</article>

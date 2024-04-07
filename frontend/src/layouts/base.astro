@@ -1,11 +1,17 @@
 ---
-import '../styles/tailwind.css';
+import LanguageSelect from "@components/LanguageSelect.vue";
+import "../styles/tailwind.css";
+import { ViewTransitions } from "astro:transitions";
+
 interface Props {
   title?: string;
 }
 
 const { title } = Astro.props;
+const pathname = Astro.url.pathname;
+const isHome = pathname === "/";
 ---
+
 <html lang="en">
   <head>
     <meta charset="utf-8" />
@@ -13,8 +19,14 @@ const { title } = Astro.props;
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
     <title>jjspscl {title && `| ${title}`}</title>
+    <ViewTransitions />
   </head>
   <body class="m-0 p-0 bg-pinoy-blacked-500 text-white">
-    <slot />
+    <header class="container mx-auto max-w-screen-md my-5">
+      <LanguageSelect client:only="vue" />
+    </header>
+    <main class="grid items-center container mx-auto max-w-screen-md">
+      <slot />
+    </main>
   </body>
 </html>

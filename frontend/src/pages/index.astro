@@ -1,7 +1,21 @@
 ---
-import BaseLayout from '@layouts/base.astro';
+import BaseLayout from "@layouts/base.astro";
+import { useStoryblokApi } from "@storyblok/astro";
 
+export const prerender = false;
+const sbAPI = useStoryblokApi();
+const language = Astro.url.searchParams.get("lang") as string;
+const { data } = await sbAPI.get(`cdn/stories/home`, {
+  version: import.meta.env.DEV ? "draft" : "published",
+  language,
+});
+const { content } = data.story;
+const greeting = content.greeting;
+console.log(greeting, language);
 ---
+
 <BaseLayout>
-    <h1 class="text-9xl font-quiapo">Joshua Pascual</h1>
+  <section class="min-h-screen">
+    <h1 class="text-9xl font-kagitingan">{greeting}</h1>
+  </section>
 </BaseLayout>

@@ -6,6 +6,9 @@ import cloudflare from "@astrojs/cloudflare";
 import tailwind from "@astrojs/tailwind";
 import vue from "@astrojs/vue";
 
+import { loadEnv } from 'vite';
+
+const env = loadEnv("", process.cwd(), ['STORYBLOK']);
 // https://astro.build/config
 export default defineConfig({
   site: 'https://jjspscl.com',
@@ -13,20 +16,21 @@ export default defineConfig({
   adapter: cloudflare({
     imageService: 'cloudflare'
   }),
+  prefetch: true,
   vite: {
-    plugins: [
-      basicSsl()
-    ],
-    server: {
-      https: true
-    },
+    // plugins: [
+    //   basicSsl()
+    // ],
+    // server: {
+    //   https: true
+    // },
     build: {
       minify: true,
     }
   },
   i18n: {
-    locales: ['en', 'tl'],
-    defaultLocale: 'tl'
+    locales: ['en', 'en-ph'],
+    defaultLocale: 'en',
   },
   integrations: [
     sitemap(), 
@@ -35,9 +39,12 @@ export default defineConfig({
       applyBaseStyles: false,
     }),
     storyblok({
-        accessToken: import.meta.env.PUBLIC_STORYBLOK_TOKEN,
-        components: {
-          'article': "components/storyblok/Article",
-        }
+      accessToken: env.STORYBLOK_TOKEN,
+      components: {
+        'article': "components/storyblok/blog/Article",
+      },
+      apiOptions: {
+        region: 'ap'
+      }
   })]
 });

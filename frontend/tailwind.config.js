@@ -1,7 +1,12 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: ['./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}'],
+  content: ['./src/**/*.{astro,html,tsx,vue}'],
   theme: {
+    container: {
+      padding: {
+        DEFAULT: "4rem"
+      }
+    },
     extend: {
       fontFamily: {
         kagitingan: ['Kagitingan'],
@@ -10,7 +15,6 @@ export default {
       },
 			colors: {
 				'pinoy': {
-          // '#354739'
 					'green': {
             50: '#f0f7f0',
             100: '#f0f7f0',
@@ -27,6 +31,12 @@ export default {
             500: '#191919',
             600: '#121212',
             700: '#0b0b0b',
+          },
+          "cream": "#FAE4BB",
+          "cream": {
+            400: "#FCE8B3",
+            500: "#FAE4BB",
+            600: "#F9E2C0"
           }
 				}
 			}
