@@ -9,7 +9,7 @@ interface Props {
 
 const { title } = Astro.props;
 const cookie = Astro.request.headers.get("cookie");
-const themeCookie = cookie && cookie?.split("theme");
+const themeCookie = cookie && cookie?.split("theme=");
 const themeValue = themeCookie && themeCookie[1];
 const theme = themeValue && themeValue.split(";")[0] || "dark";
 ---
