@@ -1,16 +1,11 @@
 ---
 import BlogKaratula from "@assets/icons/blog.karatula.svg";
-import { getImage } from "astro:assets";
 import DarkModeToggle from "./DarkModeToggle.vue";
 import LanguageSelect from "./LanguageSelect.vue";
 
-const blogKaratula = await getImage({
-  src: BlogKaratula,
-  format: "svg",
-});
 ---
 
-<header class="container flex justify-between mx-auto max-w-screen-md my-5">
+<header class="container flex justify-between items-center mx-auto max-w-screen-md my-5">
   <a href="/" class="text-xl font-bold" data-astro-prefetch>
     <h1 class="font-maragsa text-4xl font-bold">jjspscl</h1>
   </a>
@@ -18,7 +13,7 @@ const blogKaratula = await getImage({
     <!-- <a href="/projects" class="bg-pinoy-orange-500 rounded" data-astro-prefetch>
       <span class="text-white mx-2">Projects</span>
     </a> -->
-    <a href="/blog" class="rounded" style={`background-image: url(${blogKaratula.src});`} data-astro-prefetch>
+    <a href="/blog" class="rounded" style={`background-image: url(${BlogKaratula.src});`} data-astro-prefetch>
       <span class="text-black mx-2">Blog</span>
     </a>
     <!-- <a href="/contact" class="bg-pinoy-cream-500 rounded" data-astro-prefetch>
