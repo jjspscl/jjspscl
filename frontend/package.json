@@ -5,9 +5,9 @@
   "scripts": {
     "dev": "astro dev",
     "start": "bunx --bun astro dev --host",
-    "build": "astro check && astro build",
-    "preview": "bun run build; bunx --bun astro preview --preview",
-    "astro": "astro"
+    "build": "bunx --bun astro check && bunx --bun astro build",
+    "preview": "bunx wrangler pages dev ./dist",
+    "deploy": "bun run build && bunx wrangler pages deploy ./dist"
   },
   "dependencies": {
     "@astrojs/check": "^0.5.10",
@@ -28,7 +28,8 @@
   },
   "devDependencies": {
     "@types/bun": "^1.0.12",
-    "@vitejs/plugin-basic-ssl": "^1.1.0"
+    "@vitejs/plugin-basic-ssl": "^1.1.0",
+    "wrangler": "^3.48.0"
   },
   "trustedDependencies": [
     "sharp"

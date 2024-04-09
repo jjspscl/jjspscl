@@ -1,7 +1,10 @@
 /** @type {import('tailwindcss').Config} */
 export default {
   content: ['./src/**/*.{astro,html,tsx,vue}'],
+  darkMode: ['selector', '[data-theme="dark"]'],
   theme: {
+    fontFamily: {
+    },
     container: {
       padding: {
         DEFAULT: "4rem"
@@ -37,9 +40,26 @@ export default {
             400: "#FCE8B3",
             500: "#FAE4BB",
             600: "#F9E2C0"
+          },
+          "orange": {
+            400: "#C65A1A",
+            500: "#B15415",
+            600: "#A44E0E"
           }
-				}
-			}
+				},
+			},
+      keyframes: {
+        'fade-in-up': {
+          '0%': {
+            opacity: '0',
+            transform: 'translateY(1rem)'
+          },
+          '100%': {
+            opacity: '1',
+            transform: 'translateY(0)'
+          }
+        }
+      }
 		},
   },
   plugins: [],

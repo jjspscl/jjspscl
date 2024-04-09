@@ -21,7 +21,7 @@ const published_at = time.formatISO(data.published_at, "DD MMMM, YYYY");
 ---
 
 <article
-  class="column feature rounded text-white"
+  class="column feature rounded bg-pinoy-cream-500 dark:text-pinoy-blacked-300"
   transition:name={article.slug}
 >
   <div class="p-4">
@@ -38,7 +38,7 @@ const published_at = time.formatISO(data.published_at, "DD MMMM, YYYY");
       href={`/blog/${article.slug}`}
       class="font-semibold text-blue-600 hover:underline"
       title="read more"
-      data-astro-prefetch
+      data-astro-prefetch="tap"
     >
       Read More »
     </a>

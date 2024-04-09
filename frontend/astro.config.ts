@@ -12,7 +12,7 @@ const env = loadEnv("", process.cwd(), ['STORYBLOK']);
 // https://astro.build/config
 export default defineConfig({
   site: 'https://jjspscl.com',
-  output: "hybrid",
+  output: "server",
   adapter: cloudflare({
     imageService: 'cloudflare'
   }),
@@ -47,7 +47,8 @@ export default defineConfig({
         'article': "components/storyblok/blog/Article",
       },
       apiOptions: {
-        region: 'ap'
+        region: 'ap',
+        rateLimit: 250
       }
   })]
 });

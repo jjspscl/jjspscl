@@ -1,5 +1,5 @@
 ---
-import LanguageSelect from "@components/LanguageSelect.vue";
+import Header from "@components/Header.astro";
 import "../styles/tailwind.css";
 import { ViewTransitions } from "astro:transitions";
 
@@ -8,9 +8,12 @@ interface Props {
 }
 
 const { title } = Astro.props;
+const cookie = Astro.request.headers.get("cookie");
+
+const theme = cookie && cookie?.split("theme=")[1].split(";")[0] || "dark";
 ---
 
-<html lang="en">
+<html lang="en" data-theme={theme}>
   <head>
     <meta charset="utf-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -19,10 +22,10 @@ const { title } = Astro.props;
     <title>jjspscl {title && `| ${title}`}</title>
     <ViewTransitions />
   </head>
-  <body class="m-0 p-0 bg-pinoy-blacked-500 text-white">
-    <header class="container mx-auto max-w-screen-md my-5">
-      <LanguageSelect client:only="vue" />
-    </header>
+  <body
+    class="m-0 p-0 dark:bg-pinoy-blacked-500 bg-pinoy-cream-500 dark:text-white text-black transition-colors duration-500 dark"
+  >
+    <Header/>
     <main class="grid items-center container mx-auto max-w-screen-md">
       <slot />
     </main>

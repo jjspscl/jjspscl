@@ -1,6 +1,6 @@
 <template>
-    <a :href="targetPath" class="flex items-center space-x-2" @click="toggleLanguage" data-astro-prefetch>
-        <img :src="selectedFlag.src" :alt="selectedFlag.alt" class="w-10" />
+    <a :href="targetPath" class="flex items-center space-x-2 w-10 h-10 rounded-full overflow-hidden" @click="toggleLanguage" data-astro-prefetch>
+        <img :src="selectedFlag.src" :alt="selectedFlag.alt" class="w-20 h-20" />
     </a>
 </template>
 
@@ -20,7 +20,6 @@ const currentPath = window.location.pathname;
 let targetPath = ref(`${currentPath}${window.location.search ? '&' : '?'}lang=en-ph`);
 const urlParams = new URLSearchParams(window.location.search);
 const currentParamLang = ref(urlParams.get('lang') ?? 'en'); 
-console.log('currentParamLang', urlParams);
 const currentLang = ref(currentParamLang);
 const selectedFlag = ref(currentLang.value === 'en' ? USFlag : USFlag);
 

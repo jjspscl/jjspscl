@@ -11,11 +11,13 @@ const { data } = await sbAPI.get(`cdn/stories/home`, {
 });
 const { content } = data.story;
 const greeting = content.greeting;
-console.log(greeting, language);
 ---
 
 <BaseLayout>
-  <section class="min-h-screen">
-    <h1 class="text-9xl font-kagitingan">{greeting}</h1>
+  <section>
+    <h1 class="md:text-9xl text-6xl font-kagitingan mt-40">{greeting}</h1>
+    <p class="text-xl">
+        My place on the interwebs
+    </p>
   </section>
 </BaseLayout>

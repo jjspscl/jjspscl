@@ -7,10 +7,12 @@ export const prerender = false;
 const storyblokApi = useStoryblokApi();
 const slug = Astro.params.slug;
 let content: ISbResult | null = null;
+const language = Astro.url.searchParams.get("lang") as string;
 
 try {
   const { data } = await storyblokApi.get(`cdn/stories/blog/${slug}`, {
     version: import.meta.env.DEV ? "draft" : "published",
+    language,
   });
 
   if (!data) {
