@@ -1,10 +1,9 @@
 <template>
   <div class="flex transition-opacity rounded-full items-center overflow-hidden">
     <button @click="toggleDarkMode" type="button">
-      <!-- <img :src="currentIcon.src" :alt="currentIcon.alt" class="w-10 dark:bg-pinoy-cream-500" /> -->
-      <!-- animate the svg that is com -->
-      <div v-if="isDarkMode" v-html="moonSvg" class="w-10 h-10 animate-[fade-in-up_0.5s_ease-in-out]"></div>
-      <div v-else v-html="sunSvg" class="w-10 h-10 animate-[fade-in-up_0.5s_ease-in-out]"></div>
+      <!-- TODO: ADD transitions animate-[fade-in-up_0.5s_ease-in-out] -->
+      <div v-if="isDarkMode" v-html="moonSvg" class="w-10 h-10"></div>
+      <div v-else v-html="sunSvg" class="w-10 h-10"></div>
     </button>
   </div>
 </template>
@@ -12,13 +11,17 @@
 <script setup>
     import { computed, onMounted, ref } from 'vue';
     import { useStore } from '@nanostores/vue';
+    import { themeStore } from '@stores/theme';
     import moonSvg from '@assets/icons/moon.svg?raw';
     import sunSvg from '@assets/icons/sun.svg?raw';
 
+    const $theme = useStore(themeStore);
     const isDarkMode = ref(document.documentElement.dataset.theme === 'dark');
+    themeStore.set(isDarkMode.value ? 'dark' : 'light');
     const root = document.querySelector('html');
     const toggleDarkMode = () => {
         isDarkMode.value = !isDarkMode.value;
+        themeStore.set(isDarkMode.value ? 'dark' : 'light');
         const nextTheme =
 					document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
 				document.documentElement.dataset.theme = nextTheme;

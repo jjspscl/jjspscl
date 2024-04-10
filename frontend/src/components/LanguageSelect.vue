@@ -1,6 +1,6 @@
 <template>
-    <a :href="targetPath" class="flex items-center space-x-2 w-10 h-10 rounded-full overflow-hidden" @click="toggleLanguage" data-astro-prefetch>
-        <img :src="selectedFlag.src" :alt="selectedFlag.alt" class="w-20 h-20" />
+    <a :href="targetPath" class="flex items-center space-x-2 w-7 h-7" @click="toggleLanguage" data-astro-prefetch>
+        <img :src="selectedFlag.src" :alt="selectedFlag.alt"/>
     </a>
 </template>
 

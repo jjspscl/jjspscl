@@ -17,14 +17,14 @@ const { data } = await storyblokApi.get(`cdn/stories`, {
 const articles = data.stories;
 ---
 
-<section class="">
-  <ul class="grid grid-cols-1 gap-6">
+<section>
+  <ul class="grid grid-cols-1">
     {
       articles?.length > 0 &&
         articles.map((article: any) => {
           article.content.slug = article.slug;
           return (
-            <li class="flex max-w-md justify-center">
+            <li class="flex">
               <ArticleCard data={article} />
             </li>
           );

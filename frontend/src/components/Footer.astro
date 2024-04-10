@@ -1,0 +1,35 @@
+---
+import LanguageSelect from "./LanguageSelect.vue";
+import SocialIcon from "@components/SocialIcon.vue";
+---
+
+<style>
+  .footer-wrapper {
+    /* flex justify-between flex-col md:flex-row container max-w-screen-md mx-auto mt-auto py-8 items-center gap-y-2 */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2rem;
+    padding: 1.5rem 0;
+
+    @media screen and (min-width: 768px) {
+      flex-direction: row;
+    }
+  }
+
+</style>
+<footer class="mt-auto max-w-screen-md container mx-auto">
+  <div class="px-0">
+    <hr aria-hidden="true" class="border-black border-1 dark:border-white"/>
+  </div>
+  <div class="footer-wrapper">
+    <span class="order-1"> Copyright © 2023 </span>
+    <span class="flex md:order-2 items-center">
+      <SocialIcon client:only="vue" />
+      <span class="mx-2">|</span>
+      <LanguageSelect client:only="vue" />
+    </span>
+
+  </div>
+</footer>

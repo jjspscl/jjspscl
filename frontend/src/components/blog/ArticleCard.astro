@@ -1,5 +1,5 @@
 ---
-import * as time from "@utils/time"
+import * as time from "@utils/time";
 interface Props {
   data: {
     content: {
@@ -20,15 +20,15 @@ const article = data?.content;
 const published_at = time.formatISO(data.published_at, "DD MMMM, YYYY");
 ---
 
-<article
-  class="column feature rounded bg-pinoy-cream-500 dark:text-pinoy-blacked-300"
-  transition:name={article.slug}
->
+<article class="feature rounded">
   <div class="p-4">
     <p class="text-sm">
       {published_at}
     </p>
-    <h1 class="text-2xl font-kagitingan lg:text-3xl">
+    <h1
+      class="text-2xl font-kagitingan lg:text-3xl"
+      transition:name={article.slug}
+    >
       {article.title}
     </h1>
     <p class="leading-relaxed line-clamp-2">

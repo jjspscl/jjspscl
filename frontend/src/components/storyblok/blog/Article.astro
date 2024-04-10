@@ -12,12 +12,11 @@ const renderedRichText = renderRichText(blok.content);
 
 <article
   {...storyblokEditable(blok)}
-  transition:name={slug}
-  transition:animate="initial"
-  class="container dark:bg-pinoy-cream-500 rounded dark:text-pinoy-blacked-500"
+  class="rounded dark:text-white"
 >
-  <div class="container mx-auto mb-12">
-    <h1 class="text-6xl font-bold mt-12 mb-4">
+  <div class="1mb-12">
+    <h1 class="text-6xl font-kagitingan font-bold mt-12 mb-4"
+      transition:name={slug}>
       {blok.title}
     </h1>
     <h3 class="text-3xl font-bold mb-4">

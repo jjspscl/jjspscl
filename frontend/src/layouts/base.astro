@@ -1,17 +1,16 @@
 ---
 import Header from "@components/Header.astro";
+import Footer from "@components/Footer.astro";
 import "../styles/tailwind.css";
 import { ViewTransitions } from "astro:transitions";
+import { getTheme } from "@utils/theme.astro";
 
 interface Props {
   title?: string;
 }
 
 const { title } = Astro.props;
-const cookie = Astro.request.headers.get("cookie");
-const themeCookie = cookie && cookie?.split("theme=");
-const themeValue = themeCookie && themeCookie[1];
-const theme = themeValue && themeValue.split(";")[0] || "dark";
+const theme = getTheme(Astro.request);
 ---
 
 <html lang="en" data-theme={theme}>
@@ -24,11 +23,12 @@ const theme = themeValue && themeValue.split(";")[0] || "dark";
     <ViewTransitions />
   </head>
   <body
-    class="m-0 p-0 dark:bg-pinoy-blacked-500 bg-pinoy-cream-500 dark:text-white text-black transition-colors duration-500 dark"
+    class="m-0 p-0 dark:bg-pinoy-blacked-500 bg-pinoy-cream-500 dark:text-white text-black transition-colors duration-500 dark flex flex-col min-h-screen"
   >
     <Header/>
     <main class="grid items-center container mx-auto max-w-screen-md">
       <slot />
     </main>
+    <Footer />
   </body>
 </html>
