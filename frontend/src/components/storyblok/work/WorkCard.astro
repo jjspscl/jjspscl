@@ -21,26 +21,10 @@ if (!worksData) {
 }
 const content = worksData?.story.content;
 
-const tech = await Promise.allSettled(content.tech.map(async (tech: string) => {
-    console.log(tech);
-    try {
-        const { data: techData } = await storyblokApi.getStory(`tech-stack`, {
-            version: import.meta.env.DEV ? "draft" : "published",
-            find_by: "uuid",
-            language,
-        });
-        console.log(techData);
-        return techData?.story.content;
-        
-    } catch (error) {
-        console.log(error);
-    }
-}));
-
 
 // const techs = 
 ---
 
 <p>
-    {JSON.stringify(worksData)}
+    {JSON.stringify(content)}
 </p>

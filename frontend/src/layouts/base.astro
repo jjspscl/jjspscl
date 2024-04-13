@@ -21,8 +21,9 @@ const language = Astro.url.searchParams.get("lang") as string;
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
     <title>jjspscl {title && `| ${title}`}</title>
+    <link rel="sitemap" href="/sitemap-index.xml" />
     <ViewTransitions />
-  </head>
+  </ul>
   <body
     class="m-0 p-0 dark:bg-pinoy-blacked-500 bg-pinoy-cream-500 dark:text-white text-black transition-colors duration-500 dark flex flex-col min-h-screen"
   >
@@ -32,4 +33,6 @@ const language = Astro.url.searchParams.get("lang") as string;
     </main>
     <Footer />
   </body>
+
+
 </html>
