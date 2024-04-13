@@ -1,0 +1,46 @@
+---
+import { useStoryblokApi } from '@storyblok/astro';
+
+interface Props {
+  slug: string;
+}
+
+const { slug } = Astro.props;
+
+export const prerender = false;
+const storyblokApi = useStoryblokApi();
+const language = Astro.url.searchParams.get("lang") as string;
+const { data: worksData } = await storyblokApi.get(`cdn/stories/work/${slug}`, {
+  version: import.meta.env.DEV ? "draft" : "published",
+  language,
+  // page: parseInt(page),
+  // per_page: 5,
+});
+if (!worksData) {
+    return Astro.redirect("/404");
+}
+const content = worksData?.story.content;
+
+const tech = await Promise.allSettled(content.tech.map(async (tech: string) => {
+    console.log(tech);
+    try {
+        const { data: techData } = await storyblokApi.getStory(`tech-stack`, {
+            version: import.meta.env.DEV ? "draft" : "published",
+            find_by: "uuid",
+            language,
+        });
+        console.log(techData);
+        return techData?.story.content;
+        
+    } catch (error) {
+        console.log(error);
+    }
+}));
+
+
+// const techs = 
+---
+
+<p>
+    {JSON.stringify(worksData)}
+</p>

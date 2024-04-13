@@ -11,9 +11,10 @@ interface Props {
 
 const { title } = Astro.props;
 const theme = getTheme(Astro.request);
+const language = Astro.url.searchParams.get("lang") as string;
 ---
 
-<html lang="en" data-theme={theme}>
+<html lang={language === "en-ph" ? "tl" : "en"} data-theme={theme}>
   <head>
     <meta charset="utf-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -25,7 +26,7 @@ const theme = getTheme(Astro.request);
   <body
     class="m-0 p-0 dark:bg-pinoy-blacked-500 bg-pinoy-cream-500 dark:text-white text-black transition-colors duration-500 dark flex flex-col min-h-screen"
   >
-    <Header/>
+    <Header />
     <main class="grid items-center container mx-auto max-w-screen-md">
       <slot />
     </main>
