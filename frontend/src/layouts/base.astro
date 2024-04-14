@@ -28,9 +28,7 @@ const language = Astro.url.searchParams.get("lang") as string;
     class="m-0 p-0 dark:bg-pinoy-blacked-500 bg-pinoy-cream-500 dark:text-white text-black transition-colors duration-500 dark flex flex-col min-h-screen"
   >
     <Header />
-    <main class="grid items-center container mx-auto max-w-screen-md">
-      <slot />
-    </main>
+    <slot />
     <Footer />
   </body>
 

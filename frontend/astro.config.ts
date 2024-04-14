@@ -44,7 +44,10 @@ export default defineConfig({
     storyblok({
       accessToken: env.STORYBLOK_TOKEN as string,
       components: {
-        'article': "components/storyblok/blog/Article",
+        'article': "storyblok/blog/Article",
+        'all-articles': "storyblok/blog/AllArticle",
+        'all-work': "storyblok/work/AllWork",
+        'landing': "storyblok/Landing",
       },
       apiOptions: {
         region: 'ap',

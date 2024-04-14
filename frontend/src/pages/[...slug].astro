@@ -1,0 +1,25 @@
+---
+import Base from "@layouts/base.astro";
+import { useStoryblokApi } from "@storyblok/astro";
+import StoryblokComponent from "@storyblok/astro/StoryblokComponent.astro";
+
+const storyblokApi = useStoryblokApi();
+
+const { slug } = Astro.params;
+const language = Astro.url.searchParams.get("lang") as string;
+const { data } = await storyblokApi.get(
+  `cdn/stories/${slug === undefined ? "home" : slug}`,
+  {
+    version: import.meta.env.DEV ? "draft" : "published",
+    language
+  }
+);
+
+const blok = data.story.content;
+---
+
+<Base>
+  <main class="grid items-center container mx-auto max-w-screen-md">
+    <StoryblokComponent blok={blok} />
+  </main>
+</Base>

@@ -1,0 +1,21 @@
+---
+import BaseLayout from "@layouts/base.astro";
+import { useStoryblokApi } from "@storyblok/astro";
+
+
+interface Props {
+  blok: {
+    greeting: string;
+  }
+}
+
+const { blok } = Astro.props;
+
+const greeting = blok.greeting;
+---
+<section>
+  <h1 class="md:text-9xl text-6xl font-kagitingan mt-40">{greeting}</h1>
+  <p class="text-xl">
+      My place on the interwebs
+  </p>
+</section>

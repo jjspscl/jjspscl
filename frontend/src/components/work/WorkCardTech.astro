@@ -1,0 +1,23 @@
+---
+
+export const prerender = false;
+
+interface Props {
+    name: string;
+    filename: string;
+    source: {
+        url: string;
+        target: string;
+    }
+}
+
+const { name, filename, source } = Astro.props;
+---
+<a href={source.url} target={source.target} class="flex items-center hover:underline">
+    <span class="flex mr-2">
+        <span>
+            <img class="size-6 mr-1" src={filename} alt={name} />
+        </span>
+        <span>{name}</span>
+    </span>
+</a>
