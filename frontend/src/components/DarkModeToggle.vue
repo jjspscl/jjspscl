@@ -25,7 +25,7 @@
         const nextTheme =
 					document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
 				document.documentElement.dataset.theme = nextTheme;
-				document.cookie = `theme=${nextTheme};path=/S`;
+				document.cookie = `theme=${nextTheme};path=/`;
     };
 
     // Initialize dark mode based on user preference or system setting
