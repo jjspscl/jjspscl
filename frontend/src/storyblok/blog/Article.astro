@@ -25,6 +25,6 @@ const renderedRichText = renderRichText(blok.content);
     <h2 class="text-2xl font-bold mb-4">
       {blok.subtitle}
     </h2>
-    <Fragment set:html={renderedRichText} />
+    <div class="prose dark:text-white dark:prose-invert prose-headings:mb-1 prose:-" set:html={renderedRichText} />
   </div>
 </article>

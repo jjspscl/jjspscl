@@ -1,6 +1,4 @@
 ---
-import type { SbBlokData } from "@storyblok/astro";
-import * as time from "@utils/time";
 import WorkCardTech from "./WorkCardTech.astro";
 
 export const prerender = false;
@@ -9,7 +7,7 @@ interface Props {
     content: {
       title: string;
       headline: string;
-      technology: SbBlokData[];
+      technology: any[];
     };
   };
 }

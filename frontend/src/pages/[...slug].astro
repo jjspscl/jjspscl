@@ -2,24 +2,39 @@
 import Base from "@layouts/base.astro";
 import { useStoryblokApi } from "@storyblok/astro";
 import StoryblokComponent from "@storyblok/astro/StoryblokComponent.astro";
+import { unknown } from "astro/zod";
 
 const storyblokApi = useStoryblokApi();
 
 const { slug } = Astro.params;
 const language = Astro.url.searchParams.get("lang") as string;
-const { data } = await storyblokApi.get(
-  `cdn/stories/${slug === undefined ? "home" : slug}`,
-  {
-    version: import.meta.env.DEV ? "draft" : "published",
-    language
-  }
-);
 
-const blok = data.story.content;
+let blok: any = null;
+try {
+  const res = await storyblokApi.get(
+    `cdn/stories/${slug === undefined ? "home" : slug}`,
+    {
+      version: import.meta.env.DEV ? "draft" : "published",
+      language
+    }
+  );
+  
+  
+  const data = res.data;
+  
+  
+  blok = data.story.content;
+} catch (error: any) {
+  if (error?.status === 404) {
+    return Astro.redirect("/404");
+  }
+}
 ---
 
 <Base>
   <main class="grid items-center container mx-auto max-w-screen-md">
-    <StoryblokComponent blok={blok} />
+    { blok && (
+      <StoryblokComponent blok={blok} />
+    )}
   </main>
 </Base>

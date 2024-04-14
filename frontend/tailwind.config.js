@@ -59,9 +59,11 @@ export default {
             transform: 'translateY(0)'
           }
         }
-      }
+      },
 		},
   },
-  plugins: [],
+  plugins: [
+    require('@tailwindcss/typography'),
+  ],
 }
 
