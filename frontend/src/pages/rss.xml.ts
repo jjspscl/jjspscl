@@ -13,7 +13,7 @@ const { data } = await storyblokApi.get(`cdn/stories`, {
 const posts = data.stories;
 console.log(posts);
 
-export async function GET(context) {
+export async function GET(context: any) {
   if(process.env.VITE_ENVIRONMENT === 'preview'){
     return
   }
@@ -24,7 +24,7 @@ export async function GET(context) {
             site: context.site,
             stylesheet: '/rss/pretty-feed.xsl',
             xmlns: {atom: "http://www.w3.org/2005/Atom",},
-            items: posts.map((post)=> ({
+            items: posts.map((post: any)=> ({
                 title: post.content.title,
                 pubDate: post.first_published_at,
                 description: post.content.headline,
