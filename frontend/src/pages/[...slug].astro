@@ -14,14 +14,12 @@ try {
     `cdn/stories/${slug === undefined ? "home" : slug}`,
     {
       version: import.meta.env.DEV ? "draft" : "published",
-      language
+      language,
     }
   );
-  
-  
+
   const data = res.data;
-  
-  
+
   blok = data.story.content;
 } catch (error: any) {
   if (error?.status === 404) {
@@ -31,9 +29,9 @@ try {
 ---
 
 <Base>
-  <main class="grid items-center container mx-auto max-w-screen-md">
-    { blok && (
-      <StoryblokComponent blok={blok} />
-    )}
+  <main
+    class="p-0 md:container grid items-center mx-8 md:mx-auto md:max-w-screen-md"
+  >
+    {blok && <StoryblokComponent blok={blok} />}
   </main>
 </Base>
