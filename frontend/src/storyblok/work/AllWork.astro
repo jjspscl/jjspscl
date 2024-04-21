@@ -8,7 +8,7 @@ const { blok } = Astro.props;
 const storyblokApi = useStoryblokApi();
 const language = Astro.url.searchParams.get("lang") as string;
 const { data } = await storyblokApi.get(`cdn/stories`, {
-  version: import.meta.env.DEV ? "draft" : "published",
+  version: import.meta.env.MODE === "production" ? "published" : "draft",
   starts_with: "work/",
   content_type: "work",
   language,

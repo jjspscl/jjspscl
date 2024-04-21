@@ -6,7 +6,7 @@
     "dev": "astro dev --host",
     "start": "bunx --bun astro dev --host",
     "build": "bunx --bun astro check && bunx --bun astro build",
-    "preview": "bun run build && bunx wrangler pages dev ./dist --ip 0.0.0.0",
+    "preview": "bun run build && bunx wrangler pages dev ./dist --ip 0.0.0.0 --env=production",
     "deploy": "bun run build && bunx wrangler pages deploy ./dist"
   },
   "dependencies": {
@@ -31,7 +31,7 @@
     "@tailwindcss/typography": "^0.5.12",
     "@types/bun": "^1.0.12",
     "@vitejs/plugin-basic-ssl": "^1.1.0",
-    "wrangler": "^3.48.0"
+    "wrangler": "3.51.2"
   },
   "trustedDependencies": [
     "sharp"

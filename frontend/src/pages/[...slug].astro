@@ -13,7 +13,7 @@ try {
   const res = await storyblokApi.get(
     `cdn/stories/${slug === undefined ? "home" : slug}`,
     {
-      version: import.meta.env.DEV ? "draft" : "published",
+      version: import.meta.env.MODE === "production" ? "published" : "draft",
       language,
     }
   );
