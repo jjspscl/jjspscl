@@ -9,14 +9,25 @@ interface Props {
 const { blok, slug } = Astro.props;
 const renderedRichText = renderRichText(blok.content);
 ---
+<style is:inline>
+  :target {
+    background-color: #ffa;
+  }
 
-<article
-  {...storyblokEditable(blok)}
-  class="rounded dark:text-white mb-28"
->
+  /* is darkmode */
+  @media (prefers-color-scheme: dark) {
+    :target {
+      background-color: #aaf;
+    }
+  }
+</style>
+
+<article {...storyblokEditable(blok)} class="rounded dark:text-white mb-28">
   <div class="1mb-12">
-    <h1 class="text-6xl font-kagitingan font-bold mt-12 mb-4"
-      transition:name={slug}>
+    <h1
+      class="text-6xl font-kagitingan font-bold mt-12 mb-4"
+      transition:name={slug}
+    >
       {blok.title}
     </h1>
     <h3 class="text-3xl font-bold mb-4">
@@ -25,6 +36,9 @@ const renderedRichText = renderRichText(blok.content);
     <h2 class="text-2xl font-bold mb-4">
       {blok.subtitle}
     </h2>
-    <div class="prose dark:text-white dark:prose-invert prose-headings:mb-1 prose:-" set:html={renderedRichText} />
+    <div
+      class="prose dark:text-white dark:prose-invert prose-headings:mb-1 prose:-"
+      set:html={renderedRichText}
+    />
   </div>
 </article>
