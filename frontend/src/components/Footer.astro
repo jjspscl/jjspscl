@@ -5,20 +5,23 @@ import SocialIcon from "@components/SocialIcon.vue";
 
 <style>
   .footer-wrapper {
-    /* flex justify-between flex-col md:flex-row container max-w-screen-md mx-auto mt-auto py-8 items-center gap-y-2 */
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
     gap: 2rem;
     padding: 1.5rem 0;
+  }
 
-    @media screen and (min-width: 768px) {
+  @media screen and (min-width: 768px){
+    .footer-wrapper {
       flex-direction: row;
+      padding: 1rem 0;
+      gap: 1px;
     }
   }
 </style>
-<footer class="p-0 md:container mt-auto mx-8 md:mx-auto md:max-w-screen-md">
+<footer class="p-0 md:container mt-auto mx-5 md:mx-auto md:max-w-screen-md">
   <div class="px-0">
     <hr aria-hidden="true" class="border-black border-1 dark:border-white" />
   </div>
