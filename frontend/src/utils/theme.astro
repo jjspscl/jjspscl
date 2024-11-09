@@ -1,8 +1,0 @@
----
-export const getTheme = (request: Request) => {
-    const cookie = request.headers.get("cookie");
-    const themeCookie = cookie && cookie?.split("theme=");
-    const themeValue = themeCookie && themeCookie[1];
-    return themeValue && themeValue.split(";")[0] || "dark";
-}
----
