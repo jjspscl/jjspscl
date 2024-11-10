@@ -1,0 +1,31 @@
+---
+import BaseLayout from "@components/layouts/base.astro";
+import ProjectCard from "@features/projects/components/ProjectCard.astro";
+import { getProjects } from "@features/projects/project.service";
+
+import type { IProject } from "@features/projects/project.type";
+import type { ISbResult } from "@sb/storyblok.types";
+
+let stories: ISbResult<IProject>[] = [];
+try {
+    const data = await getProjects();
+
+    if (data) {
+        stories = data;
+    }
+} catch (error: any) {
+    if (error?.status === 404) {
+        return Astro.redirect("/404");
+    }
+}
+---
+
+<BaseLayout>
+    <main class="container mx-auto md:mx-auto md:max-w-screen-md">
+        <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {
+                stories.map((story) => <ProjectCard project={story.content} slug={story.slug}/>)
+            }
+        </section>
+    </main>
+</BaseLayout>

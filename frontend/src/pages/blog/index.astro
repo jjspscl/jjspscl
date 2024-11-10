@@ -1,0 +1,35 @@
+---
+import Base from "@components/layouts/base.astro";
+import { getBlogPosts } from "@features/blog/blog.service";
+import BlogCard from "@features/blog/components/BlogCard.astro";
+
+import type { IBlog } from "@sb/blog/blog.type";
+import type { ISbResult } from "@sb/storyblok.types";
+
+let stories: ISbResult<IBlog>[] = [];
+try {
+    const data = await getBlogPosts();
+
+    if (data) {
+        stories = data;
+    }
+} catch (error: any) {
+    if (error?.status === 404) {
+        return Astro.redirect("/404");
+    }
+}
+---
+
+<Base>
+    <main class="container mx-auto max-w-screen-md">
+        <section class="grid gap-4 mb-10">
+            {
+                stories.map((story) => {
+                    return (
+                        <BlogCard blog={story.content} slug={story.slug} />
+                    );
+                })
+            }
+        </section>
+    </main>
+</Base>

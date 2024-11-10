@@ -1,0 +1,23 @@
+---
+import Card from "@components/Card";
+
+import type { IBlog } from "@features/blog/blog.type";
+
+interface Props {
+    slug: string;
+    blog: IBlog;
+}
+
+const { blog, slug } = Astro.props;
+const href = `/blog/${slug}`;
+---
+<Card>
+    <h2 class="text-3xl">{blog.title}</h2>
+    <p class="text-lg mb-5">{blog.headline}</p>
+    <a class="grid gap-4 hover:underline" 
+        data-astro-prefetch href={href}
+    >
+        Read more
+    </a>
+
+</Card>

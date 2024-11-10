@@ -1,0 +1,16 @@
+---
+import BaseLayout from "@components/layouts/base.astro";
+const language = Astro.url.searchParams.get("lang") as string;
+const message =
+  language === "en-ph" ? "Wala dito hinahanap mo" : "Page not found";
+---
+
+<BaseLayout>
+    <main
+        class="grid items-center container mx-auto max-w-screen-md align-middle my-auto"
+    >
+        <section class="text-center">
+            <h1 class="font-quiapo text-5xl">404 {message} :(</h1>
+        </section>
+    </main>
+</BaseLayout>

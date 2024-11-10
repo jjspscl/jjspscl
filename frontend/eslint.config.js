@@ -2,15 +2,16 @@ import eslintPluginAstro from 'eslint-plugin-astro';
 import pluginImport from "eslint-plugin-import";
 import unusedImports from "eslint-plugin-unused-imports";
 
-
+/** @type { import("eslint").Linter.Config[] } */
 export default [
     ...eslintPluginAstro.configs.all,
-    {
+    {   
         plugins: {
             "unused-imports": unusedImports,
             "import": pluginImport,
         },
         rules: {
+            "astro/no-set-html-directive": "warn",
             "no-unused-vars": "off",
             "unused-imports/no-unused-imports": "error",
             "unused-imports/no-unused-vars": [

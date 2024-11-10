@@ -1,0 +1,12 @@
+---
+interface Props {
+    label: string;
+    href: string;
+}
+
+const { label, href } = Astro.props;
+---
+
+<a class="rounded" data-astro-prefetch href={href}>
+    <span class="mx-2 font-bold">{label}</span>
+</a>

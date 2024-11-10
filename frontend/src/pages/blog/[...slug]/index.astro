@@ -1,0 +1,35 @@
+---
+import BaseLayout from "@components/layouts/base.astro";
+import { getBlogPost } from "@features/blog/blog.service";
+import StoryblokComponent from "@storyblok/astro/StoryblokComponent.astro";
+
+
+const { slug } = Astro.params;
+if (!slug) {
+    return Astro.redirect("/404");
+}
+
+let blok;
+
+try {
+    const data = await getBlogPost(slug);
+
+    if (data?.story?.content) {
+        blok = data.story.content;
+    }
+} catch (error: any) {
+    if (error?.status === 404) {
+        return Astro.redirect("/404");
+    }
+}
+
+const title = blok?.title;
+---
+
+<BaseLayout title={title}>
+    <main
+        class="p-0 md:container grid items-center mx-8 md:mx-auto md:max-w-screen-md"
+    >
+        {blok && <StoryblokComponent blok={blok} />}
+    </main>
+</BaseLayout>

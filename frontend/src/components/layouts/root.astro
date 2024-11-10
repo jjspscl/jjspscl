@@ -1,0 +1,27 @@
+---
+import { ViewTransitions } from "astro:transitions";
+
+import "@styles/tailwind.css";
+import "@styles/animate.css";
+
+interface Props {
+  title?: string;
+}
+
+const { title } = Astro.props;
+const language = Astro.url.searchParams.get("lang") as string;
+---
+<html lang={language === "en-ph" ? "tl" : "en"}>
+    <head>
+        <meta charset="utf-8" />
+        <link href="/favicon.svg" rel="icon" type="image/svg+xml" />
+        <meta content="width=device-width" name="viewport" />
+        <meta content={Astro.generator} name="generator" />
+        <title>jjspscl {title && `| ${title}`}</title>
+        <link href="/sitemap-index.xml" rel="sitemap" />
+        <ViewTransitions />
+    </head>
+    <body class="flex flex-col min-h-screen">
+        <slot/>
+    </body>
+</html>

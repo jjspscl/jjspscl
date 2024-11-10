@@ -1,17 +1,19 @@
 ---
-
+import Root from "@components/layouts/root.astro";
 ---
 
-<html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <link href="/favicon.svg" rel="icon" type="image/svg+xml" />
-        <meta content="width=device-width" name="viewport" />
-
-        <meta content={Astro.generator} name="generator" />
-        <title>Astro</title>
-    </head>
-    <body>
-        <h1>Astro</h1>
-    </body>
-</html>
+<Root>
+    <main
+        class="flex-1 container mx-auto md:mx-auto md:max-w-screen-md flex flex-col justify-center"
+    >
+        <section>
+            <h1 class="text-9xl font-bold mb-10 highlight-text">
+        this is a home page.
+            </h1>
+        </section>
+        <section>
+            <a class="text-4xl font-bold pr-4" href="/blog">blog</a>
+            <a class="text-4xl font-bold pr-4" href="/projects">projects</a>
+        </section>
+    </main>
+</Root>
