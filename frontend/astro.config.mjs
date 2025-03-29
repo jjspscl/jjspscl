@@ -1,7 +1,7 @@
 // @ts-check
 import react from '@astrojs/react';
 import tailwind from '@astrojs/tailwind';
-import storyblok from '@storyblok/astro';
+import { storyblok } from '@storyblok/astro';
 import { defineConfig } from 'astro/config';
 import { loadEnv } from 'vite';
 
@@ -10,6 +10,9 @@ const env = loadEnv(process.env.NODE_ENV ?? "", process.cwd(), ['STORYBLOK']);
 // https://astro.build/config
 export default defineConfig({
     site: 'https://jjspscl.com',
+    server: {
+        allowedHosts: true
+    },
     output: "server",
     prefetch: true,
     integrations: [

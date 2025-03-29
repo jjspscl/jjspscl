@@ -1,5 +1,5 @@
 ---
-import { ViewTransitions } from "astro:transitions";
+import { ClientRouter } from "astro:transitions";
 
 import "@styles/tailwind.css";
 import "@styles/animate.css";
@@ -19,7 +19,7 @@ const language = Astro.url.searchParams.get("lang") as string;
         <meta content={Astro.generator} name="generator" />
         <title>jjspscl {title && `| ${title}`}</title>
         <link href="/sitemap-index.xml" rel="sitemap" />
-        <ViewTransitions />
+        <ClientRouter />
     </head>
     <body class="flex flex-col min-h-screen">
         <slot/>

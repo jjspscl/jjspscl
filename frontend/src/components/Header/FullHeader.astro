@@ -1,0 +1,26 @@
+---
+import { links } from "../../lib/constants/links";
+
+---
+
+<header>
+    <nav class="bg-vhs-cream text-vhs-black py-4">
+        <div class="container mx-auto flex justify-center">
+            <div class="flex justify-between items-center">
+                <div class="flex gap-x-4">
+                    {
+                        links.map(({ href, text }) => (
+                            <a 
+                                class="text-lg font-bold hover:underline" 
+                                data-astro-prefetch
+                                href={href}  
+                            >
+                                {text}
+                            </a>
+                        ))
+                    }
+                </div>
+            </div>
+        </div>
+    </nav>
+</header>

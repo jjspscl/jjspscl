@@ -1,19 +1,48 @@
 ---
+import MyImage from "@components/assets/Me.astro";
 import Root from "@components/layouts/root.astro";
+
+import { links } from "../lib/constants/links";
+import { TRANSITION_NAMES } from "../lib/constants/transition";
+
 ---
 
 <Root>
     <main
-        class="flex-1 container mx-auto md:mx-auto md:max-w-screen-md flex flex-col justify-center"
+        class="flex-1 container mx-auto flex flex-col justify-center items-center"
     >
-        <section>
-            <h1 class="text-9xl font-bold mb-10 highlight-text">
-        this is a home page.
-            </h1>
+        <section class="flex justify-center mb-10">
+            <div class="flex flex-col sm:flex-row items-center">
+                <span class="mb-10 sm:mb-0" transition:name={TRANSITION_NAMES.MY_IMAGE}>
+                    <a 
+                        aria-label="Go to me"             
+                        class="flex items-center"
+                        href="/me"
+                    >
+                        <MyImage/>
+                    </a>
+                </span>
+                <a 
+                    aria-label="Go to me"             
+                    class="flex items-center"
+                    href="/me"
+                >
+                    <h1 class="text-6xl sm:text-9xl font-bold mb-10 highlight-text sm:ml-10 text-center sm:text-left">i'm <br/>joshua</h1>
+                </a>
+            </div>
         </section>
-        <section>
-            <a class="text-4xl font-bold pr-4" href="/blog">blog</a>
-            <a class="text-4xl font-bold pr-4" href="/projects">projects</a>
+        <section class="flex justify-center">
+            {
+                links.map(({ href, text }) => (
+                    <a 
+                        class="text-4xl font-bold pr-4 hover:underline" 
+                        data-astro-prefetch
+                        href={href}  
+                    >
+                        {text}
+                    </a>
+                ))
+            }
         </section>
     </main>
 </Root>
