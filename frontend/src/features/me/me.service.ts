@@ -1,6 +1,5 @@
 import type {
   ISbResponse,
-  ISbResponses,
   ISbResult,
 } from "../storyblok/storyblok.types";
 import { getStoryblokVersion, storyblokApi } from "../storyblok/utils";

@@ -3,7 +3,7 @@ import Base from "@components/layouts/base.astro";
 import { getBlogPosts } from "@features/blog/blog.service";
 import BlogCard from "@features/blog/components/BlogCard.astro";
 
-import type { IBlog } from "@sb/blog/blog.type";
+import type { IBlog } from "../../features/blog/blog.type";
 import type { ISbResult } from "@sb/storyblok.types";
 
 let stories: ISbResult<IBlog>[] = [];
