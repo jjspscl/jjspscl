@@ -1,11 +1,12 @@
 import type { ISbResponses, ISbResult } from "@sb/storyblok.types";
-import { getStoryblokVersion, storyblokApi } from "@sb/utils";
+import { getStoryblokVersion } from "@sb/utils";
 import type { IProject } from "./project.type";
+import { storyBlokClient } from "../storyblok/client";
 
 
 export const getProjects = async () => {
     let projectData: ISbResult<IProject>[] = [];
-    const res = await storyblokApi.get("cdn/stories", {
+    const res = await storyBlokClient.get("cdn/stories", {
         starts_with: "projects/",
         sort_by: "first_published_at:desc",
         content_type: "project",

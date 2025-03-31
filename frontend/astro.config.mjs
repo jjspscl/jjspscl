@@ -3,14 +3,21 @@ import cloudflare from '@astrojs/cloudflare';
 import react from '@astrojs/react';
 import tailwind from '@astrojs/tailwind';
 import { storyblok } from '@storyblok/astro';
-import { defineConfig } from 'astro/config';
+import { defineConfig, envField } from 'astro/config';
 import { loadEnv } from 'vite';
 const env = loadEnv(process.env.NODE_ENV ?? "", process.cwd(), "");
 
 // https://astro.build/config
 export default defineConfig({
     site: "https://jjspscl.com",
-
+    env: {
+        schema: {
+            STORYBLOK_TOKEN: envField.string({
+                context: "server",
+                access: "secret",
+            })
+        }
+    },
     server: {
         allowedHosts: true,
     },
@@ -18,12 +25,13 @@ export default defineConfig({
     output: "server",
     adapter: cloudflare({
         platformProxy: {
-            enabled: true,
+            enabled: true
         },
     }),
     prefetch: true,
-    build: {},
-
+    build: {
+        
+    },
     integrations: [
         tailwind(),
         react(),

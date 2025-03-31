@@ -11,7 +11,7 @@ export default [
             "import": pluginImport,
         },
         rules: {
-            "astro/no-set-html-directive": "warn",
+            "astro/no-set-html-directive": "off",
             "no-unused-vars": "off",
             "unused-imports/no-unused-imports": "error",
             "unused-imports/no-unused-vars": [
