@@ -4,3 +4,7 @@ Allow: /
 
 # Sitemaps
 Sitemap: https://jjspscl.com/sitemap-index.xml
+
+# LLMs.txt - AI/LLM friendly content
+# https://llmstxt.org/
+LLMsTxt: https://jjspscl.com/llms.txt

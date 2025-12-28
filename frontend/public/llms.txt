@@ -1,0 +1,35 @@
+# Joshua Pascual
+
+> Joshua Pascual (jjspscl) is a Software Developer based in the Philippines, passionate about building modern web applications. This is his personal portfolio website showcasing his projects, blog posts, and professional experience.
+
+## About
+
+Joshua Pascual is a full-stack developer with expertise in modern web technologies including TypeScript, React, Astro, and Node.js. He is passionate about creating performant, accessible, and user-friendly web applications.
+
+Key information:
+- **Name**: Joshua Pascual
+- **Handle**: jjspscl
+- **Role**: Software Developer
+- **Location**: Philippines
+- **Website**: https://jjspscl.com
+
+## Pages
+
+- [Home](https://jjspscl.com/): Main landing page with introduction and navigation
+- [About](https://jjspscl.com/about): Detailed information about Joshua's background, skills, and experience
+- [Blog](https://jjspscl.com/blog): Technical blog posts about software development, programming tutorials, and learning journeys
+- [Projects](https://jjspscl.com/projects): Portfolio of software projects and applications built by Joshua
+- [Contact](https://jjspscl.com/contact): Contact form and information to get in touch with Joshua
+
+## Technical Stack
+
+This portfolio website is built with:
+- **Framework**: Astro (static site generator with islands architecture)
+- **Styling**: Tailwind CSS
+- **CMS**: Storyblok (headless CMS)
+- **Hosting**: Cloudflare Pages
+- **Language**: TypeScript
+
+## Optional
+
+- [GitHub Profile](https://github.com/jjspscl): Source code repositories and open source contributions
