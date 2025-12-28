@@ -1,5 +1,5 @@
 import { useForm } from "@tanstack/react-form";
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import { z } from "zod";
 import {
   nameSchema,
@@ -16,6 +16,46 @@ interface ContactFormProps {
 type FormStep = "name" | "email" | "message" | "success";
 
 const STEP_ORDER: FormStep[] = ["name", "email", "message"];
+
+const REDIRECT_DELAY_MS = 5000;
+
+function SuccessMessage() {
+  const [countdown, setCountdown] = useState(Math.ceil(REDIRECT_DELAY_MS / 1000));
+
+  useEffect(() => {
+    const redirectTimer = setTimeout(() => {
+      window.location.href = "/";
+    }, REDIRECT_DELAY_MS);
+
+    const countdownInterval = setInterval(() => {
+      setCountdown((prev) => Math.max(0, prev - 1));
+    }, 1000);
+
+    return () => {
+      clearTimeout(redirectTimer);
+      clearInterval(countdownInterval);
+    };
+  }, []);
+
+  return (
+    <div className="flex min-h-[400px] flex-col items-center justify-center">
+      <div className="text-center animate-typeform-scale">
+        <div className="mb-4 text-5xl animate-typeform-check">✓</div>
+        <h2 className="mb-2 text-2xl font-bold text-white animate-typeform-fade" style={{ animationDelay: "0.2s", animationFillMode: "backwards" }}>Message Sent!</h2>
+        <p className="text-gray-400 animate-typeform-fade" style={{ animationDelay: "0.4s", animationFillMode: "backwards" }}>
+          Thanks for reaching out. I'll get back to you soon.
+        </p>
+        <div className="mt-6 flex items-center justify-center gap-2 text-gray-500 animate-typeform-fade" style={{ animationDelay: "0.6s", animationFillMode: "backwards" }}>
+          <svg className="h-4 w-4 animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+          <span className="text-sm">Redirecting in {countdown}s...</span>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export function ContactForm({ turnstileToken, onTurnstileReset }: ContactFormProps) {
   const [currentStep, setCurrentStep] = useState<FormStep>("name");
@@ -98,17 +138,7 @@ export function ContactForm({ turnstileToken, onTurnstileReset }: ContactFormPro
   );
 
   if (currentStep === "success") {
-    return (
-      <div className="flex min-h-[400px] flex-col items-center justify-center">
-        <div className="text-center animate-typeform-scale">
-          <div className="mb-4 text-5xl animate-typeform-check">✓</div>
-          <h2 className="mb-2 text-2xl font-bold text-white animate-typeform-fade" style={{ animationDelay: "0.2s", animationFillMode: "backwards" }}>Message Sent!</h2>
-          <p className="text-gray-400 animate-typeform-fade" style={{ animationDelay: "0.4s", animationFillMode: "backwards" }}>
-            Thanks for reaching out. I'll get back to you soon.
-          </p>
-        </div>
-      </div>
-    );
+    return <SuccessMessage />;
   }
 
   return (
