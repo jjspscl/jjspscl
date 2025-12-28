@@ -1,5 +1,5 @@
 import { TURNSTILE_VERIFY_URL } from "./contact.constant";
-import { checkAndIncrementDailyLimit, storeContactSubmission } from "./contact.db";
+import { checkAndIncrementDailyLimit, checkDailyLimit, storeContactSubmission } from "./contact.db";
 import type {
   ContactSubmissionData,
   ContactSubmissionMetadata,
@@ -56,6 +56,10 @@ export async function verifyTurnstileToken(token: string): Promise<TurnstileVeri
 
 export async function checkRateLimit(ip: string): Promise<DailyLimitResult> {
   return checkAndIncrementDailyLimit(getDatabase(), ip);
+}
+
+export async function getRateLimitStatus(ip: string): Promise<DailyLimitResult> {
+  return checkDailyLimit(getDatabase(), ip);
 }
 
 export async function submitContactForm(

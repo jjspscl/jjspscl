@@ -10,17 +10,19 @@ import {
     setTurnstileSecretKey,
     verifyTurnstileToken,
     checkRateLimit,
+    getRateLimitStatus,
     submitContactForm,
 } from "../../features/contact";
 
+const headers = Astro.request.headers;
+const ip = headers.get("CF-Connecting-IP") || headers.get("X-Forwarded-For") || "unknown";
+setDatabase(Astro.locals.runtime?.env?.DB);
+setTurnstileSecretKey(TURNSTILE_SECRET_KEY);
+
+const initialRateLimitStatus = await getRateLimitStatus(ip);
+
 if (Astro.request.method === "POST") {
     const contentType = Astro.request.headers.get("Content-Type") || "";
-    const headers = Astro.request.headers;
-    const ip = headers.get("CF-Connecting-IP") || headers.get("X-Forwarded-For") || "unknown";
-    
-    // Initialize the contact service
-    setDatabase(Astro.locals.runtime?.env?.DB);
-    setTurnstileSecretKey(TURNSTILE_SECRET_KEY);
 
     try {
         let rawData: { name?: string; email?: string; message?: string; turnstileToken?: string };
@@ -71,9 +73,8 @@ if (Astro.request.method === "POST") {
         });
         
         if (!validationResult.success) {
-            const errors = validationResult.error.errors.map(e => e.message).join(", ");
             return new Response(
-                JSON.stringify({ error: errors }),
+                JSON.stringify({ error: validationResult.error.errors.map(e => e.message).join(", ") }),
                 { status: 400, headers: { "Content-Type": "application/json" } }
             );
         }
@@ -104,12 +105,21 @@ if (Astro.request.method === "POST") {
 }
 
 const siteKey = TURNSTILE_SITE_KEY;
+const isRateLimited = !initialRateLimitStatus.allowed;
 ---
 <Base>
     <main class="container mx-auto md:mx-auto md:max-w-screen-md h-full py-10 px-4">
         <section class="max-w-xl mx-auto">
-            <h1 class="text-3xl md:text-4xl font-bold text-center mb-8">Contact</h1>
-            <ContactFormWrapper client:load turnstileSiteKey={siteKey} />
+            {isRateLimited ? (
+                <div class="text-center">
+                    <div class="bg-amber-500/10 border border-amber-500/30 text-amber-400 px-6 py-4 rounded-lg">
+                        <p class="font-medium">Daily message limit reached</p>
+                        <p class="text-sm mt-2 text-amber-400/80">You've already sent your message for today. Please try again tomorrow.</p>
+                    </div>
+                </div>
+            ) : (
+                <ContactFormWrapper client:load turnstileSiteKey={siteKey} />
+            )}
         </section>
     </main>
 </Base>

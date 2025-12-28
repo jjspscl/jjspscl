@@ -52,6 +52,37 @@ export async function checkAndIncrementDailyLimit(
   }
 }
 
+export async function checkDailyLimit(
+  db: D1Database | undefined,
+  ip: string
+): Promise<DailyLimitResult> {
+  if (!db) {
+    console.warn("D1 database not available, skipping rate limit check");
+    return { allowed: true, remaining: DAILY_LIMIT };
+  }
+
+  const today = new Date().toISOString().split("T")[0];
+
+  try {
+    const existing = await db
+      .prepare("SELECT count FROM daily_limits WHERE ip_address = ? AND date = ?")
+      .bind(ip, today)
+      .first<{ count: number }>();
+
+    if (existing) {
+      if (existing.count >= DAILY_LIMIT) {
+        return { allowed: false, remaining: 0 };
+      }
+      return { allowed: true, remaining: DAILY_LIMIT - existing.count };
+    }
+
+    return { allowed: true, remaining: DAILY_LIMIT };
+  } catch (error) {
+    console.error("D1 rate limit check error:", error);
+    return { allowed: true, remaining: DAILY_LIMIT, error: "An unexpected error occurred. Please try again." };
+  }
+}
+
 export async function storeContactSubmission(
   db: D1Database | undefined,
   data: ContactSubmissionData,

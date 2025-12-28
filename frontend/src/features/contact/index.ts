@@ -12,6 +12,7 @@ export {
   setTurnstileSecretKey,
   verifyTurnstileToken,
   checkRateLimit,
+  getRateLimitStatus,
   submitContactForm,
 } from "./contact.service";
 

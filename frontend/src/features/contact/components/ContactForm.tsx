@@ -46,6 +46,7 @@ export function ContactForm({ turnstileToken, onTurnstileReset }: ContactFormPro
         setSubmitError(
           error instanceof Error ? error.message : "Something went wrong"
         );
+        onTurnstileReset?.();
       } finally {
         setIsSubmitting(false);
       }
