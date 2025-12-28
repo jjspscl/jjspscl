@@ -152,8 +152,6 @@ const isRateLimited = !initialRateLimitStatus.allowed;
 
                         document.addEventListener('astro:before-preparation', cleanup);
                         document.addEventListener('astro:before-swap', cleanup);
-                        
-                        // Fallback for traditional navigation
                         window.addEventListener('beforeunload', cleanup);
                         window.addEventListener('pagehide', cleanup);
                     })();
