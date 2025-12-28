@@ -72,7 +72,7 @@ const imageURL = new URL(image, Astro.site);
         <link rel="alternate" type="text/markdown" href="/llms.txt" title="LLM-friendly site information" />
         
         <!-- JSON-LD Structured Data -->
-        <script type="application/ld+json" set:html={JSON.stringify({
+        <script is:inline type="application/ld+json" set:html={JSON.stringify({
             "@context": "https://schema.org",
             "@type": "Person",
             "name": "Joshua Pascual",

@@ -4,7 +4,8 @@ import unusedImports from "eslint-plugin-unused-imports";
 
 /** @type { import("eslint").Linter.Config[] } */
 export default [
-    ...eslintPluginAstro.configs.all,
+    ...eslintPluginAstro.configs.recommended,
+    ...eslintPluginAstro.configs["jsx-a11y-recommended"],
     {   
         plugins: {
             "unused-imports": unusedImports,
@@ -23,7 +24,6 @@ export default [
                     argsIgnorePattern: "^_",
                 },
             ],
-            indent: ["error", 4],
             semi: ["error", "always"],
             "import/order": [
                 "warn",
