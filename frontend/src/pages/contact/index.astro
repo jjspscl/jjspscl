@@ -1,47 +1,23 @@
 ---
 import { TURNSTILE_SITE_KEY } from "astro:env/client";
-import { TURNSTILE_SECRET_KEY } from "astro:env/server";
 
 import Base from "../../components/layouts/base.astro";
-import { ContactFormWrapper, contactFormSchema } from "../../features/contact";
-import { checkAndIncrementDailyLimit, storeContactSubmission } from "../../features/db";
-
-const TURNSTILE_VERIFY_URL = "https://challenges.cloudflare.com/turnstile/v0/siteverify";
-
-interface TurnstileResponse {
-    success: boolean;
-    "error-codes"?: string[];
-}
-
-async function verifyTurnstileToken(token: string): Promise<{ success: boolean; error?: string }> {
-    try {
-        const formData = new FormData();
-        formData.append("secret", TURNSTILE_SECRET_KEY);
-        formData.append("response", token);
-
-        const response = await fetch(TURNSTILE_VERIFY_URL, {
-            method: "POST",
-            body: formData,
-        });
-
-        if (!response.ok) {
-            return { success: false, error: "Turnstile service unavailable" };
-        }
-
-        const result = (await response.json()) as TurnstileResponse;
-        return { success: result.success, error: result["error-codes"]?.join(", ") };
-    } catch (error) {
-        console.error("Turnstile verification error:", error);
-        return { success: false, error: "Failed to verify token" };
-    }
-}
+import {
+    ContactFormWrapper,
+    contactFormSchema,
+    setDatabase,
+    verifyTurnstileToken,
+    checkRateLimit,
+    submitContactForm,
+} from "../../features/contact";
 
 if (Astro.request.method === "POST") {
     const contentType = Astro.request.headers.get("Content-Type") || "";
     const headers = Astro.request.headers;
     const ip = headers.get("CF-Connecting-IP") || headers.get("X-Forwarded-For") || "unknown";
     
-    const db = Astro.locals.runtime?.env?.DB;
+    // Initialize the database for the contact service
+    setDatabase(Astro.locals.runtime?.env?.DB);
 
     try {
         let rawData: { name?: string; email?: string; message?: string; turnstileToken?: string };
@@ -76,7 +52,7 @@ if (Astro.request.method === "POST") {
             );
         }
 
-        const limitCheck = await checkAndIncrementDailyLimit(db, ip);
+        const limitCheck = await checkRateLimit(ip);
         
         if (!limitCheck.allowed) {
             return new Response(
@@ -109,9 +85,7 @@ if (Astro.request.method === "POST") {
             turnstileToken,
         };
 
-        await storeContactSubmission(db, { name, email, message }, metadata);
-
-        console.log("Contact form submission:", { name, email, message, metadata, remaining: limitCheck.remaining });
+        await submitContactForm({ name, email, message }, metadata);
 
         return new Response(
             JSON.stringify({ success: true, remaining: limitCheck.remaining }),
