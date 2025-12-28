@@ -1,5 +1,8 @@
 ---
 import { storyblokEditable, renderRichText } from "@storyblok/astro";
+import ArticleTag from "./ArticleTag.astro";
+
+import type { IArticleTagResolved } from "../blog.type";
 
 export const prerender = false;
 interface Props {
@@ -8,6 +11,7 @@ interface Props {
 }
 const { blok, slug } = Astro.props;
 const renderedRichText = renderRichText(blok.content);
+const tags = (blok.tags || []) as IArticleTagResolved[];
 ---
 
 <style is:inline>
@@ -71,6 +75,17 @@ const renderedRichText = renderRichText(blok.content);
         <p class="text-base text-text-secondary mb-4">
             {blok.created_at}
         </p>
+        {tags.length > 0 && (
+            <div class="flex flex-wrap gap-2 mb-6">
+                {tags.map((tag) => (
+                    <ArticleTag 
+                        tag={tag.content} 
+                        href={`/blog?tags=${encodeURIComponent(tag.content.title)}`}
+                        colorful 
+                    />
+                ))}
+            </div>
+        )}
         <h2 class="text-xl md:text-2xl font-semibold mb-6">
             {blok.subtitle}
         </h2>

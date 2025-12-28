@@ -1,0 +1,65 @@
+---
+import Base from "@components/layouts/base.astro";
+import { getAllTags } from "@features/blog/blog.service";
+import { getTagColor } from "@features/blog/blog.type";
+
+let allTags: Awaited<ReturnType<typeof getAllTags>> = [];
+
+try {
+    allTags = await getAllTags();
+} catch (error: any) {
+    if (error?.status === 404) {
+        return Astro.redirect("/404");
+    }
+}
+
+const title = "Blog Tags";
+const description = "Browse all article tags";
+---
+
+<Base title={title} description={description}>
+    <main class="container mx-auto max-w-screen-md">
+        {allTags.length > 0 ? (
+            <section class="flex flex-wrap gap-3">
+                {allTags.map((tagStory) => {
+                    const tag = tagStory.content;
+                    const color = getTagColor(tag._uid || tag.title);
+                    const href = `/blog?tags=${encodeURIComponent(tag.title)}`;
+                    return (
+                        <a 
+                            href={href}
+                            class:list={[
+                                "inline-flex items-center rounded overflow-hidden text-sm font-semibold uppercase tracking-wide transition-opacity hover:opacity-80",
+                                color.bg,
+                                color.bgDark,
+                            ]}
+                        >
+                            {tag.icon?.filename && (
+                                <span class:list={[
+                                    "flex items-center justify-center px-3 py-2",
+                                    "bg-black/20 dark:bg-white/10"
+                                ]}>
+                                    <img
+                                        src={tag.icon.filename}
+                                        alt={tag.icon.alt || tag.title}
+                                        class="w-5 h-5 dark:invert"
+                                        loading="lazy"
+                                    />
+                                </span>
+                            )}
+                            <span class:list={[
+                                "px-3 py-2",
+                                color.text,
+                                color.textDark
+                            ]}>
+                                {tag.title}
+                            </span>
+                        </a>
+                    );
+                })}
+            </section>
+        ) : (
+            <p class="text-text-secondary text-center py-8">No tags found.</p>
+        )}
+    </main>
+</Base>

@@ -6,12 +6,18 @@ import BlogCard from "@features/blog/components/BlogCard.astro";
 import type { IBlog } from "../../features/blog/blog.type";
 import type { ISbResult } from "@sb/storyblok.types";
 
-let stories: ISbResult<IBlog>[] = [];
-try {
-    const data = await getBlogPosts();
+const url = new URL(Astro.request.url);
+const tagsParam = url.searchParams.get("tags");
+const filterTags = tagsParam ? tagsParam.split(",").filter(Boolean) : [];
 
-    if (data) {
-        stories = data;
+let stories: ISbResult<IBlog>[] = [];
+
+try {
+    const blogData = await getBlogPosts({
+        tags: filterTags.length > 0 ? filterTags : undefined
+    });
+    if (blogData) {
+        stories = blogData;
     }
 } catch (error: any) {
     if (error?.status === 404) {
@@ -23,13 +29,13 @@ try {
 <Base>
     <main class="container mx-auto max-w-screen-md">
         <section class="grid gap-4 mb-10">
-            {
-                stories.map((story) => {
-                    return (
-                        <BlogCard blog={story.content} slug={story.slug} />
-                    );
-                })
-            }
+            {stories.length > 0 ? (
+                stories.map((story) => (
+                    <BlogCard blog={story.content} slug={story.slug} />
+                ))
+            ) : (
+                <p class="text-text-secondary text-center py-8">No articles found.</p>
+            )}
         </section>
     </main>
 </Base>

@@ -55,6 +55,7 @@ export default defineConfig({
             componentsDir: "src/features",
             components: {
                 article: "blog/components/Blog",
+                "article-tag": "blog/components/ArticleTag",
             },
             apiOptions: {
                 region: "ap",

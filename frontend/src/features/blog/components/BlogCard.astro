@@ -1,6 +1,8 @@
 ---
 import Card from "@components/Card";
 
+import ArticleTag from "./ArticleTag.astro";
+
 import type { IBlog } from "@features/blog/blog.type";
 
 interface Props {
@@ -10,10 +12,22 @@ interface Props {
 
 const { blog, slug } = Astro.props;
 const href = `/blog/${slug}`;
+const tags = blog.tags || [];
 ---
 <Card>
     <h2 class="text-xl md:text-2xl font-bold mb-2">{blog.title}</h2>
-    <p class="text-base text-text-secondary mb-5">{blog.headline}</p>
+    <p class="text-base text-text-secondary mb-4">{blog.headline}</p>
+    {tags.length > 0 && (
+        <div class="flex flex-wrap gap-2 mb-4">
+            {tags.map((tag) => (
+                <ArticleTag 
+                    tag={tag.content} 
+                    href={`/blog?tags=${encodeURIComponent(tag.content.title)}`}
+                    colorful 
+                />
+            ))}
+        </div>
+    )}
     <a class="grid gap-4 hover:underline" 
         data-astro-prefetch href={href}
     >
