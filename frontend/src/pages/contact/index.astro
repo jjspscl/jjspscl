@@ -3,13 +3,16 @@ import { TURNSTILE_SITE_KEY } from "astro:env/client";
 import { TURNSTILE_SECRET_KEY } from "astro:env/server";
 
 import Base from "../../components/layouts/base.astro";
+import { ContactFormWrapper, contactFormSchema } from "../../features/contact";
+import { checkAndIncrementDailyLimit, storeContactSubmission } from "../../features/db";
 
 const TURNSTILE_VERIFY_URL = "https://challenges.cloudflare.com/turnstile/v0/siteverify";
 
-let errorMessage = "";
-let successMessage = "";
+interface TurnstileResponse {
+    success: boolean;
+    "error-codes"?: string[];
+}
 
-// Helper function to verify Turnstile token
 async function verifyTurnstileToken(token: string): Promise<{ success: boolean; error?: string }> {
     try {
         const formData = new FormData();
@@ -25,7 +28,7 @@ async function verifyTurnstileToken(token: string): Promise<{ success: boolean; 
             return { success: false, error: "Turnstile service unavailable" };
         }
 
-        const result = await response.json();
+        const result = (await response.json()) as TurnstileResponse;
         return { success: result.success, error: result["error-codes"]?.join(", ") };
     } catch (error) {
         console.error("Turnstile verification error:", error);
@@ -33,150 +36,103 @@ async function verifyTurnstileToken(token: string): Promise<{ success: boolean; 
     }
 }
 
-// Handle POST requests (form submission only)
 if (Astro.request.method === "POST") {
+    const contentType = Astro.request.headers.get("Content-Type") || "";
+    const headers = Astro.request.headers;
+    const ip = headers.get("CF-Connecting-IP") || headers.get("X-Forwarded-For") || "unknown";
+    
+    const db = Astro.locals.runtime?.env?.DB;
+
     try {
-        const formData = await Astro.request.formData();
-        const turnstileToken = formData.get("cf-turnstile-response")?.toString();
+        let rawData: { name?: string; email?: string; message?: string; turnstileToken?: string };
+
+        if (contentType.includes("application/json")) {
+            rawData = await Astro.request.json();
+        } else {
+            const formData = await Astro.request.formData();
+            rawData = {
+                name: formData.get("name")?.toString().trim(),
+                email: formData.get("email")?.toString().trim(),
+                message: formData.get("message")?.toString().trim(),
+                turnstileToken: formData.get("cf-turnstile-response")?.toString(),
+            };
+        }
+
+        const turnstileToken = rawData.turnstileToken;
 
         if (!turnstileToken) {
-            errorMessage = "Please complete the verification challenge.";
-        } else {
-            // Verify Turnstile token for form submission
-            const verification = await verifyTurnstileToken(turnstileToken);
-            
-            if (!verification.success) {
-                errorMessage = "Security verification failed. Please try again.";
-            } else {
-                // Process form data
-                const name = formData.get("name")?.toString().trim();
-                const email = formData.get("email")?.toString().trim();
-                const message = formData.get("message")?.toString().trim();
-
-                if (!name || !email || !message) {
-                    errorMessage = "Please fill in all fields.";
-                } else {
-                    // TODO: Send email or store message
-                    console.log("Contact form submission:", { name, email, message });
-                    successMessage = "Thank you for your message! I'll get back to you soon.";
-                }
-            }
+            return new Response(
+                JSON.stringify({ error: "Please complete the verification challenge." }),
+                { status: 400, headers: { "Content-Type": "application/json" } }
+            );
         }
+
+        const verification = await verifyTurnstileToken(turnstileToken);
+        
+        if (!verification.success) {
+            return new Response(
+                JSON.stringify({ error: "Security verification failed. Please try again." }),
+                { status: 400, headers: { "Content-Type": "application/json" } }
+            );
+        }
+
+        const limitCheck = await checkAndIncrementDailyLimit(db, ip);
+        
+        if (!limitCheck.allowed) {
+            return new Response(
+                JSON.stringify({ error: "Daily message limit reached. Please try again tomorrow." }),
+                { status: 429, headers: { "Content-Type": "application/json" } }
+            );
+        }
+
+        const validationResult = contactFormSchema.safeParse({
+            name: rawData.name?.trim() ?? "",
+            email: rawData.email?.trim() ?? "",
+            message: rawData.message?.trim() ?? "",
+        });
+        
+        if (!validationResult.success) {
+            const errors = validationResult.error.errors.map(e => e.message).join(", ");
+            return new Response(
+                JSON.stringify({ error: errors }),
+                { status: 400, headers: { "Content-Type": "application/json" } }
+            );
+        }
+
+        const { name, email, message } = validationResult.data;
+
+        const metadata = {
+            ip,
+            userAgent: headers.get("User-Agent") || "unknown",
+            country: headers.get("CF-IPCountry") || "unknown",
+            city: headers.get("CF-IPCity") || "unknown",
+            turnstileToken,
+        };
+
+        await storeContactSubmission(db, { name, email, message }, metadata);
+
+        console.log("Contact form submission:", { name, email, message, metadata, remaining: limitCheck.remaining });
+
+        return new Response(
+            JSON.stringify({ success: true, remaining: limitCheck.remaining }),
+            { status: 200, headers: { "Content-Type": "application/json" } }
+        );
     } catch (error) {
         console.error("Error processing request:", error);
-        errorMessage = "An error occurred. Please try again later.";
+        return new Response(
+            JSON.stringify({ error: "An error occurred. Please try again later." }),
+            { status: 500, headers: { "Content-Type": "application/json" } }
+        );
     }
 }
 
 const siteKey = TURNSTILE_SITE_KEY;
 ---
 <Base>
-    <script async defer is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js"></script>
-    
     <main class="container mx-auto md:mx-auto md:max-w-screen-md h-full py-10 px-4">
-        <section class="max-w-lg mx-auto">
+        <section class="max-w-xl mx-auto">
             <h1 class="text-3xl md:text-4xl font-bold text-center mb-8">Contact</h1>
-            
-            {successMessage ? (
-                <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
-                    {successMessage}
-                </div>
-            ) : (
-                <>
-                    {errorMessage && (
-                        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-                            {errorMessage}
-                        </div>
-                    )}
-
-                    <!-- Verification Gate -->
-                    <div class="text-center" id="verification-gate">
-                        <p class="text-base text-text-secondary mb-6">
-                            Please verify you're human to access the contact form.
-                        </p>
-                        <div class="flex justify-center">
-                            <div 
-                                aria-label="Security verification"
-                                class="cf-turnstile" 
-                                data-callback="onTurnstileSuccess"
-                                data-sitekey={siteKey}
-                                data-theme="auto"
-                            ></div>
-                        </div>
-                    </div>
-
-                    <!-- Contact Form (hidden initially) -->
-                    <form class="space-y-6 hidden" id="contact-form" method="POST">
-                        <div>
-                            <label class="block text-sm font-medium mb-2" for="name" id="name-label">Name</label>
-                            <input
-                                aria-labelledby="name-label"
-                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
-                                id="name"
-                                name="name"
-                                required
-                                type="text"
-                            />
-                        </div>
-
-                        <div>
-                            <label class="block text-sm font-medium mb-2" for="email" id="email-label">Email</label>
-                            <input
-                                aria-labelledby="email-label"
-                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
-                                id="email"
-                                name="email"
-                                required
-                                type="email"
-                            />
-                        </div>
-
-                        <div>
-                            <label class="block text-sm font-medium mb-2" for="message" id="message-label">Message</label>
-                            <textarea
-                                aria-labelledby="message-label"
-                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white resize-none"
-                                id="message"
-                                name="message"
-                                required
-                                rows="5"
-                            ></textarea>
-                        </div>
-
-                        <!-- Hidden Turnstile token field -->
-                        <input id="turnstile-token" name="cf-turnstile-response" type="hidden" />
-
-                        <button
-                            class="w-full bg-vhs-blue hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-colors"
-                            type="submit"
-                        >
-                            Send Message
-                        </button>
-                    </form>
-                </>
-            )}
+            <ContactFormWrapper client:load turnstileSiteKey={siteKey} />
         </section>
     </main>
-
-    <script is:inline>
-        window.onTurnstileSuccess = function(token) {
-            // Hide verification gate
-            const gate = document.getElementById('verification-gate');
-            if (gate) {
-                gate.classList.add('hidden');
-            }
-
-            // Show contact form
-            const form = document.getElementById('contact-form');
-            if (form) {
-                form.classList.remove('hidden');
-            }
-
-            // Store the token for form submission
-            const tokenInput = document.getElementById('turnstile-token');
-            if (tokenInput) {
-                tokenInput.value = token;
-            }
-        };
-    </script>
 </Base>
