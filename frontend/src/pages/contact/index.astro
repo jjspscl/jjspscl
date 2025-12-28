@@ -111,12 +111,53 @@ const isRateLimited = !initialRateLimitStatus.allowed;
     <main class="container mx-auto md:mx-auto md:max-w-screen-md h-full py-10 px-4">
         <section class="max-w-xl mx-auto">
             {isRateLimited ? (
-                <div class="text-center">
-                    <div class="bg-amber-500/10 border border-amber-500/30 text-amber-400 px-6 py-4 rounded-lg">
-                        <p class="font-medium">Daily message limit reached</p>
-                        <p class="text-sm mt-2 text-amber-400/80">You've already sent your message for today. Please try again tomorrow.</p>
+                <div class="flex min-h-[400px] flex-col items-center justify-center">
+                    <div class="text-center">
+                        <div class="mb-4 text-5xl">✓</div>
+                        <h2 class="mb-2 text-2xl font-bold text-white">Message Already Sent!</h2>
+                        <p class="text-gray-400">
+                            You've already sent your message for today. Please try again tomorrow.
+                        </p>
+                        <div class="mt-6 flex items-center justify-center gap-2 text-gray-500" id="redirect-container">
+                            <svg class="h-4 w-4 animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                            <span class="text-sm">Redirecting in <span id="countdown">5</span>s...</span>
+                        </div>
                     </div>
                 </div>
+                <script>
+                    (() => {
+                        const countdownEl = document.getElementById('countdown');
+                        let count = 5;
+                        let redirectCancelled = false;
+                        
+                        const interval = setInterval(() => {
+                            if (redirectCancelled) return;
+                            count--;
+                            if (countdownEl) countdownEl.textContent = String(count);
+                            if (count <= 0) {
+                                clearInterval(interval);
+                                if (!redirectCancelled) {
+                                    window.location.href = '/';
+                                }
+                            }
+                        }, 1000);
+
+                        const cleanup = () => {
+                            redirectCancelled = true;
+                            clearInterval(interval);
+                        };
+
+                        document.addEventListener('astro:before-preparation', cleanup);
+                        document.addEventListener('astro:before-swap', cleanup);
+                        
+                        // Fallback for traditional navigation
+                        window.addEventListener('beforeunload', cleanup);
+                        window.addEventListener('pagehide', cleanup);
+                    })();
+                </script>
             ) : (
                 <ContactFormWrapper client:load turnstileSiteKey={siteKey} />
             )}
