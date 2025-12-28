@@ -1,8 +1,8 @@
 ---
 import Card from "@components/Card";
+import Tag from "@lib/tag/Tag.astro";
 
 import type { IProject } from "../project.type";
-
 
 interface Props {
   slug: string;
@@ -11,11 +11,27 @@ interface Props {
 
 const { project } = Astro.props;
 const demoUrl = project.demo_url;
+const technology = project.technology || [];
 ---
 
 <Card>
-    <h2 class="text-lg md:text-xl font-bold mb-2">{project.title}</h2>
-    <p class="text-base text-text-secondary mb-5">{project.headline}</p>
+    <h2 class="text-xl md:text-2xl font-bold mb-2 break-words">{project.title}</h2>
+    <p class="text-base text-text-secondary mb-4">{project.headline}</p>
+    {technology.length > 0 && (
+        <div class="flex flex-wrap gap-2 mb-4">
+            {technology.map((tech) => (
+                <Tag 
+                    tag={{ 
+                        _uid: tech.content._uid, 
+                        title: tech.content.name, 
+                        icon: tech.content.logo,
+                        component: tech.content.component 
+                    }} 
+                    colorful 
+                />
+            ))}
+        </div>
+    )}
     {
         demoUrl && (
             <a class="grid gap-4 hover:underline" href={demoUrl} target="_blank">

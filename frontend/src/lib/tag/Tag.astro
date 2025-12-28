@@ -1,10 +1,10 @@
 ---
-import type { IArticleTag } from "../blog.type";
-import { getTagColor } from "@lib/tag";
+import type { ITag } from "./tag.type";
+import { getTagColor } from "./tag.util";
 
 interface Props {
-    tag?: IArticleTag;
-    blok?: IArticleTag;
+    tag?: ITag;
+    blok?: ITag;
     href?: string;
     active?: boolean;
     colorful?: boolean;
