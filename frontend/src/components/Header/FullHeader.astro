@@ -1,17 +1,19 @@
 ---
 import { links } from "../../lib/constants/links";
 
+const currentPath = Astro.url.pathname;
+const filteredLinks = links.filter(link => link.href !== currentPath);
 ---
 
 <header>
-    <nav class="bg-vhs-cream text-vhs-black py-4">
+    <nav class="text-white py-4">
         <div class="container mx-auto flex justify-center">
             <div class="flex justify-between items-center">
-                <div class="flex gap-x-4">
+                <div class="flex gap-x-10 py-5">
                     {
-                        links.map(({ href, text }) => (
+                        filteredLinks.map(({ href, text }) => (
                             <a 
-                                class="text-lg font-bold hover:underline" 
+                                class="text-3xl font-bold hover:underline" 
                                 data-astro-prefetch
                                 href={href}  
                             >

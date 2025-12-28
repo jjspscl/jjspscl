@@ -15,6 +15,14 @@ export default defineConfig({
             STORYBLOK_TOKEN: envField.string({
                 context: "server",
                 access: "secret",
+            }),
+            TURNSTILE_SITE_KEY: envField.string({
+                context: "client",
+                access: "public",
+            }),
+            TURNSTILE_SECRET_KEY: envField.string({
+                context: "server",
+                access: "secret",
             })
         }
     },

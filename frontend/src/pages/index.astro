@@ -17,7 +17,7 @@ import { TRANSITION_NAMES } from "../lib/constants/transition";
                     <a 
                         aria-label="Go to me"             
                         class="flex items-center"
-                        href="/me"
+                        href="/about"
                     >
                         <MyImage/>
                     </a>
@@ -25,17 +25,17 @@ import { TRANSITION_NAMES } from "../lib/constants/transition";
                 <a 
                     aria-label="Go to me"             
                     class="flex items-center"
-                    href="/me"
+                    href="/about"
                 >
                     <h1 class="text-6xl sm:text-9xl font-bold mb-10 highlight-text sm:ml-10 text-center sm:text-left">i'm <br/>joshua</h1>
                 </a>
             </div>
         </section>
-        <section class="flex justify-center">
+        <section class="flex gap-x-10 justify-center">
             {
                 links.map(({ href, text }) => (
                     <a 
-                        class="text-4xl font-bold pr-4 hover:underline" 
+                        class="text-4xl font-bold hover:underline" 
                         data-astro-prefetch
                         href={href}  
                     >

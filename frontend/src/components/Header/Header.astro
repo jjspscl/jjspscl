@@ -2,19 +2,19 @@
 import HeaderLink from "./HeaderLink.astro";
 import { links } from "../../lib/constants/links";
 
+const currentPath = Astro.url.pathname;
+const filteredLinks = links.filter(link => link.href !== currentPath);
 ---
 
 <header
     class="p-0 md:container flex justify-between items-center mx-8 md:mx-auto md:max-w-screen-md my-5"
 >
-    <a class="text-xl font-bold" href={
-        Astro.url.pathname === "/me" ? "/" : "/me"
-    }>
+    <a class="text-xl font-bold" href="/">
         <h1 class="text-4xl font-bold">jjspscl.</h1>
     </a>
     <nav class="flex text-2xl my-auto">
         {
-            links.map(({ href, text }) => (
+            filteredLinks.map(({ href, text }) => (
                 <HeaderLink 
                     href={href} 
                     label={text} 
