@@ -38,7 +38,7 @@ const renderedRichText = renderRichText(blok.content);
             {blok.subtitle}
         </h2>
         <div
-            class="prose dark:text-white dark:prose-invert prose-headings:mb-1 prose:-"
+            class="prose prose-lg max-w-none dark:prose-invert prose-headings:font-bold prose-headings:mb-2 prose-p:leading-relaxed prose-pre:bg-[#1e1e1e] prose-code:text-sm"
             set:html={renderedRichText}
         />
     </div>

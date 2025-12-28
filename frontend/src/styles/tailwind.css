@@ -137,3 +137,137 @@ select {
   --color-text: #333333;
   --color-accent: #0077b6;
 }
+
+/* Storyblok Rich Text Styles */
+.prose pre {
+  background-color: #1e1e1e;
+  color: #d4d4d4;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  overflow-x: auto;
+  margin: 1.5rem 0;
+  font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', 'Fira Mono', 'Droid Sans Mono', 'Source Code Pro', monospace;
+  font-size: 0.875rem;
+  line-height: 1.7;
+  border: 1px solid #333;
+}
+
+.prose pre code {
+  background-color: transparent;
+  padding: 0;
+  border-radius: 0;
+  font-weight: 400;
+  color: inherit;
+}
+
+.prose code {
+  background-color: #f3f4f6;
+  color: #ef4444;
+  padding: 0.2rem 0.4rem;
+  border-radius: 0.25rem;
+  font-size: 0.875em;
+  font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', 'Fira Mono', monospace;
+  font-weight: 500;
+}
+
+.prose code::before,
+.prose code::after {
+  content: '';
+}
+
+/* Dark mode prose code styles */
+.dark .prose code,
+.prose-invert code {
+  background-color: #374151;
+  color: #fbbf24;
+}
+
+.dark .prose pre,
+.prose-invert pre {
+  background-color: #0d1117;
+  border-color: #30363d;
+}
+
+/* Blockquote styling */
+.prose blockquote {
+  border-left: 4px solid var(--color-accent, #80b918);
+  padding-left: 1rem;
+  font-style: italic;
+  background-color: rgba(128, 185, 24, 0.05);
+  padding: 1rem;
+  border-radius: 0 0.5rem 0.5rem 0;
+  margin: 1.5rem 0;
+}
+
+/* Lists */
+.prose ul {
+  list-style-type: disc;
+  padding-left: 1.5rem;
+}
+
+.prose ol {
+  list-style-type: decimal;
+  padding-left: 1.5rem;
+}
+
+.prose li {
+  margin: 0.5rem 0;
+}
+
+/* Links in prose */
+.prose a {
+  color: var(--color-accent, #0077b6);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.prose a:hover {
+  text-decoration: none;
+}
+
+/* Headings spacing */
+.prose h1,
+.prose h2,
+.prose h3,
+.prose h4,
+.prose h5,
+.prose h6 {
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  font-weight: 700;
+}
+
+/* Horizontal rule */
+.prose hr {
+  border-color: var(--color-gray, #e5e5e5);
+  margin: 2rem 0;
+}
+
+/* Images in prose */
+.prose img {
+  border-radius: 0.5rem;
+  margin: 1.5rem auto;
+}
+
+/* Tables */
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+}
+
+.prose th,
+.prose td {
+  border: 1px solid var(--color-gray, #e5e5e5);
+  padding: 0.75rem;
+  text-align: left;
+}
+
+.prose th {
+  background-color: rgba(0, 0, 0, 0.05);
+  font-weight: 600;
+}
+
+.dark .prose th {
+  background-color: rgba(255, 255, 255, 0.05);
+}
