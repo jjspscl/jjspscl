@@ -1,5 +1,3 @@
-import { TURNSTILE_SECRET_KEY } from "astro:env/server";
-
 import { TURNSTILE_VERIFY_URL } from "./contact.constant";
 import { checkAndIncrementDailyLimit, storeContactSubmission } from "./contact.db";
 import type {
@@ -14,9 +12,14 @@ import type {
 type D1Database = Env["DB"];
 
 let _db: D1Database | undefined;
+let _turnstileSecretKey: string | undefined;
 
 export function setDatabase(db: D1Database | undefined): void {
   _db = db;
+}
+
+export function setTurnstileSecretKey(secretKey: string): void {
+  _turnstileSecretKey = secretKey;
 }
 
 function getDatabase(): D1Database | undefined {
@@ -24,9 +27,14 @@ function getDatabase(): D1Database | undefined {
 }
 
 export async function verifyTurnstileToken(token: string): Promise<TurnstileVerificationResult> {
+  if (!_turnstileSecretKey) {
+    console.error("Turnstile secret key not configured");
+    return { success: false, error: "Server configuration error" };
+  }
+
   try {
     const formData = new FormData();
-    formData.append("secret", TURNSTILE_SECRET_KEY);
+    formData.append("secret", _turnstileSecretKey);
     formData.append("response", token);
 
     const response = await fetch(TURNSTILE_VERIFY_URL, {

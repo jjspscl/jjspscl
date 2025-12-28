@@ -1,11 +1,13 @@
 ---
 import { TURNSTILE_SITE_KEY } from "astro:env/client";
+import { TURNSTILE_SECRET_KEY } from "astro:env/server";
 
 import Base from "../../components/layouts/base.astro";
 import {
     ContactFormWrapper,
     contactFormSchema,
     setDatabase,
+    setTurnstileSecretKey,
     verifyTurnstileToken,
     checkRateLimit,
     submitContactForm,
@@ -16,8 +18,9 @@ if (Astro.request.method === "POST") {
     const headers = Astro.request.headers;
     const ip = headers.get("CF-Connecting-IP") || headers.get("X-Forwarded-For") || "unknown";
     
-    // Initialize the database for the contact service
+    // Initialize the contact service
     setDatabase(Astro.locals.runtime?.env?.DB);
+    setTurnstileSecretKey(TURNSTILE_SECRET_KEY);
 
     try {
         let rawData: { name?: string; email?: string; message?: string; turnstileToken?: string };

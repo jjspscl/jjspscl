@@ -6,6 +6,7 @@ import {
   emailSchema,
   messageSchema,
 } from "../contact.schema";
+import { getZodError, submitContactFormRequest } from "../contact.util";
 
 interface ContactFormProps {
   turnstileToken: string;
@@ -15,12 +16,6 @@ interface ContactFormProps {
 type FormStep = "name" | "email" | "message" | "success";
 
 const STEP_ORDER: FormStep[] = ["name", "email", "message"];
-
-function getZodError(value: string, schema: z.ZodSchema): string | null {
-  const result = schema.safeParse(value);
-  if (result.success) return null;
-  return result.error.errors[0]?.message ?? "Invalid input";
-}
 
 export function ContactForm({ turnstileToken, onTurnstileReset }: ContactFormProps) {
   const [currentStep, setCurrentStep] = useState<FormStep>("name");
@@ -41,19 +36,10 @@ export function ContactForm({ turnstileToken, onTurnstileReset }: ContactFormPro
       setSubmitError(null);
 
       try {
-        const response = await fetch("/contact", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            ...value,
-            turnstileToken,
-          }),
+        await submitContactFormRequest({
+          ...value,
+          turnstileToken,
         });
-
-        if (!response.ok) {
-          const data = (await response.json()) as { error?: string };
-          throw new Error(data.error || "Failed to send message");
-        }
 
         setCurrentStep("success");
       } catch (error) {

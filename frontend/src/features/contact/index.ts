@@ -6,13 +6,17 @@ export { ContactFormWrapper } from "./components/ContactFormWrapper";
 export { contactFormSchema, nameSchema, emailSchema, messageSchema } from "./contact.schema";
 export type { ContactFormData } from "./contact.schema";
 
-// Service
+// Service (server-side)
 export {
   setDatabase,
+  setTurnstileSecretKey,
   verifyTurnstileToken,
   checkRateLimit,
   submitContactForm,
 } from "./contact.service";
+
+// Utilities (client-side)
+export { getZodError, submitContactFormRequest } from "./contact.util";
 
 // Constants
 export { DAILY_LIMIT, TURNSTILE_VERIFY_URL } from "./contact.constant";
