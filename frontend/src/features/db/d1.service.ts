@@ -5,6 +5,7 @@ const DAILY_LIMIT = 5;
 export interface DailyLimitResult {
   allowed: boolean;
   remaining: number;
+  error?: string;
 }
 
 export interface ContactSubmissionData {
@@ -19,6 +20,11 @@ export interface ContactSubmissionMetadata {
   country: string;
   city: string;
   turnstileToken: string;
+}
+
+export interface SubmissionResult {
+  success: boolean;
+  error?: string;
 }
 
 export async function checkAndIncrementDailyLimit(
@@ -61,7 +67,7 @@ export async function checkAndIncrementDailyLimit(
     return { allowed: true, remaining: DAILY_LIMIT - 1 };
   } catch (error) {
     console.error("D1 rate limit error:", error);
-    return { allowed: true, remaining: DAILY_LIMIT };
+    return { allowed: true, remaining: DAILY_LIMIT, error: "An unexpected error occurred. Please try again." };
   }
 }
 
@@ -69,10 +75,10 @@ export async function storeContactSubmission(
   db: D1Database | undefined,
   data: ContactSubmissionData,
   metadata: ContactSubmissionMetadata
-): Promise<void> {
+): Promise<SubmissionResult> {
   if (!db) {
     console.warn("D1 database not available, skipping submission storage");
-    return;
+    return { success: false, error: "An unexpected error occurred. Please try again later." };
   }
 
   try {
@@ -92,7 +98,10 @@ export async function storeContactSubmission(
         metadata.turnstileToken
       )
       .run();
+    
+    return { success: true };
   } catch (error) {
     console.error("D1 storage error:", error);
+    return { success: false, error: "An unexpected error occurred. Please try again." };
   }
 }

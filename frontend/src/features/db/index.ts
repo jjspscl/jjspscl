@@ -7,4 +7,5 @@ export type {
   DailyLimitResult,
   ContactSubmissionData,
   ContactSubmissionMetadata,
+  SubmissionResult,
 } from "./d1.service";
