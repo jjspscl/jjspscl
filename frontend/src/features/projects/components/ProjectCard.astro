@@ -14,8 +14,8 @@ const demoUrl = project.demo_url;
 ---
 
 <Card>
-    <h2 class="text-xl font-bold">{project.title}</h2>
-    <p class="text-sm mb-5">{project.headline}</p>
+    <h2 class="text-lg md:text-xl font-bold mb-2">{project.title}</h2>
+    <p class="text-base text-text-secondary mb-5">{project.headline}</p>
     {
         demoUrl && (
             <a class="grid gap-4 hover:underline" href={demoUrl} target="_blank">

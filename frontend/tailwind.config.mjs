@@ -15,7 +15,13 @@ export default {
                     "yellow": "var(--color-yellow)",
                     "green": "var(--color-green)",
                     "blue": "var(--color-blue)",
-                }
+                },
+                "text": {
+                    "primary": "var(--color-text)",
+                    "secondary": "var(--color-text-muted)",
+                },
+                "accent": "var(--color-accent)",
+                "link": "var(--color-link)",
             },
             typography: (theme) => ({
                 DEFAULT: {

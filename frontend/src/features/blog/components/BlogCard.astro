@@ -12,8 +12,8 @@ const { blog, slug } = Astro.props;
 const href = `/blog/${slug}`;
 ---
 <Card>
-    <h2 class="text-3xl">{blog.title}</h2>
-    <p class="text-lg mb-5">{blog.headline}</p>
+    <h2 class="text-xl md:text-2xl font-bold mb-2">{blog.title}</h2>
+    <p class="text-base text-text-secondary mb-5">{blog.headline}</p>
     <a class="grid gap-4 hover:underline" 
         data-astro-prefetch href={href}
     >

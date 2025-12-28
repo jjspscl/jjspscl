@@ -11,9 +11,9 @@ const filteredLinks = links.filter(link => link.href !== currentPath);
             <div class="flex justify-between items-center">
                 <div class="flex gap-x-10 py-5">
                     {
-                        filteredLinks.map(({ href, text }) => (
+                    {filteredLinks.map(({ href, text }) => (
                             <a 
-                                class="text-3xl font-bold hover:underline" 
+                                class="text-xl md:text-2xl font-bold hover:underline" 
                                 data-astro-prefetch
                                 href={href}  
                             >

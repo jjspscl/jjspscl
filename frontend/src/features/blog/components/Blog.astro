@@ -21,24 +21,61 @@ const renderedRichText = renderRichText(blok.content);
       color: #000;
     }
   }
+
+  /* Override inline styles from Storyblok rich text */
+  .prose-override * {
+    color: inherit !important;
+  }
+  
+  .prose-override a {
+    color: #0052a3 !important;
+    text-decoration: underline !important;
+  }
+  
+  .prose-override a:hover {
+    color: #003d7a !important;
+  }
+
+  .prose-override code {
+    color: #c41425 !important;
+  }
+
+  .prose-override pre,
+  .prose-override pre * {
+    color: #d4d4d4 !important;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .prose-override a {
+      color: #7cc5ed !important;
+    }
+    
+    .prose-override a:hover {
+      color: #a8d8f0 !important;
+    }
+
+    .prose-override code {
+      color: #fbbf24 !important;
+    }
+  }
 </style>
 
-<article {...storyblokEditable(blok)} class="rounded dark:text-white mb-28">
+<article {...storyblokEditable(blok)} class="rounded mb-28 text-[#1a1a1a] dark:text-[#f5f5f5]">
     <div class="1mb-12">
         <h1
-            class="text-6xl font-kagitingan font-bold mt-12 mb-4"
+            class="text-4xl md:text-5xl font-kagitingan font-bold mt-12 mb-4 leading-tight"
             transition:name={slug}
         >
             {blok.title}
         </h1>
-        <h3 class="text-3xl font-bold mb-4">
+        <p class="text-base text-text-secondary mb-4">
             {blok.created_at}
-        </h3>
-        <h2 class="text-2xl font-bold mb-4">
+        </p>
+        <h2 class="text-xl md:text-2xl font-semibold mb-6">
             {blok.subtitle}
         </h2>
         <div
-            class="prose prose-lg max-w-none dark:prose-invert prose-headings:font-bold prose-headings:mb-2 prose-p:leading-relaxed prose-pre:bg-[#1e1e1e] prose-code:text-sm"
+            class="prose-override prose prose-base md:prose-lg max-w-none dark:prose-invert prose-headings:font-bold prose-headings:mb-2 prose-p:leading-relaxed prose-pre:bg-[#1e1e1e] prose-code:text-sm"
             set:html={renderedRichText}
         />
     </div>
