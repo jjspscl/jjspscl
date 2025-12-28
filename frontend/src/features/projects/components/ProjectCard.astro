@@ -15,10 +15,17 @@ const technology = project.technology || [];
 ---
 
 <Card>
-    <h2 class="text-xl md:text-2xl font-bold mb-2 break-words">{project.title}</h2>
+    {
+        demoUrl && (
+            <a class="absolute top-4 right-4 hover:underline text-sm" href={demoUrl} target="_blank">
+                View Demo
+            </a>
+        )
+    }
+    <h2 class="text-xl md:text-2xl font-bold mb-2 break-words pr-20">{project.title}</h2>
     <p class="text-base text-text-secondary mb-4">{project.headline}</p>
     {technology.length > 0 && (
-        <div class="flex flex-wrap gap-2 mb-4">
+        <div class="flex flex-wrap gap-2">
             {technology.map((tech) => (
                 <Tag 
                     tag={{ 
@@ -32,11 +39,4 @@ const technology = project.technology || [];
             ))}
         </div>
     )}
-    {
-        demoUrl && (
-            <a class="grid gap-4 hover:underline" href={demoUrl} target="_blank">
-                View Demo
-            </a>
-        )
-    }
 </Card>

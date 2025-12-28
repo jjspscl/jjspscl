@@ -7,7 +7,6 @@ export const getProjects = async () => {
     let projectData: ISbResult<IProject>[] = [];
     const res = await storyBlokClient.get("cdn/stories", {
         starts_with: "projects/",
-        sort_by: "first_published_at:desc",
         content_type: "project",
         version: getStoryblokVersion(),
         resolve_relations: "project.technology",

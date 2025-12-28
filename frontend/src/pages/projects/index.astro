@@ -21,11 +21,13 @@ try {
 ---
 
 <BaseLayout>
-    <main class="container mx-auto md:mx-auto md:max-w-screen-md">
-        <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {
+    <main class="container mx-auto max-w-screen-md">
+        <section class="grid gap-4 mb-10">
+            {stories.length > 0 ? (
                 stories.map((story) => <ProjectCard project={story.content} slug={story.slug}/>)
-            }
+            ) : (
+                <p class="text-text-secondary text-center py-8">No projects found.</p>
+            )}
         </section>
     </main>
 </BaseLayout>
