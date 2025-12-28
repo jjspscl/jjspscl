@@ -6,7 +6,11 @@ import tailwind from '@astrojs/tailwind';
 import { storyblok } from '@storyblok/astro';
 import { defineConfig, envField } from 'astro/config';
 import { loadEnv } from 'vite';
+
+import { getCustomPages, createSitemapSerializer } from './src/features/sitemap/sitemap.service';
+
 const env = loadEnv(process.env.NODE_ENV ?? "", process.cwd(), "");
+const storyblokToken = env.STORYBLOK_TOKEN;
 
 // https://astro.build/config
 export default defineConfig({
@@ -46,7 +50,18 @@ export default defineConfig({
         
     },
     integrations: [
-        sitemap(),
+        sitemap({
+            customPages: storyblokToken ? await getCustomPages(storyblokToken) : [],
+            filter: (page) => !page.endsWith('/') || page === 'https://jjspscl.com/',
+            serialize: storyblokToken ? createSitemapSerializer(storyblokToken) : undefined,
+            changefreq: "weekly",
+            priority: 0.5,
+            lastmod: new Date(),
+            namespaces: {
+                news: false,
+                video: false,
+            },
+        }),
         tailwind(),
         react(),
         storyblok({
