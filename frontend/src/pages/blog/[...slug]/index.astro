@@ -10,12 +10,14 @@ if (!slug) {
 }
 
 let blok;
+let story;
 
 try {
     const data = await getBlogPost(slug);
 
     if (data?.story?.content) {
         blok = data.story.content;
+        story = data.story;
     }
 } catch (error: any) {
     if (error?.status === 404) {
@@ -24,9 +26,11 @@ try {
 }
 
 const title = blok?.title;
+const description = blok?.subtitle || blok?.description || `Read ${title} on Joshua Pascual's blog`;
+const publishedDate = story?.first_published_at || story?.published_at;
 ---
 
-<BaseLayout title={title}>
+<BaseLayout title={title} description={description} type="article" publishedDate={publishedDate}>
     <main
         class="p-0 md:container grid items-center mx-8 md:mx-auto md:max-w-screen-md"
     >

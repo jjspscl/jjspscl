@@ -1,6 +1,7 @@
 // @ts-check
 import cloudflare from '@astrojs/cloudflare';
 import react from '@astrojs/react';
+import sitemap from '@astrojs/sitemap';
 import tailwind from '@astrojs/tailwind';
 import { storyblok } from '@storyblok/astro';
 import { defineConfig, envField } from 'astro/config';
@@ -45,6 +46,7 @@ export default defineConfig({
         
     },
     integrations: [
+        sitemap(),
         tailwind(),
         react(),
         storyblok({

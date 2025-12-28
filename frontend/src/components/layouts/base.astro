@@ -6,11 +6,15 @@ import RootLayout from "./root.astro";
 
 interface Props {
   title?: string;
+  description?: string;
+  image?: string;
+  type?: "website" | "article";
+  publishedDate?: string;
 }
 
-const { title } = Astro.props;
+const { title, description, image, type, publishedDate } = Astro.props;
 ---
-<RootLayout title={title}>
+<RootLayout title={title} description={description} image={image} type={type} publishedDate={publishedDate}>
     <Header />
     <slot />
     <Footer />

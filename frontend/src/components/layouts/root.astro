@@ -6,19 +6,85 @@ import "@styles/animate.css";
 
 interface Props {
   title?: string;
+  description?: string;
+  image?: string;
+  type?: "website" | "article";
+  publishedDate?: string;
 }
 
-const { title } = Astro.props;
+const { 
+  title, 
+  description = "Joshua Pascual - Software Developer passionate about building modern web applications. Explore my projects, blog posts, and get in touch.",
+  image = "/me.png",
+  type = "website",
+  publishedDate
+} = Astro.props;
+
 const language = Astro.url.searchParams.get("lang") as string;
+const siteTitle = "Joshua Pascual";
+const fullTitle = title ? `${title} | ${siteTitle}` : siteTitle;
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const imageURL = new URL(image, Astro.site);
 ---
 <html lang={language === "en-ph" ? "tl" : "en"}>
     <head>
         <meta charset="utf-8" />
-        <link href="/favicon.svg" rel="icon" type="image/svg+xml" />
-        <meta content="width=device-width" name="viewport" />
+        <meta content="width=device-width, initial-scale=1.0" name="viewport" />
         <meta content={Astro.generator} name="generator" />
-        <title>jjspscl {title && `| ${title}`}</title>
+        
+        <!-- Primary Meta Tags -->
+        <title>{fullTitle}</title>
+        <meta name="title" content={fullTitle} />
+        <meta name="description" content={description} />
+        <meta name="author" content="Joshua Pascual" />
+        <meta name="keywords" content="Joshua Pascual, jjspscl, software developer, web developer, full stack developer, portfolio, blog, projects" />
+        <link rel="canonical" href={canonicalURL} />
+        
+        <!-- Favicon -->
+        <link href="/favicon.svg" rel="icon" type="image/svg+xml" />
+        <link rel="apple-touch-icon" href="/me.png" />
+        
+        <!-- Open Graph / Facebook -->
+        <meta property="og:type" content={type} />
+        <meta property="og:url" content={canonicalURL} />
+        <meta property="og:title" content={fullTitle} />
+        <meta property="og:description" content={description} />
+        <meta property="og:image" content={imageURL} />
+        <meta property="og:site_name" content={siteTitle} />
+        <meta property="og:locale" content="en_US" />
+        {publishedDate && <meta property="article:published_time" content={publishedDate} />}
+        
+        <!-- Twitter -->
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:url" content={canonicalURL} />
+        <meta name="twitter:title" content={fullTitle} />
+        <meta name="twitter:description" content={description} />
+        <meta name="twitter:image" content={imageURL} />
+        
+        <!-- Additional SEO -->
+        <meta name="robots" content="index, follow" />
+        <meta name="googlebot" content="index, follow, max-video-preview:-1, max-image-preview:large, max-snippet:-1" />
+        
+        <!-- Sitemap -->
         <link href="/sitemap-index.xml" rel="sitemap" />
+        
+        <!-- JSON-LD Structured Data -->
+        <script type="application/ld+json" set:html={JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Person",
+            "name": "Joshua Pascual",
+            "url": "https://jjspscl.com",
+            "image": imageURL.toString(),
+            "sameAs": [
+                "https://github.com/jjspscl"
+            ],
+            "jobTitle": "Software Developer",
+            "worksFor": {
+                "@type": "Organization",
+                "name": "Self-employed"
+            }
+        })} />
+        
         <ClientRouter />
     </head>
     <body class="flex flex-col min-h-screen">
