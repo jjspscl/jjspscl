@@ -1,6 +1,6 @@
 ---
 import { TURNSTILE_SITE_KEY } from "astro:env/client";
-import { TURNSTILE_SECRET_KEY } from "astro:env/server";
+import { TURNSTILE_SECRET_KEY, RESEND_API_KEY } from "astro:env/server";
 
 import Base from "../../components/layouts/base.astro";
 import {
@@ -13,11 +13,13 @@ import {
     getRateLimitStatus,
     submitContactForm,
 } from "../../features/contact";
+import { setResendApiKey } from "../../features/resend";
 
 const headers = Astro.request.headers;
 const ip = headers.get("CF-Connecting-IP") || headers.get("X-Forwarded-For") || "unknown";
 setDatabase(Astro.locals.runtime?.env?.DB);
 setTurnstileSecretKey(TURNSTILE_SECRET_KEY);
+setResendApiKey(RESEND_API_KEY);
 
 const initialRateLimitStatus = await getRateLimitStatus(ip);
 

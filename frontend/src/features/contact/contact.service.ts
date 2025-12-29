@@ -8,6 +8,7 @@ import type {
   TurnstileResponse,
   TurnstileVerificationResult,
 } from "./contact.type";
+import { sendContactNotification } from "../resend";
 
 type D1Database = Env["DB"];
 
@@ -70,8 +71,18 @@ export async function submitContactForm(
 
   if (result.success) {
     console.log("Contact form submission:", { ...data, metadata });
-    // TODO: Add email notifications here
-    // TODO: Add Discord notifications here
+
+    sendContactNotification({
+      name: data.name,
+      email: data.email,
+      message: data.message,
+      ip: metadata.ip,
+      country: metadata.country,
+      city: metadata.city,
+      submittedAt: new Date(),
+    }).catch((error) => {
+      console.error("Failed to send contact notification:", error);
+    });
   }
 
   return result;
