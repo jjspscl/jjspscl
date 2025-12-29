@@ -1,0 +1,33 @@
+---
+interface Props {
+    class?: string;
+    width?: string;
+    height?: string;
+}
+
+const { class: className = "", width = "40", height = "40" } = Astro.props;
+---
+
+<img
+    src="/logo.svg"
+    alt="jjspscl logo"
+    class:list={["logo", className]}
+    width={width}
+    height={height}
+/>
+
+<style>
+    .logo {
+        filter: none;
+    }
+
+    :global(.dark) .logo {
+        filter: invert(1);
+    }
+
+    @media (prefers-color-scheme: dark) {
+        :global(:not(.light)) .logo {
+            filter: invert(1);
+        }
+    }
+</style>
