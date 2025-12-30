@@ -1,6 +1,8 @@
 ---
 import { ClientRouter } from "astro:transitions";
 
+import { createPersonSchema, createWebSiteSchema } from "@features/seo";
+
 import "@styles/tailwind.css";
 import "@styles/animate.css";
 
@@ -10,21 +12,26 @@ interface Props {
   image?: string;
   type?: "website" | "article";
   publishedDate?: string;
+  schemaType?: "home" | "page" | "article";
 }
 
 const { 
   title, 
-  description = "Joshua Pascual - Software Developer passionate about building modern web applications. Explore my projects, blog posts, and get in touch.",
+  description = "Joshua Pascual - Software Engineer passionate about building modern web applications. Explore my projects, blog posts, and get in touch.",
   image = "/me.png",
   type = "website",
-  publishedDate
+  publishedDate,
+  schemaType = "page"
 } = Astro.props;
 
 const language = Astro.url.searchParams.get("lang") as string;
-const defaultTitle = "Joshua Pascual";
-const fullTitle = title || defaultTitle;
+const defaultTitle = "Joshua Pascual | Software Engineer";
+const fullTitle = title ? `${title} | Joshua Pascual` : defaultTitle;
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const imageURL = new URL(image, Astro.site);
+
+const personSchema = createPersonSchema();
+const webSiteSchema = createWebSiteSchema();
 ---
 <html lang={language === "en-ph" ? "tl" : "en"}>
     <head>
@@ -71,22 +78,13 @@ const imageURL = new URL(image, Astro.site);
         <!-- LLMs.txt for AI/LLM discoverability -->
         <link rel="alternate" type="text/markdown" href="/llms.txt" title="LLM-friendly site information" />
         
-        <!-- JSON-LD Structured Data -->
-        <script is:inline type="application/ld+json" set:html={JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "Person",
-            "name": "Joshua Pascual",
-            "url": "https://jjspscl.com",
-            "image": imageURL.toString(),
-            "sameAs": [
-                "https://github.com/jjspscl"
-            ],
-            "jobTitle": "Software Developer",
-            "worksFor": {
-                "@type": "Organization",
-                "name": "Self-employed"
-            }
-        })} />
+        <!-- JSON-LD Structured Data - Person Schema -->
+        <script is:inline type="application/ld+json" set:html={JSON.stringify(personSchema)} />
+        
+        <!-- JSON-LD Structured Data - WebSite Schema (for sitelinks) -->
+        {schemaType === "home" && (
+          <script is:inline type="application/ld+json" set:html={JSON.stringify(webSiteSchema)} />
+        )}
         
         <ClientRouter />
     </head>

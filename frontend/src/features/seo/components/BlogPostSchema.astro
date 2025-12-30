@@ -1,0 +1,25 @@
+---
+import { createBlogPostingSchema } from "@features/seo";
+
+interface Props {
+  headline: string;
+  description?: string;
+  image?: string;
+  datePublished: string;
+  dateModified?: string;
+  url: string;
+}
+
+const { headline, description, image, datePublished, dateModified, url } = Astro.props;
+
+const blogPostingSchema = createBlogPostingSchema({
+  headline,
+  description,
+  image,
+  datePublished,
+  dateModified,
+  url,
+});
+---
+
+<script is:inline type="application/ld+json" set:html={JSON.stringify(blogPostingSchema)} />

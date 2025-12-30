@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "@components/layouts/base.astro";
 import { getBlogPost } from "@features/blog/blog.service";
+import { BlogPostSchema, SITE_URL } from "@features/seo";
 import StoryblokComponent from "@storyblok/astro/StoryblokComponent.astro";
 
 
@@ -29,9 +30,20 @@ const blogTitle = blok?.title;
 const title = blogTitle ?? "JJSPSCL | Blog";
 const description = blok?.subtitle || blok?.description || `Read ${blogTitle} on Joshua Pascual's blog`;
 const publishedDate = story?.first_published_at || story?.published_at;
+const modifiedDate = story?.published_at;
+const blogUrl = `${SITE_URL}/blog/${slug}`;
+const blogImage = blok?.image?.filename;
 ---
 
-<BaseLayout title={title} description={description} type="article" publishedDate={publishedDate}>
+<BaseLayout title={title} description={description} type="article" publishedDate={publishedDate} image={blogImage}>
+    <BlogPostSchema
+      headline={blogTitle}
+      description={description}
+      image={blogImage}
+      datePublished={publishedDate}
+      dateModified={modifiedDate}
+      url={blogUrl}
+    />
     <main
         class="container grid items-center mx-auto max-w-screen-md px-4"
     >

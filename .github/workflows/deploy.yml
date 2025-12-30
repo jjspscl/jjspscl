@@ -11,6 +11,8 @@ on:
       - main
     paths:
       - 'frontend/**'
+  repository_dispatch:
+    types: [storyblok-publish]
   workflow_dispatch:
 
 jobs:
@@ -44,6 +46,10 @@ jobs:
           TURNSTILE_SECRET_KEY: ${{ secrets.TURNSTILE_SECRET_KEY }}
         run: npm run build
 
+      - name: Generate IndexNow Key File
+        working-directory: frontend
+        run: echo "${{ secrets.INDEXNOW_KEY }}" > dist/${{ secrets.INDEXNOW_KEY }}.txt
+
       - name: Deploy to Cloudflare Pages
         uses: cloudflare/wrangler-action@v3
         with:
@@ -51,3 +57,20 @@ jobs:
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           workingDirectory: frontend
           command: pages deploy dist --project-name=jjspscl
+
+      - name: Submit to IndexNow
+        if: github.event_name != 'pull_request'
+        uses: bojieyang/indexnow-action@v2
+        with:
+          sitemap-location: 'https://jjspscl.com/sitemap-index.xml'
+          key: ${{ secrets.INDEXNOW_KEY }}
+          since: 7
+          since-unit: day
+          endpoint: api.indexnow.org
+
+      - name: Submit to Google Indexing API
+        if: github.event_name != 'pull_request'
+        uses: robingenz/action-google-indexing@v1.0.0
+        with:
+          siteUrl: 'https://jjspscl.com'
+          gcpServiceAccountKey: ${{ secrets.GCP_INDEXER_KEY }}
