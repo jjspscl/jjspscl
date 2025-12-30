@@ -72,5 +72,5 @@ jobs:
         if: github.event_name != 'pull_request'
         uses: robingenz/action-google-indexing@v1.0.0
         with:
-          siteUrl: 'https://jjspscl.com'
+          siteUrl: 'sc-domain:jjspscl.com'
           gcpServiceAccountKey: ${{ secrets.GCP_INDEXER_KEY }}
