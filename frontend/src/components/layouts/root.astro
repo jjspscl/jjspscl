@@ -21,8 +21,8 @@ const {
 } = Astro.props;
 
 const language = Astro.url.searchParams.get("lang") as string;
-const siteTitle = "Joshua Pascual";
-const fullTitle = title ? `${title} | ${siteTitle}` : siteTitle;
+const defaultTitle = "Joshua Pascual";
+const fullTitle = title || defaultTitle;
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const imageURL = new URL(image, Astro.site);
 ---

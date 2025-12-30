@@ -1,9 +1,19 @@
 ---
 import RootLayout from './root.astro';
 import FullHeader from '../Header/FullHeader.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  type?: "website" | "article";
+  publishedDate?: string;
+}
+
+const { title, description, image, type, publishedDate } = Astro.props;
 ---
 
-<RootLayout>
+<RootLayout title={title} description={description} image={image} type={type} publishedDate={publishedDate}>
     <FullHeader />
     <slot />
 </RootLayout>
