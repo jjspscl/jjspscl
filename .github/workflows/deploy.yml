@@ -70,7 +70,8 @@ jobs:
 
       - name: Submit to Google Indexing API
         if: github.event_name != 'pull_request'
+        continue-on-error: true
         uses: robingenz/action-google-indexing@v1.0.0
         with:
-          siteUrl: 'sc-domain:jjspscl.com'
+          siteUrl: 'https://jjspscl.com'
           gcpServiceAccountKey: ${{ secrets.GCP_INDEXER_KEY }}
