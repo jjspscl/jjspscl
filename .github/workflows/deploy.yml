@@ -6,11 +6,13 @@ on:
       - main
     paths:
       - 'frontend/**'
+      - '.github/workflows/deploy.yml'
   pull_request:
     branches:
       - main
     paths:
       - 'frontend/**'
+      - '.github/workflows/deploy.yml'
   repository_dispatch:
     types: [storyblok-publish]
   workflow_dispatch:
@@ -78,7 +80,23 @@ jobs:
     if: github.event_name != 'pull_request' && needs.build-and-deploy.outputs.deployed == 'true'
 
     steps:
-      - name: 📤 Submit to IndexNow
+      - name: 📤 Submit Homepage to IndexNow
+        run: |
+          curl -X POST "https://api.indexnow.org/indexnow" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "host": "jjspscl.com",
+              "key": "${{ secrets.INDEXNOW_KEY }}",
+              "urlList": [
+                "https://jjspscl.com/",
+                "https://jjspscl.com/about",
+                "https://jjspscl.com/blog",
+                "https://jjspscl.com/projects",
+                "https://jjspscl.com/contact"
+              ]
+            }'
+
+      - name: 📤 Submit Sitemap to IndexNow
         uses: bojieyang/indexnow-action@v2
         with:
           sitemap-location: 'https://jjspscl.com/sitemap-index.xml'
@@ -95,8 +113,15 @@ jobs:
     continue-on-error: true
 
     steps:
-      - name: 📤 Submit to Google
+      - name: 📤 Submit Homepage to Google
         uses: robingenz/action-google-indexing@v1.0.0
         with:
           siteUrl: 'https://jjspscl.com'
           gcpServiceAccountKey: ${{ secrets.GCP_INDEXER_KEY }}
+          requestType: 'URL_UPDATED'
+          urls: |
+            https://jjspscl.com/
+            https://jjspscl.com/about
+            https://jjspscl.com/blog
+            https://jjspscl.com/projects
+            https://jjspscl.com/contact
