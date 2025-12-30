@@ -16,29 +16,38 @@ on:
   workflow_dispatch:
 
 jobs:
+  # ============================================
+  # 🏗️ BUILD & DEPLOY
+  # ============================================
   build-and-deploy:
     runs-on: ubuntu-latest
-    name: Build & Deploy
+    name: 🏗️ Build & Deploy
     permissions:
       contents: read
       deployments: write
-    
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+    outputs:
+      deployed: ${{ steps.deploy.outcome == 'success' }}
 
-      - name: Setup Node.js
+    steps:
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            frontend
+          sparse-checkout-cone-mode: false
+
+      - name: 📦 Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '22'
           cache: 'npm'
           cache-dependency-path: frontend/package-lock.json
 
-      - name: Install Dependencies
+      - name: 📚 Install Dependencies
         working-directory: frontend
         run: npm ci
 
-      - name: Build
+      - name: 🔨 Build
         working-directory: frontend
         env:
           STORYBLOK_TOKEN: ${{ secrets.STORYBLOK_TOKEN }}
@@ -46,11 +55,12 @@ jobs:
           TURNSTILE_SECRET_KEY: ${{ secrets.TURNSTILE_SECRET_KEY }}
         run: npm run build
 
-      - name: Generate IndexNow Key File
+      - name: 🔑 Generate IndexNow Key File
         working-directory: frontend
         run: echo "${{ secrets.INDEXNOW_KEY }}" > dist/${{ secrets.INDEXNOW_KEY }}.txt
 
-      - name: Deploy to Cloudflare Pages
+      - name: 🚀 Deploy to Cloudflare Pages
+        id: deploy
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
@@ -58,8 +68,17 @@ jobs:
           workingDirectory: frontend
           command: pages deploy dist --project-name=jjspscl
 
-      - name: Submit to IndexNow
-        if: github.event_name != 'pull_request'
+  # ============================================
+  # 🔍 SEARCH ENGINE INDEXING (runs in parallel)
+  # ============================================
+  index-bing:
+    runs-on: ubuntu-latest
+    name: 🔍 IndexNow (Bing/DuckDuckGo/Yandex)
+    needs: build-and-deploy
+    if: github.event_name != 'pull_request' && needs.build-and-deploy.outputs.deployed == 'true'
+
+    steps:
+      - name: 📤 Submit to IndexNow
         uses: bojieyang/indexnow-action@v2
         with:
           sitemap-location: 'https://jjspscl.com/sitemap-index.xml'
@@ -68,9 +87,15 @@ jobs:
           since-unit: day
           endpoint: api.indexnow.org
 
-      - name: Submit to Google Indexing API
-        if: github.event_name != 'pull_request'
-        continue-on-error: true
+  index-google:
+    runs-on: ubuntu-latest
+    name: 🔍 Google Indexing API
+    needs: build-and-deploy
+    if: github.event_name != 'pull_request' && needs.build-and-deploy.outputs.deployed == 'true'
+    continue-on-error: true
+
+    steps:
+      - name: 📤 Submit to Google
         uses: robingenz/action-google-indexing@v1.0.0
         with:
           siteUrl: 'https://jjspscl.com'
