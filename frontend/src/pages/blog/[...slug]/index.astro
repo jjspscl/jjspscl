@@ -32,7 +32,7 @@ const publishedDate = story?.first_published_at || story?.published_at;
 
 <BaseLayout title={title} description={description} type="article" publishedDate={publishedDate}>
     <main
-        class="p-0 md:container grid items-center mx-8 md:mx-auto md:max-w-screen-md"
+        class="container grid items-center mx-auto max-w-screen-md px-4"
     >
         {blok && <StoryblokComponent blok={blok} />}
     </main>
