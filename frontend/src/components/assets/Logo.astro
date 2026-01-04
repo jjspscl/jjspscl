@@ -1,4 +1,6 @@
 ---
+import { TRANSITION_NAMES } from "../../lib/constants/transition";
+
 interface Props {
     class?: string;
     width?: string;
@@ -8,15 +10,24 @@ interface Props {
 const { class: className = "", width = "40", height = "40" } = Astro.props;
 ---
 
-<img
+<!-- <img
     src="/logo.svg"
     alt="jjspscl logo"
     class:list={["logo", className]}
     width={width}
     height={height}
+/> -->
+
+<img
+    src="/me.png"
+    alt="Joshua"
+    class:list={["rounded-lg", className]}
+    width={width}
+    height={height}
+    transition:name={TRANSITION_NAMES.MY_IMAGE}
 />
 
-<style>
+<!-- <style>
     .logo {
         filter: none;
     }
@@ -30,4 +41,4 @@ const { class: className = "", width = "40", height = "40" } = Astro.props;
             filter: invert(1);
         }
     }
-</style>
+</style> -->
