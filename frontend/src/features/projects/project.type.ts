@@ -12,6 +12,7 @@ export interface ITechTag {
     _uid: string;
     name: string;
     logo: ITagAsset;
+    source: IStoryblokLink;
     component: "tech-stack";
 }
 

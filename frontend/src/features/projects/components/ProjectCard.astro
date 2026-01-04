@@ -46,6 +46,7 @@ const technology = project.technology || [];
                         icon: tech.content.logo,
                         component: tech.content.component 
                     }} 
+                    href={tech.content.source?.cached_url}
                     colorful 
                 />
             ))}
