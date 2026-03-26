@@ -22,7 +22,7 @@
     "@tanstack/react-form": "^1.27.6",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
-    "astro": "^5.16.6",
+    "astro": "^5.18.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "storyblok-js-client": "^7.1.6",
