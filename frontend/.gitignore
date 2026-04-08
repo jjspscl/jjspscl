@@ -23,6 +23,7 @@ pnpm-debug.log*
 .idea/
 
 .vscode/*
+.opencode/*
 
 # Wrangler / Cloudflare D1 local database
 .wrangler/

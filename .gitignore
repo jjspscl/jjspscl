@@ -20,5 +20,7 @@ pnpm-debug.log*
 .DS_Store
 
 .vscode/*
+.opencode/*
+opencode.json
 
 .github/*-instructions.md
