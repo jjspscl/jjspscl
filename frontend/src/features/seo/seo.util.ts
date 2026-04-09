@@ -20,6 +20,7 @@ export function createWebSiteSchema(): WebSiteSchema {
     "@context": "https://schema.org",
     "@type": "WebSite",
     name: SITE_NAME,
+    alternateName: AUTHOR.alternateName,
     url: SITE_URL,
     description: SITE_DESCRIPTION,
     author: {
