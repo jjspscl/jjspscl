@@ -12,30 +12,24 @@ import { sendContactNotification } from "../resend";
 
 type D1Database = Cloudflare.Env["DB"];
 
-let _db: D1Database | undefined;
-let _turnstileSecretKey: string | undefined;
-
-export function setDatabase(db: D1Database | undefined): void {
-  _db = db;
+export interface ContactServiceDeps {
+  db: D1Database | undefined;
+  turnstileSecretKey: string;
+  resendApiKey: string | undefined;
 }
 
-export function setTurnstileSecretKey(secretKey: string): void {
-  _turnstileSecretKey = secretKey;
-}
-
-function getDatabase(): D1Database | undefined {
-  return _db;
-}
-
-export async function verifyTurnstileToken(token: string): Promise<TurnstileVerificationResult> {
-  if (!_turnstileSecretKey) {
+export async function verifyTurnstileToken(
+  token: string,
+  secretKey: string
+): Promise<TurnstileVerificationResult> {
+  if (!secretKey) {
     console.error("Turnstile secret key not configured");
     return { success: false, error: "Server configuration error" };
   }
 
   try {
     const formData = new FormData();
-    formData.append("secret", _turnstileSecretKey);
+    formData.append("secret", secretKey);
     formData.append("response", token);
 
     const response = await fetch(TURNSTILE_VERIFY_URL, {
@@ -55,22 +49,30 @@ export async function verifyTurnstileToken(token: string): Promise<TurnstileVeri
   }
 }
 
-export async function checkRateLimit(ip: string): Promise<DailyLimitResult> {
-  return checkAndIncrementDailyLimit(getDatabase(), ip);
+export async function checkRateLimit(
+  db: D1Database | undefined,
+  ip: string
+): Promise<DailyLimitResult> {
+  return checkAndIncrementDailyLimit(db, ip);
 }
 
-export async function getRateLimitStatus(ip: string): Promise<DailyLimitResult> {
-  return checkDailyLimit(getDatabase(), ip);
+export async function getRateLimitStatus(
+  db: D1Database | undefined,
+  ip: string
+): Promise<DailyLimitResult> {
+  return checkDailyLimit(db, ip);
 }
 
 export async function submitContactForm(
+  db: D1Database | undefined,
+  resendApiKey: string | undefined,
   data: ContactSubmissionData,
   metadata: ContactSubmissionMetadata
 ): Promise<SubmissionResult> {
-  const result = await storeContactSubmission(getDatabase(), data, metadata);
+  const result = await storeContactSubmission(db, data, metadata);
 
   if (result.success) {
-    sendContactNotification({
+    sendContactNotification(resendApiKey, {
       name: data.name,
       email: data.email,
       message: data.message,

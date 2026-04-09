@@ -1,4 +1,4 @@
-export { setResendApiKey, sendContactNotification } from "./resend.service";
+export { sendContactNotification } from "./resend.service";
 
 export type {
   ResendEmailPayload,

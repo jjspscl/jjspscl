@@ -5,13 +5,12 @@ export { contactFormSchema, nameSchema, emailSchema, messageSchema } from "./con
 export type { ContactFormData } from "./contact.schema";
 
 export {
-  setDatabase,
-  setTurnstileSecretKey,
   verifyTurnstileToken,
   checkRateLimit,
   getRateLimitStatus,
   submitContactForm,
 } from "./contact.service";
+export type { ContactServiceDeps } from "./contact.service";
 
 export { getZodError, submitContactFormRequest } from "./contact.util";
 

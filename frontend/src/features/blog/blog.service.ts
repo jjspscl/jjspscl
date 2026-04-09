@@ -1,11 +1,12 @@
 import { getStoryblokVersion } from "@sb/storyblok.util"
 import type { IBlog, IArticleTag, GetBlogPostsOptions } from "./blog.type";
 import type { ISbResponses, ISbResult } from "@sb/storyblok.type";
-import { storyBlokClient } from "../storyblok/storyblok.client";
+import { getStoryblokClient } from "../storyblok/storyblok.client";
 
 export const getBlogPosts = async (options: GetBlogPostsOptions = {}) => {
     let blogData: ISbResult<IBlog>[] = [];
-    const res = await storyBlokClient.get("cdn/stories", {
+    const client = getStoryblokClient();
+    const res = await client.get("cdn/stories", {
         starts_with: "blog/",
         sort_by: "first_published_at:desc",
         content_type: "article",
@@ -32,7 +33,8 @@ export const getBlogPosts = async (options: GetBlogPostsOptions = {}) => {
 }
 
 export const getBlogPost = async (slug: string) => {
-    const res = await storyBlokClient.get(`cdn/stories/blog/${slug}`, {
+    const client = getStoryblokClient();
+    const res = await client.get(`cdn/stories/blog/${slug}`, {
         version: getStoryblokVersion(),
         resolve_relations: "article.tags",
     });
@@ -42,7 +44,8 @@ export const getBlogPost = async (slug: string) => {
 }
 
 export const getAllTags = async (): Promise<ISbResult<IArticleTag>[]> => {
-    const res = await storyBlokClient.get("cdn/stories", {
+    const client = getStoryblokClient();
+    const res = await client.get("cdn/stories", {
         starts_with: "blog/tags/",
         content_type: "article-tag",
         version: getStoryblokVersion(),

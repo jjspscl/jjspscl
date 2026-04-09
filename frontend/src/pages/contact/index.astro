@@ -4,25 +4,20 @@ import Base from "@components/layouts/base.astro";
 import {
     ContactFormWrapper,
     contactFormSchema,
-    setDatabase,
-    setTurnstileSecretKey,
     verifyTurnstileToken,
     checkRateLimit,
     getRateLimitStatus,
     submitContactForm,
 } from "@features/contact";
-import { setResendApiKey } from "@features/resend";
 import { TURNSTILE_SITE_KEY } from "astro:env/client";
 import { TURNSTILE_SECRET_KEY, RESEND_API_KEY } from "astro:env/server";
 import { env } from "cloudflare:workers";
 
 const headers = Astro.request.headers;
 const ip = headers.get("CF-Connecting-IP") || headers.get("X-Forwarded-For") || "unknown";
-setDatabase(env.DB);
-setTurnstileSecretKey(TURNSTILE_SECRET_KEY);
-setResendApiKey(RESEND_API_KEY);
+const db = env.DB;
 
-const initialRateLimitStatus = await getRateLimitStatus(ip);
+const initialRateLimitStatus = await getRateLimitStatus(db, ip);
 
 if (Astro.request.method === "POST") {
     const contentType = Astro.request.headers.get("Content-Type") || "";
@@ -51,7 +46,7 @@ if (Astro.request.method === "POST") {
             );
         }
 
-        const verification = await verifyTurnstileToken(turnstileToken);
+        const verification = await verifyTurnstileToken(turnstileToken, TURNSTILE_SECRET_KEY);
         
         if (!verification.success) {
             return new Response(
@@ -60,7 +55,7 @@ if (Astro.request.method === "POST") {
             );
         }
 
-        const limitCheck = await checkRateLimit(ip);
+        const limitCheck = await checkRateLimit(db, ip);
         
         if (!limitCheck.allowed) {
             return new Response(
@@ -92,7 +87,7 @@ if (Astro.request.method === "POST") {
             turnstileToken,
         };
 
-        await submitContactForm({ name, email, message }, metadata);
+        await submitContactForm(db, RESEND_API_KEY, { name, email, message }, metadata);
 
         return new Response(
             JSON.stringify({ success: true, remaining: limitCheck.remaining }),

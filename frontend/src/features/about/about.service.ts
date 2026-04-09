@@ -1,4 +1,4 @@
-import { storyBlokClient } from "../storyblok/storyblok.client";
+import { getStoryblokClient } from "../storyblok/storyblok.client";
 import type {
   ISbResponse,
 } from "../storyblok/storyblok.type";
@@ -8,7 +8,8 @@ import type { IMeResponse } from "./about.type";
 
 export const getMe = async () => {
   try {
-    const res = await storyBlokClient.get("cdn/stories/about", {
+    const client = getStoryblokClient();
+    const res = await client.get("cdn/stories/about", {
       version: getStoryblokVersion(),
     });
   

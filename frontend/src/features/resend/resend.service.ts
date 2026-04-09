@@ -11,18 +11,8 @@ import type {
   ContactNotificationData,
 } from "./resend.type";
 
-let _apiKey: string | undefined;
-
-export function setResendApiKey(apiKey: string | undefined): void {
-  _apiKey = apiKey;
-}
-
-function isConfigured(): boolean {
-  return Boolean(_apiKey);
-}
-
-async function sendEmail(payload: ResendEmailPayload): Promise<SendEmailResult> {
-  if (!isConfigured()) {
+async function sendEmail(apiKey: string, payload: ResendEmailPayload): Promise<SendEmailResult> {
+  if (!apiKey) {
     console.warn("Resend API key not configured, skipping email");
     return { success: false, error: "Resend not configured" };
   }
@@ -31,7 +21,7 @@ async function sendEmail(payload: ResendEmailPayload): Promise<SendEmailResult> 
     const response = await fetch(RESEND_API_URL, {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${_apiKey}`,
+        Authorization: `Bearer ${apiKey}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify(payload),
@@ -162,8 +152,14 @@ JP
 }
 
 export async function sendContactNotification(
+  apiKey: string | undefined,
   data: ContactNotificationData
 ): Promise<SendEmailResult> {
+  if (!apiKey) {
+    console.warn("Resend API key not configured, skipping email");
+    return { success: false, error: "Resend not configured" };
+  }
+
   const ownerPayload: ResendEmailPayload = {
     from: CONTACT_NOTIFICATION_FROM,
     to: CONTACT_NOTIFICATION_TO,
@@ -182,8 +178,8 @@ export async function sendContactNotification(
   };
 
   const [ownerResult, senderResult] = await Promise.all([
-    sendEmail(ownerPayload),
-    sendEmail(senderPayload),
+    sendEmail(apiKey, ownerPayload),
+    sendEmail(apiKey, senderPayload),
   ]);
 
   if (!ownerResult.success) {

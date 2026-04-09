@@ -1,3 +1,7 @@
+-- Migration: 0001_initial_schema
+-- Description: Create initial contact form tables
+-- Date: 2025-01-01
+
 CREATE TABLE IF NOT EXISTS daily_limits (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     ip_address TEXT NOT NULL,
