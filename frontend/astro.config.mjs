@@ -4,7 +4,7 @@ import react from '@astrojs/react';
 import sitemap from '@astrojs/sitemap';
 import { storyblok } from '@storyblok/astro';
 import tailwindcss from '@tailwindcss/vite';
-import { defineConfig, envField } from 'astro/config';
+import { defineConfig, envField, fontProviders } from 'astro/config';
 import { loadEnv } from 'vite';
 
 import { getCustomPages, createSitemapSerializer } from './src/features/sitemap/sitemap.service';
@@ -83,7 +83,12 @@ export default defineConfig({
             } : {},
         },
     },
-    experimental: {
-        rustCompiler: true,
-    }
+    fonts: [{
+        name: "Inter",
+        cssVariable: "--font-inter",
+        provider: fontProviders.google(),
+        weights: [400, 500, 600, 700],
+        styles: ["normal"],
+        subsets: ["latin"],
+    }],
 });

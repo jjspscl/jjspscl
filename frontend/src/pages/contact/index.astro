@@ -106,6 +106,7 @@ const siteKey = TURNSTILE_SITE_KEY;
 const isRateLimited = !initialRateLimitStatus.allowed;
 ---
 <Base title="Contact" description="Get in touch with Joshua Pascual for collaboration opportunities, questions, or just to say hello.">
+    <link slot="head" rel="preconnect" href="https://challenges.cloudflare.com" />
     <main class="container mx-auto max-w-screen-md h-full py-10 px-4">
         <section class="max-w-xl mx-auto">
             {isRateLimited ? (

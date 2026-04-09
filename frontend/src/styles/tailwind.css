@@ -23,7 +23,7 @@
     --color-surface-secondary: var(--theme-surface-secondary);
     --color-primary: var(--theme-primary);
 
-    --font-sans: "Inter", sans-serif;
+    --font-sans: var(--font-inter), sans-serif;
 }
 
 /* ─── Base layer: resets, root variables, element defaults, prose ─── */

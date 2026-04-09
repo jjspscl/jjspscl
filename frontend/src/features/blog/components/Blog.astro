@@ -5,7 +5,6 @@ import ArticleTag from "./ArticleTag.astro";
 
 import type { IArticleBlok } from "../blog.type";
 
-export const prerender = false;
 interface Props {
   blok: IArticleBlok;
   slug: string;
@@ -15,19 +14,18 @@ const renderedRichText = renderRichText(blok.content);
 const tags = blok.tags || [];
 ---
 
-<style is:inline>
-  :target {
+<style is:global>
+  .blog-target:target {
     background-color: #aaf;
   }
 
   @media (prefers-color-scheme: dark) {
-    :target {
+    .blog-target:target {
       background-color: #ffa;
       color: #000;
     }
   }
 
-  /* Override inline styles from Storyblok rich text */
   .prose-override * {
     color: inherit !important;
   }
@@ -57,7 +55,7 @@ const tags = blok.tags || [];
   }
 </style>
 
-<article {...storyblokEditable(blok)} class="rounded mb-28 text-text-primary">
+<article {...storyblokEditable(blok)} class="blog-target rounded mb-28 text-text-primary">
     <div class="mb-12">
         <h1
             class="text-4xl md:text-5xl font-bold mt-12 mb-4 leading-tight"

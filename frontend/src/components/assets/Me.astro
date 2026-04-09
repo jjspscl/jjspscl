@@ -1,7 +1,16 @@
-<img 
-    alt="Joshua Pascual" 
-    class="rounded-full size-52"     
-    src="/me.png"
-    width="208"
-    height="208"
+---
+import { Image } from "astro:assets";
+import meImage from "@assets/me.png";
+---
+
+<Image
+    src={meImage}
+    alt="Joshua Pascual"
+    class="rounded-full size-52"
+    width={208}
+    height={208}
+    format="webp"
+    quality={80}
+    fetchpriority="high"
+    loading="eager"
 />

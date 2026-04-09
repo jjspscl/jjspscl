@@ -18,7 +18,7 @@ interface Props {
 const { 
   title, 
   description = "Joshua Pascual - Software Engineer passionate about building modern web applications. Explore my projects, blog posts, and get in touch.",
-  image = "/me.png",
+  image = "/og-me.png",
   type = "website",
   publishedDate,
   schemaType = "page"
@@ -39,15 +39,12 @@ const webSiteSchema = createWebSiteSchema();
         <meta content="width=device-width, initial-scale=1.0" name="viewport" />
         <meta content={Astro.generator} name="generator" />
         
-        <!-- Preconnect to external origins -->
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-        <link rel="preconnect" href="https://api-ap.storyblok.com" />
+        <!-- Preconnect to Storyblok CDN (images) -->
         <link rel="preconnect" href="https://a-ap.storyblok.com" crossorigin />
-        <link rel="preconnect" href="https://challenges.cloudflare.com" />
         
-        <!-- Google Fonts: Inter -->
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+        <!-- Theme color -->
+        <meta name="theme-color" content="#fff7ec" media="(prefers-color-scheme: light)" />
+        <meta name="theme-color" content="#141414" media="(prefers-color-scheme: dark)" />
         
         <!-- Primary Meta Tags -->
         <title>{fullTitle}</title>
@@ -60,7 +57,7 @@ const webSiteSchema = createWebSiteSchema();
         <!-- Favicon -->
         <link href="/favicon.svg" rel="icon" type="image/svg+xml" />
         <link href="/favicon.ico" rel="icon" sizes="32x32" type="image/x-icon" />
-        <link rel="apple-touch-icon" href="/me.png" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         
         <!-- Open Graph / Facebook -->
         <meta property="og:type" content={type} />
@@ -98,6 +95,7 @@ const webSiteSchema = createWebSiteSchema();
         )}
         
         <ClientRouter />
+        <slot name="head" />
     </head>
     <body class="flex flex-col min-h-screen">
         <a href="#main-content" class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:rounded-lg focus:bg-primary focus:px-4 focus:py-2 focus:text-white focus:outline-none">

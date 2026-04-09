@@ -15,6 +15,7 @@ interface Props {
 const { title, description, image, type, publishedDate } = Astro.props;
 ---
 <RootLayout title={title} description={description} image={image} type={type} publishedDate={publishedDate}>
+    <slot name="head" slot="head" />
     <Header />
     <slot />
     <Footer />

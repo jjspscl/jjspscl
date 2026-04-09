@@ -1,21 +1,25 @@
 ---
+import { Image } from "astro:assets";
+import meImage from "@assets/me.png";
 import { TRANSITION_NAMES } from "@lib/constants/transition";
 
 interface Props {
     class?: string;
-    width?: string;
-    height?: string;
+    width?: number;
+    height?: number;
 }
 
-const { class: className = "", width = "40", height = "40" } = Astro.props;
+const { class: className = "", width = 40, height = 40 } = Astro.props;
 ---
 
-<img
-    src="/me.png"
+<Image
+    src={meImage}
     alt="Joshua Pascual"
     class:list={["rounded-lg", className]}
     width={width}
     height={height}
+    format="webp"
+    quality={80}
     loading="lazy"
     transition:name={TRANSITION_NAMES.MY_IMAGE}
 />
