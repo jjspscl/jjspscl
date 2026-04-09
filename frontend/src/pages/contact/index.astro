@@ -160,7 +160,7 @@ const isRateLimited = !initialRateLimitStatus.allowed;
                     })();
                 </script>
             ) : (
-                <ContactFormWrapper client:load turnstileSiteKey={siteKey} />
+                <ContactFormWrapper client:only="react" turnstileSiteKey={siteKey} />
             )}
         </section>
     </main>

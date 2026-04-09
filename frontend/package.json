@@ -14,6 +14,7 @@
   "dependencies": {
     "@astrojs/check": "^0.9.8",
     "@astrojs/cloudflare": "^13.1.8",
+    "@astrojs/compiler-rs": "^0.1.6",
     "@astrojs/react": "^5.0.3",
     "@astrojs/sitemap": "^3.7.2",
     "@marsidev/react-turnstile": "^1.5.0",
