@@ -6,7 +6,7 @@ on:
       - main
     paths:
       - 'frontend/db/**'
-      - 'frontend/wrangler.toml'
+      - 'frontend/wrangler.jsonc'
   workflow_dispatch:
     inputs:
       environment:

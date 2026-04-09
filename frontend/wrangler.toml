@@ -1,8 +1,0 @@
-name = "jjspscl"
-compatibility_date = "2026-04-01"
-pages_build_output_dir = "./dist"
-
-[[d1_databases]]
-binding = "DB"
-database_name = "contact-limits"
-database_id = "e502a5c2-f63e-40ae-b8b7-9ed12458838d"

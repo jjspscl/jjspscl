@@ -1,4 +1,4 @@
-name: Deploy Frontend to Cloudflare Pages
+name: Deploy Frontend to Cloudflare Workers
 
 on:
   push:
@@ -65,14 +65,14 @@ jobs:
         working-directory: frontend
         run: echo "${{ secrets.INDEXNOW_KEY }}" > dist/${{ secrets.INDEXNOW_KEY }}.txt
 
-      - name: 🚀 Deploy to Cloudflare Pages
+      - name: 🚀 Deploy to Cloudflare Workers
         id: deploy
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           workingDirectory: frontend
-          command: pages deploy dist --project-name=jjspscl
+          command: deploy
 
   # ============================================
   # 🔍 SEARCH ENGINE INDEXING (runs in parallel)

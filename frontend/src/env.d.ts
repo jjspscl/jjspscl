@@ -7,12 +7,6 @@ declare namespace Cloudflare {
   }
 }
 
-type Runtime = import("@astrojs/cloudflare").Runtime;
-
-declare namespace App {
-  interface Locals extends Runtime {}
-}
-
 interface ImportMetaEnv {
   readonly STORYBLOK_TOKEN: string;
 }
