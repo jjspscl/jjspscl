@@ -12,17 +12,34 @@ import { renderCalendarCard } from "./cards/calendar";
 
 interface Bindings {
   STATS_CACHE: KVNamespace;
-  GITHUB_TOKEN_PERSONAL: string;
-  GITHUB_TOKEN_CORPORATE: string;
-  GITHUB_USERNAME_PERSONAL: string;
-  GITHUB_USERNAME_CORPORATE: string;
+  GITHUB_ACCOUNTS?: string;
+  GITHUB_TOKEN_PERSONAL?: string;
+  GITHUB_TOKEN_CORPORATE?: string;
+  GITHUB_USERNAME_PERSONAL?: string;
+  GITHUB_USERNAME_CORPORATE?: string;
 }
 
-const app = new Hono<{ Bindings: Bindings }>();
+function buildAccountList(env: Bindings): AccountConfig[] {
+  if (env.GITHUB_ACCOUNTS) {
+    const parsed: unknown = JSON.parse(env.GITHUB_ACCOUNTS);
 
-let inflightPromise: Promise<MergedData> | null = null;
+    if (!Array.isArray(parsed) || parsed.length === 0) {
+      throw new Error("GITHUB_ACCOUNTS must be a non-empty JSON array");
+    }
 
-async function fetchFreshData(env: Bindings): Promise<MergedData> {
+    return parsed.map((entry: Record<string, unknown>, i: number) => {
+      if (
+        typeof entry.token !== "string" ||
+        typeof entry.username !== "string"
+      ) {
+        throw new Error(
+          `GITHUB_ACCOUNTS[${String(i)}] must have string token and username`,
+        );
+      }
+      return { token: entry.token, username: entry.username };
+    });
+  }
+
   const accounts: AccountConfig[] = [];
 
   if (env.GITHUB_TOKEN_PERSONAL && env.GITHUB_USERNAME_PERSONAL) {
@@ -38,6 +55,16 @@ async function fetchFreshData(env: Bindings): Promise<MergedData> {
       username: env.GITHUB_USERNAME_CORPORATE,
     });
   }
+
+  return accounts;
+}
+
+const app = new Hono<{ Bindings: Bindings }>();
+
+let inflightPromise: Promise<MergedData> | null = null;
+
+async function fetchFreshData(env: Bindings): Promise<MergedData> {
+  const accounts = buildAccountList(env);
 
   if (accounts.length === 0) {
     throw new Error("No GitHub accounts configured");
@@ -153,13 +180,13 @@ app.get("/", (c) => {
 </head>
 <body>
   <h1>GitHub Stats API</h1>
-  <p class="sub">Self-hosted GitHub metrics with merged dual-account stats, served as SVG cards.</p>
+  <p class="sub">Self-hosted GitHub metrics with merged multi-account stats, served as SVG cards.</p>
 
   <h2>Available Endpoints</h2>
   <div class="endpoint"><a href="/api/stats?theme=gotham"><code>GET /api/stats</code></a> — Profile stats card</div>
   <div class="endpoint"><a href="/api/languages?theme=gotham"><code>GET /api/languages</code></a> — Top languages breakdown</div>
   <div class="endpoint"><a href="/api/streak?theme=gotham"><code>GET /api/streak</code></a> — Contribution streak tracker</div>
-  <div class="endpoint"><a href="/api/calendar?theme=gotham"><code>GET /api/calendar</code></a> — Isometric 3D contribution calendar</div>
+  <div class="endpoint"><a href="/api/calendar?theme=gotham"><code>GET /api/calendar</code></a> — Contribution calendar</div>
 
   <h2>Query Parameters</h2>
   <div class="endpoint"><code>?theme=gotham</code></div>

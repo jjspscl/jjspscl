@@ -14,8 +14,11 @@
     }
   ]
   // Secrets (set via `wrangler secret put`):
-  // - GITHUB_TOKEN_PERSONAL
-  // - GITHUB_TOKEN_CORPORATE
-  // - GITHUB_USERNAME_PERSONAL
-  // - GITHUB_USERNAME_CORPORATE
+  //
+  // Preferred — single JSON array of accounts:
+  //   GITHUB_ACCOUNTS = [{"token":"ghp_…","username":"user1"},{"token":"ghp_…","username":"user2"}]
+  //
+  // Legacy fallback (still supported):
+  //   GITHUB_TOKEN_PERSONAL, GITHUB_USERNAME_PERSONAL
+  //   GITHUB_TOKEN_CORPORATE, GITHUB_USERNAME_CORPORATE
 }
