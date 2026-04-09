@@ -1,6 +1,7 @@
 import { useForm } from "@tanstack/react-form";
 import { useState, useRef, useEffect } from "react";
 import { z } from "zod";
+import { cn } from "@lib/utils/cn";
 import {
   nameSchema,
   emailSchema,
@@ -149,7 +150,7 @@ export function ContactForm({ turnstileToken, onTurnstileReset }: ContactFormPro
         {currentStep === "name" && (
           <div
             key={`name-${stepKey.current}`}
-            className={`space-y-4 ${animationDirection === "up" ? "animate-typeform-up" : "animate-typeform-down"}`}
+            className={cn("space-y-4", animationDirection === "up" ? "animate-typeform-up" : "animate-typeform-down")}
           >
             <label className="block">
               <span className="mb-2 block text-lg text-white">
@@ -195,7 +196,7 @@ export function ContactForm({ turnstileToken, onTurnstileReset }: ContactFormPro
         {currentStep === "email" && (
           <div
             key={`email-${stepKey.current}`}
-            className={`space-y-4 ${animationDirection === "up" ? "animate-typeform-up" : "animate-typeform-down"}`}
+            className={cn("space-y-4", animationDirection === "up" ? "animate-typeform-up" : "animate-typeform-down")}
           >
             <label className="block">
               <span className="mb-2 block text-lg text-white">
@@ -248,7 +249,7 @@ export function ContactForm({ turnstileToken, onTurnstileReset }: ContactFormPro
         {currentStep === "message" && (
           <div
             key={`message-${stepKey.current}`}
-            className={`space-y-4 ${animationDirection === "up" ? "animate-typeform-up" : "animate-typeform-down"}`}
+            className={cn("space-y-4", animationDirection === "up" ? "animate-typeform-up" : "animate-typeform-down")}
           >
             <label className="block">
               <span className="mb-2 block text-lg text-white">
