@@ -1,0 +1,9 @@
+# Dynamic multi-account config (preferred)
+# JSON array — add as many accounts as needed
+GITHUB_ACCOUNTS=[{"token":"ghp_xxx","username":"your-username"},{"token":"ghp_yyy","username":"corp-username"}]
+
+# Legacy individual account config (fallback if GITHUB_ACCOUNTS is not set)
+# GITHUB_TOKEN_PERSONAL=ghp_xxx
+# GITHUB_USERNAME_PERSONAL=your-username
+# GITHUB_TOKEN_CORPORATE=ghp_yyy
+# GITHUB_USERNAME_CORPORATE=corp-username
