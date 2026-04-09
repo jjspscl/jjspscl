@@ -1,0 +1,21 @@
+{
+  "name": "metrics",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-04-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "workers_dev": true,
+  "routes": [
+    { "pattern": "stats.jjspscl.com", "custom_domain": true }
+  ],
+  "kv_namespaces": [
+    {
+      "binding": "STATS_CACHE",
+      "id": "427c2ca594e14f39a78f74699d218d95"
+    }
+  ]
+  // Secrets (set via `wrangler secret put`):
+  // - GITHUB_TOKEN_PERSONAL
+  // - GITHUB_TOKEN_CORPORATE
+  // - GITHUB_USERNAME_PERSONAL
+  // - GITHUB_USERNAME_CORPORATE
+}
