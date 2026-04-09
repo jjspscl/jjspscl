@@ -15,7 +15,7 @@ try {
     }
 } catch (error: unknown) {
     if (typeof error === "object" && error !== null && "status" in error && (error as { status: number }).status === 404) {
-        return Astro.redirect("/404");
+        return Astro.rewrite("/404");
     }
 }
 ---

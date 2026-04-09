@@ -1,5 +1,8 @@
 ---
 import BaseLayout from "@components/layouts/base.astro";
+
+export const prerender = true;
+
 const language = Astro.url.searchParams.get("lang") as string;
 const message =
   language === "en-ph" ? "Wala dito hinahanap mo" : "Page not found";

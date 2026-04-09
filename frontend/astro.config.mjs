@@ -84,6 +84,6 @@ export default defineConfig({
         },
     },
     experimental: {
-        // rustCompiler: true,
+        rustCompiler: true,
     }
 });
