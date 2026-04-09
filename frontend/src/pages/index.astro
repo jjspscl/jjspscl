@@ -1,15 +1,16 @@
 ---
 import MyImage from "@components/assets/Me.astro";
-import Root from "@components/layouts/root.astro";
-import Footer from "@components/Footer.astro";
 import { Card } from "@components/Card";
-import Tag from "@lib/tag/Tag.astro";
+import Footer from "@components/Footer.astro";
+import Root from "@components/layouts/root.astro";
+import { getProjects } from "@features/projects/project.service";
+import { AUTHOR } from "@features/seo/seo.constant";
 import { links } from "@lib/constants/links";
 import { TRANSITION_NAMES } from "@lib/constants/transition";
-import { AUTHOR } from "@features/seo/seo.constant";
-import { getProjects } from "@features/projects/project.service";
-import type { ISbResult } from "@features/storyblok/storyblok.type";
+import Tag from "@lib/tag/Tag.astro";
+
 import type { IProject } from "@features/projects/project.type";
+import type { ISbResult } from "@features/storyblok/storyblok.type";
 
 export const prerender = true;
 
