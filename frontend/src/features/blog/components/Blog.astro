@@ -33,16 +33,16 @@ const tags = blok.tags || [];
   }
   
   .prose-override a {
-    color: #0052a3 !important;
+    color: var(--theme-link) !important;
     text-decoration: underline !important;
   }
   
   .prose-override a:hover {
-    color: #003d7a !important;
+    opacity: 0.8;
   }
 
   .prose-override code {
-    color: #c41425 !important;
+    color: var(--color-vhs-red) !important;
   }
 
   .prose-override pre,
@@ -51,21 +51,13 @@ const tags = blok.tags || [];
   }
 
   @media (prefers-color-scheme: dark) {
-    .prose-override a {
-      color: #7cc5ed !important;
-    }
-    
-    .prose-override a:hover {
-      color: #a8d8f0 !important;
-    }
-
     .prose-override code {
       color: #fbbf24 !important;
     }
   }
 </style>
 
-<article {...storyblokEditable(blok)} class="rounded mb-28 text-[#1a1a1a] dark:text-[#f5f5f5]">
+<article {...storyblokEditable(blok)} class="rounded mb-28 text-text-primary">
     <div class="mb-12">
         <h1
             class="text-4xl md:text-5xl font-kagitingan font-bold mt-12 mb-4 leading-tight"

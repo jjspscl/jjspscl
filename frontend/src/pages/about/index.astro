@@ -19,11 +19,11 @@ const aboutMe = renderRichText(me.intro_description);
                 </span>
             </a>
         </section>
-        <section class="bg-vhs-cream py-10">
+        <section class="light bg-vhs-cream py-10">
             <div class="container mx-auto max-w-screen-md px-4">
                 <div class="md:grid md:grid-cols-2 md:gap-x-10">
-                    <h2 class="text-xl md:text-2xl font-bold text-center md:text-right mb-4 md:mb-0 text-[#1a1a1a]">{me.intro_label}</h2>
-                    <div class="prose prose-base md:prose-lg prose-headings:mb-1 text-center md:text-left text-[#1a1a1a] prose-p:text-[#1a1a1a] prose-strong:text-[#1a1a1a] prose-a:text-[#0052a3]">
+                    <h2 class="text-xl md:text-2xl font-bold text-center md:text-right mb-4 md:mb-0 text-text-primary">{me.intro_label}</h2>
+                    <div class="prose prose-base md:prose-lg prose-headings:mb-1 text-center md:text-left text-text-primary prose-p:text-text-primary prose-strong:text-text-primary prose-a:text-link">
                         <Fragment set:html={aboutMe}/>
                     </div>
                 </div>
