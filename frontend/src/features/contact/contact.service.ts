@@ -10,7 +10,7 @@ import type {
 } from "./contact.type";
 import { sendContactNotification } from "../resend";
 
-type D1Database = Env["DB"];
+type D1Database = Cloudflare.Env["DB"];
 
 let _db: D1Database | undefined;
 let _turnstileSecretKey: string | undefined;
@@ -70,8 +70,6 @@ export async function submitContactForm(
   const result = await storeContactSubmission(getDatabase(), data, metadata);
 
   if (result.success) {
-    console.log("Contact form submission:", { ...data, metadata });
-
     sendContactNotification({
       name: data.name,
       email: data.email,

@@ -6,7 +6,7 @@ import type {
   SubmissionResult,
 } from "./contact.type";
 
-type D1Database = Env["DB"];
+type D1Database = Cloudflare.Env["DB"];
 
 export async function checkAndIncrementDailyLimit(
   db: D1Database | undefined,

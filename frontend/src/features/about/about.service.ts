@@ -1,8 +1,8 @@
-import { storyBlokClient } from "../storyblok/client";
+import { storyBlokClient } from "../storyblok/storyblok.client";
 import type {
   ISbResponse,
-} from "../storyblok/storyblok.types";
-import { getStoryblokVersion } from "../storyblok/utils";
+} from "../storyblok/storyblok.type";
+import { getStoryblokVersion } from "../storyblok/storyblok.util";
 import type { IMeResponse } from "./about.type";
 
 
@@ -16,7 +16,7 @@ export const getMe = async () => {
   
     return data.story.content;
   } catch (error) {
-    console.log(error);
+    console.error(error);
     throw new Error("Failed to fetch data");
   }
 };

@@ -1,14 +1,14 @@
 ---
 import Base from "@components/layouts/base.astro";
 import { getAllTags } from "@features/blog/blog.service";
-import { getTagColor } from "@features/blog/blog.type";
+import { getTagColor } from "@lib/tag";
 
 let allTags: Awaited<ReturnType<typeof getAllTags>> = [];
 
 try {
     allTags = await getAllTags();
-} catch (error: any) {
-    if (error?.status === 404) {
+} catch (error: unknown) {
+    if (typeof error === "object" && error !== null && "status" in error && (error as { status: number }).status === 404) {
         return Astro.redirect("/404");
     }
 }

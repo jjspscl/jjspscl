@@ -12,7 +12,7 @@ export interface ISbResult<T> {
     tag_list: string[];
     is_startpage: boolean;
     parent_id: number;
-    meta_data: any;
+    meta_data: Record<string, unknown>;
     group_id: string;
     first_published_at: string;
     release_id: string;

@@ -1,7 +1,7 @@
-import type { ISbResponses, ISbResult } from "@sb/storyblok.types";
-import { getStoryblokVersion } from "@sb/utils";
+import type { ISbResponses, ISbResult } from "@sb/storyblok.type";
+import { getStoryblokVersion } from "@sb/storyblok.util";
 import type { IProject } from "./project.type";
-import { storyBlokClient } from "../storyblok/client";
+import { storyBlokClient } from "../storyblok/storyblok.client";
 
 export const getProjects = async () => {
     let projectData: ISbResult<IProject>[] = [];

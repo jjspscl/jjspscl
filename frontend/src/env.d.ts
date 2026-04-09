@@ -1,11 +1,13 @@
 /// <reference path="../.astro/types.d.ts" />
 /// <reference types="@cloudflare/workers-types" />
 
-interface Env {
-  DB: import("@cloudflare/workers-types").D1Database;
+declare namespace Cloudflare {
+  interface Env {
+    DB: import("@cloudflare/workers-types").D1Database;
+  }
 }
 
-type Runtime = import("@astrojs/cloudflare").Runtime<Env>;
+type Runtime = import("@astrojs/cloudflare").Runtime;
 
 declare namespace App {
   interface Locals extends Runtime {}

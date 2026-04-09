@@ -1,11 +1,7 @@
-import { getStoryblokVersion } from "@sb/utils"
-import type { IBlog, IArticleTag } from "./blog.type";
-import type { ISbResponses, ISbResult } from "@sb/storyblok.types";
-import { storyBlokClient } from "../storyblok/client";
-
-export interface GetBlogPostsOptions {
-    tags?: string[];
-}
+import { getStoryblokVersion } from "@sb/storyblok.util"
+import type { IBlog, IArticleTag, GetBlogPostsOptions } from "./blog.type";
+import type { ISbResponses, ISbResult } from "@sb/storyblok.type";
+import { storyBlokClient } from "../storyblok/storyblok.client";
 
 export const getBlogPosts = async (options: GetBlogPostsOptions = {}) => {
     let blogData: ISbResult<IBlog>[] = [];
@@ -54,12 +50,4 @@ export const getAllTags = async (): Promise<ISbResult<IArticleTag>[]> => {
 
     const data = res.data as ISbResponses<IArticleTag>;
     return data?.stories || [];
-}
-
-export const getTagBySlug = async (slug: string) => {
-    const res = await storyBlokClient.get(`cdn/stories/blog/tags/${slug}`, {
-        version: getStoryblokVersion(),
-    });
-
-    return res.data;
 }

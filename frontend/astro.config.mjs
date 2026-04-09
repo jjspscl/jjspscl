@@ -2,8 +2,8 @@
 import cloudflare from '@astrojs/cloudflare';
 import react from '@astrojs/react';
 import sitemap from '@astrojs/sitemap';
-import tailwind from '@astrojs/tailwind';
 import { storyblok } from '@storyblok/astro';
+import tailwindcss from '@tailwindcss/vite';
 import { defineConfig, envField } from 'astro/config';
 import { loadEnv } from 'vite';
 
@@ -45,15 +45,8 @@ export default defineConfig({
     },
 
     output: "server",
-    adapter: cloudflare({
-        platformProxy: {
-            enabled: true
-        },
-    }),
+    adapter: cloudflare(),
     prefetch: true,
-    build: {
-        
-    },
     integrations: [
         sitemap({
             customPages: storyblokToken ? await getCustomPages(storyblokToken) : [],
@@ -67,7 +60,6 @@ export default defineConfig({
                 video: false,
             },
         }),
-        tailwind(),
         react(),
         storyblok({
             accessToken: env.STORYBLOK_TOKEN,
@@ -84,9 +76,7 @@ export default defineConfig({
         }),
     ],
     vite: {
-        build: {
-            minify: false
-        },
+        plugins: [tailwindcss()],
         resolve: {
             alias: import.meta.env.PROD ? {
                 "react-dom/server": "react-dom/server.edge",

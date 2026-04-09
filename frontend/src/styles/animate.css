@@ -1,7 +1,7 @@
 
 .highlight-text {
   width: calc(100%);
-  background-image: linear-gradient(transparent calc(100% - 10px), var(--color-red) 10px);
+  background-image: linear-gradient(transparent calc(100% - 10px), var(--color-vhs-red) 10px);
   background-repeat: no-repeat;
   background-size: 0% 100%;
   transition: background-size 1s;

@@ -1,8 +1,7 @@
 import type { SitemapItem } from "@astrojs/sitemap";
 import { EnumChangefreq } from "sitemap";
 import StoryblokClient from "storyblok-js-client";
-
-const SITE_URL = "https://jjspscl.com";
+import { SITE_URL } from "../seo/seo.constant";
 
 const STATIC_PAGES = [
     "/",

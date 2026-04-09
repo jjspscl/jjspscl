@@ -1,5 +1,5 @@
-import type { ITag, ITagAsset, ITagResolved, TagColor } from "@lib/tag";
-import { TAG_COLORS, getTagColor } from "@lib/tag";
+import type { SbBlokData, StoryblokRichTextNode } from "@storyblok/js";
+import type { ITag, ITagAsset, ITagResolved } from "@lib/tag";
 
 export interface IArticleTag extends ITag {
     icon: ITagAsset;
@@ -8,8 +8,6 @@ export interface IArticleTag extends ITag {
 
 export type IArticleTagResolved = ITagResolved<IArticleTag>;
 
-export type { ITagAsset as IStoryblokAsset, TagColor };
-
 export interface IBlog {
     title: string;
     headline: string;
@@ -17,4 +15,14 @@ export interface IBlog {
     tags: IArticleTagResolved[];
 }
 
-export { TAG_COLORS, getTagColor };
+export interface IArticleBlok extends SbBlokData {
+    title: string;
+    subtitle: string;
+    content: StoryblokRichTextNode<string>;
+    tags: IArticleTagResolved[];
+    created_at: string;
+}
+
+export interface GetBlogPostsOptions {
+    tags?: string[];
+}

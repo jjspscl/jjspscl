@@ -1,17 +1,18 @@
 ---
 import { storyblokEditable, renderRichText } from "@storyblok/astro";
+
 import ArticleTag from "./ArticleTag.astro";
 
-import type { IArticleTagResolved } from "../blog.type";
+import type { IArticleBlok } from "../blog.type";
 
 export const prerender = false;
 interface Props {
-  blok: any;
+  blok: IArticleBlok;
   slug: string;
 }
 const { blok, slug } = Astro.props;
 const renderedRichText = renderRichText(blok.content);
-const tags = (blok.tags || []) as IArticleTagResolved[];
+const tags = blok.tags || [];
 ---
 
 <style is:inline>
@@ -65,7 +66,7 @@ const tags = (blok.tags || []) as IArticleTagResolved[];
 </style>
 
 <article {...storyblokEditable(blok)} class="rounded mb-28 text-[#1a1a1a] dark:text-[#f5f5f5]">
-    <div class="1mb-12">
+    <div class="mb-12">
         <h1
             class="text-4xl md:text-5xl font-kagitingan font-bold mt-12 mb-4 leading-tight"
             transition:name={slug}

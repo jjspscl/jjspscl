@@ -1,5 +1,5 @@
 import { useForm } from "@tanstack/react-form";
-import { useState, useCallback, useRef, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import { z } from "zod";
 import {
   nameSchema,
@@ -93,7 +93,7 @@ export function ContactForm({ turnstileToken, onTurnstileReset }: ContactFormPro
     },
   });
 
-  const validateAndAdvance = useCallback(
+  const validateAndAdvance =
     (field: "name" | "email" | "message", schema: z.ZodSchema) => {
       const value = form.getFieldValue(field);
       const error = getZodError(value, schema);
@@ -110,20 +110,18 @@ export function ContactForm({ turnstileToken, onTurnstileReset }: ContactFormPro
           form.handleSubmit();
         }
       }
-    },
-    [form]
-  );
+    };
 
-  const goBack = useCallback(() => {
+  const goBack = () => {
     const currentIndex = STEP_ORDER.indexOf(currentStep as (typeof STEP_ORDER)[number]);
     if (currentIndex > 0) {
       setAnimationDirection("down");
       stepKey.current += 1;
       setCurrentStep(STEP_ORDER[currentIndex - 1]);
     }
-  }, [currentStep]);
+  };
 
-  const handleKeyDown = useCallback(
+  const handleKeyDown =
     (
       e: React.KeyboardEvent,
       field: "name" | "email" | "message",
@@ -133,9 +131,7 @@ export function ContactForm({ turnstileToken, onTurnstileReset }: ContactFormPro
         e.preventDefault();
         validateAndAdvance(field, schema);
       }
-    },
-    [validateAndAdvance]
-  );
+    };
 
   if (currentStep === "success") {
     return <SuccessMessage />;

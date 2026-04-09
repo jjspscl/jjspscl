@@ -4,6 +4,9 @@ import unusedImports from "eslint-plugin-unused-imports";
 
 /** @type { import("eslint").Linter.Config[] } */
 export default [
+    {
+        ignores: ["dist/", ".astro/"],
+    },
     ...eslintPluginAstro.configs.recommended,
     ...eslintPluginAstro.configs["jsx-a11y-recommended"],
     {   

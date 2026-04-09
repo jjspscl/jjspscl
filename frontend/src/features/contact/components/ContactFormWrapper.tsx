@@ -1,5 +1,5 @@
 import { Turnstile } from "@marsidev/react-turnstile";
-import { useCallback, useState } from "react";
+import { useState } from "react";
 
 import { ContactForm } from "./ContactForm";
 
@@ -11,14 +11,14 @@ export function ContactFormWrapper({ turnstileSiteKey }: ContactFormWrapperProps
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const [turnstileKey, setTurnstileKey] = useState(0);
 
-  const handleTurnstileSuccess = useCallback((token: string) => {
+  const handleTurnstileSuccess = (token: string) => {
     setTurnstileToken(token);
-  }, []);
+  };
 
-  const handleTurnstileReset = useCallback(() => {
+  const handleTurnstileReset = () => {
     setTurnstileToken(null);
     setTurnstileKey((prev) => prev + 1);
-  }, []);
+  };
 
   if (!turnstileToken) {
     return (

@@ -1,10 +1,10 @@
 ---
-import { renderRichText } from "@storyblok/astro";
 
-import Me from "../../components/assets/Me.astro";
-import Full from "../../components/layouts/full.astro";
-import { getMe } from "../../features/about/about.service";
-import { TRANSITION_NAMES } from "../../lib/constants/transition";
+import Me from "@components/assets/Me.astro";
+import Full from "@components/layouts/full.astro";
+import { getMe } from "@features/about/about.service";
+import { TRANSITION_NAMES } from "@lib/constants/transition";
+import { renderRichText } from "@storyblok/astro";
 
 const me = await getMe();
 

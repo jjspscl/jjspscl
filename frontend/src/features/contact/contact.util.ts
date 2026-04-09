@@ -3,7 +3,7 @@ import { z } from "zod";
 export function getZodError(value: string, schema: z.ZodSchema): string | null {
   const result = schema.safeParse(value);
   if (result.success) return null;
-  return result.error.errors[0]?.message ?? "Invalid input";
+  return result.error.issues[0]?.message ?? "Invalid input";
 }
 
 export async function submitContactFormRequest(data: {

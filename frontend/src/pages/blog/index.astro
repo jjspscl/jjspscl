@@ -3,8 +3,8 @@ import Base from "@components/layouts/base.astro";
 import { getBlogPosts } from "@features/blog/blog.service";
 import BlogCard from "@features/blog/components/BlogCard.astro";
 
-import type { IBlog } from "../../features/blog/blog.type";
-import type { ISbResult } from "@sb/storyblok.types";
+import type { IBlog } from "@features/blog/blog.type";
+import type { ISbResult } from "@sb/storyblok.type";
 
 const url = new URL(Astro.request.url);
 const tagsParam = url.searchParams.get("tags");
@@ -19,8 +19,8 @@ try {
     if (blogData) {
         stories = blogData;
     }
-} catch (error: any) {
-    if (error?.status === 404) {
+} catch (error: unknown) {
+    if (typeof error === "object" && error !== null && "status" in error && (error as { status: number }).status === 404) {
         return Astro.redirect("/404");
     }
 }

@@ -4,7 +4,7 @@ import ProjectCard from "@features/projects/components/ProjectCard.astro";
 import { getProjects } from "@features/projects/project.service";
 
 import type { IProject } from "@features/projects/project.type";
-import type { ISbResult } from "@sb/storyblok.types";
+import type { ISbResult } from "@sb/storyblok.type";
 
 let stories: ISbResult<IProject>[] = [];
 try {
@@ -13,8 +13,8 @@ try {
     if (data) {
         stories = data;
     }
-} catch (error: any) {
-    if (error?.status === 404) {
+} catch (error: unknown) {
+    if (typeof error === "object" && error !== null && "status" in error && (error as { status: number }).status === 404) {
         return Astro.redirect("/404");
     }
 }
