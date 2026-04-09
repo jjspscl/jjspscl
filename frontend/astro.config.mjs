@@ -63,7 +63,8 @@ export default defineConfig({
         react(),
         storyblok({
             accessToken: env.STORYBLOK_TOKEN,
-            livePreview: import.meta.env.MODE === "development",
+            bridge: import.meta.env.DEV,
+            livePreview: import.meta.env.DEV,
             componentsDir: "src/features",
             components: {
                 article: "blog/components/Blog",
