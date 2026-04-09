@@ -44,7 +44,7 @@ jobs:
           echo "Running D1 migrations..."
           for migration in ./db/migrations/*.sql; do
             echo "Applying: $migration"
-            wrangler d1 execute contact-limits --remote --file="$migration"
+            wrangler d1 execute jjspscl --remote --file="$migration"
           done
           echo "All migrations applied!"
 
@@ -55,4 +55,4 @@ jobs:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: |
           echo "Verifying tables..."
-          wrangler d1 execute contact-limits --remote --command="SELECT name FROM sqlite_master WHERE type='table';"
+          wrangler d1 execute jjspscl --remote --command="SELECT name FROM sqlite_master WHERE type='table';"
