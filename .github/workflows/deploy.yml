@@ -53,6 +53,13 @@ jobs:
         working-directory: frontend
         run: npm run lint
 
+      - name: 🔐 Create .dev.vars for Cloudflare prerender
+        working-directory: frontend
+        run: |
+          echo "STORYBLOK_TOKEN=${{ secrets.STORYBLOK_TOKEN }}" > .dev.vars
+          echo "TURNSTILE_SITE_KEY=${{ secrets.TURNSTILE_SITE_KEY }}" >> .dev.vars
+          echo "TURNSTILE_SECRET_KEY=${{ secrets.TURNSTILE_SECRET_KEY }}" >> .dev.vars
+
       - name: 🔨 Build
         working-directory: frontend
         env:
@@ -63,7 +70,7 @@ jobs:
 
       - name: 🔑 Generate IndexNow Key File
         working-directory: frontend
-        run: echo "${{ secrets.INDEXNOW_KEY }}" > dist/${{ secrets.INDEXNOW_KEY }}.txt
+        run: echo "${{ secrets.INDEXNOW_KEY }}" > dist/client/${{ secrets.INDEXNOW_KEY }}.txt
 
       - name: 🚀 Deploy to Cloudflare Workers
         id: deploy
