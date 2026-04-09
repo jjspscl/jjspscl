@@ -8,4 +8,4 @@
 ![](https://stats.jjspscl.com/api/languages?theme=gotham)
 
 ## 📅 Contribution Calendar:
-![](https://stats.jjspscl.com/api/calendar?theme=gotham)
+![](https://stats.jjspscl.com/api/calendar?theme=gotham&v=2)
