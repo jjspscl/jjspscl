@@ -2,6 +2,7 @@ import { useForm } from "@tanstack/react-form";
 import { useState, useRef, useEffect } from "react";
 import { z } from "zod";
 import { cn } from "@lib/utils/cn";
+import { Button } from "@components/Button";
 import {
   nameSchema,
   emailSchema,
@@ -19,6 +20,29 @@ type FormStep = "name" | "email" | "message" | "success";
 const STEP_ORDER: FormStep[] = ["name", "email", "message"];
 
 const REDIRECT_DELAY_MS = 5000;
+
+const STEP_LABELS: Record<string, string> = {
+  name: "Step 1 of 3",
+  email: "Step 2 of 3",
+  message: "Step 3 of 3",
+};
+
+function CheckIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="3"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <polyline points="20 6 9 17 4 12" />
+    </svg>
+  );
+}
 
 function SuccessMessage() {
   const [countdown, setCountdown] = useState(Math.ceil(REDIRECT_DELAY_MS / 1000));
@@ -41,12 +65,25 @@ function SuccessMessage() {
   return (
     <div className="flex min-h-[400px] flex-col items-center justify-center">
       <div className="text-center animate-typeform-scale">
-        <div className="mb-4 text-5xl animate-typeform-check">✓</div>
-        <h2 className="mb-2 text-2xl font-bold text-white animate-typeform-fade" style={{ animationDelay: "0.2s", animationFillMode: "backwards" }}>Message Sent!</h2>
-        <p className="text-gray-400 animate-typeform-fade" style={{ animationDelay: "0.4s", animationFillMode: "backwards" }}>
+        <div className="mb-4 flex justify-center animate-typeform-check">
+          <CheckIcon className="w-14 h-14 text-vhs-green" />
+        </div>
+        <h2
+          className="mb-2 text-2xl font-bold text-text-primary animate-typeform-fade"
+          style={{ animationDelay: "0.2s", animationFillMode: "backwards" }}
+        >
+          Message Sent!
+        </h2>
+        <p
+          className="text-text-secondary animate-typeform-fade"
+          style={{ animationDelay: "0.4s", animationFillMode: "backwards" }}
+        >
           Thanks for reaching out. I'll get back to you soon.
         </p>
-        <div className="mt-6 flex items-center justify-center gap-2 text-gray-500 animate-typeform-fade" style={{ animationDelay: "0.6s", animationFillMode: "backwards" }}>
+        <div
+          className="mt-6 flex items-center justify-center gap-2 text-text-secondary animate-typeform-fade"
+          style={{ animationDelay: "0.6s", animationFillMode: "backwards" }}
+        >
           <svg className="h-4 w-4 animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
@@ -138,8 +175,27 @@ export function ContactForm({ turnstileToken, onTurnstileReset }: ContactFormPro
     return <SuccessMessage />;
   }
 
+  const stepLabel = STEP_LABELS[currentStep] || "";
+
   return (
     <div className="flex min-h-[400px] flex-col justify-center">
+      <div className="mb-6 flex items-center justify-between" aria-live="polite">
+        <span className="text-sm font-medium text-text-secondary">{stepLabel}</span>
+        <div className="flex gap-1.5">
+          {STEP_ORDER.map((step, i) => (
+            <div
+              key={step}
+              className={cn(
+                "h-1.5 w-8 rounded-full transition-colors duration-300",
+                STEP_ORDER.indexOf(currentStep as (typeof STEP_ORDER)[number]) >= i
+                  ? "bg-accent"
+                  : "bg-surface-secondary"
+              )}
+            />
+          ))}
+        </div>
+      </div>
+
       <form
         onSubmit={(e) => {
           e.preventDefault();
@@ -153,7 +209,7 @@ export function ContactForm({ turnstileToken, onTurnstileReset }: ContactFormPro
             className={cn("space-y-4", animationDirection === "up" ? "animate-typeform-up" : "animate-typeform-down")}
           >
             <label className="block">
-              <span className="mb-2 block text-lg text-white">
+              <span className="mb-2 block text-lg text-text-primary">
                 What's your name?
               </span>
               <form.Field name="name">
@@ -171,24 +227,25 @@ export function ContactForm({ turnstileToken, onTurnstileReset }: ContactFormPro
                     onKeyDown={(e) => handleKeyDown(e, "name", nameSchema)}
                     placeholder="John Doe"
                     autoFocus
-                    className="w-full rounded-lg border border-gray-700 bg-gray-800 px-4 py-3 text-white placeholder-gray-500 transition-all duration-200 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                    aria-describedby={stepErrors.name ? "name-error" : undefined}
+                    aria-invalid={!!stepErrors.name}
+                    className="w-full rounded-xl border-4 border-vhs-black dark:border-vhs-cream bg-background px-4 py-3 text-text-primary placeholder-text-secondary/50 transition-all duration-200 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20"
                   />
                 )}
               </form.Field>
               {stepErrors.name && (
-                <span className="mt-2 block text-sm text-red-400 animate-typeform-fade">
+                <span id="name-error" role="alert" className="mt-2 block text-sm text-vhs-red animate-typeform-fade">
                   {stepErrors.name}
                 </span>
               )}
             </label>
             <div className="flex justify-end pt-2">
-              <button
+              <Button
                 type="button"
                 onClick={() => validateAndAdvance("name", nameSchema)}
-                className="group relative rounded-lg bg-blue-600 px-6 py-2.5 text-white transition-all duration-200 hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-600/25 active:scale-[0.98]"
               >
                 Continue
-              </button>
+              </Button>
             </div>
           </div>
         )}
@@ -199,7 +256,7 @@ export function ContactForm({ turnstileToken, onTurnstileReset }: ContactFormPro
             className={cn("space-y-4", animationDirection === "up" ? "animate-typeform-up" : "animate-typeform-down")}
           >
             <label className="block">
-              <span className="mb-2 block text-lg text-white">
+              <span className="mb-2 block text-lg text-text-primary">
                 What's your email?
               </span>
               <form.Field name="email">
@@ -217,31 +274,32 @@ export function ContactForm({ turnstileToken, onTurnstileReset }: ContactFormPro
                     onKeyDown={(e) => handleKeyDown(e, "email", emailSchema)}
                     placeholder="john@example.com"
                     autoFocus
-                    className="w-full rounded-lg border border-gray-700 bg-gray-800 px-4 py-3 text-white placeholder-gray-500 transition-all duration-200 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                    aria-describedby={stepErrors.email ? "email-error" : undefined}
+                    aria-invalid={!!stepErrors.email}
+                    className="w-full rounded-xl border-4 border-vhs-black dark:border-vhs-cream bg-background px-4 py-3 text-text-primary placeholder-text-secondary/50 transition-all duration-200 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20"
                   />
                 )}
               </form.Field>
               {stepErrors.email && (
-                <span className="mt-2 block text-sm text-red-400 animate-typeform-fade">
+                <span id="email-error" role="alert" className="mt-2 block text-sm text-vhs-red animate-typeform-fade">
                   {stepErrors.email}
                 </span>
               )}
             </label>
             <div className="flex justify-between pt-2">
-              <button
+              <Button
                 type="button"
+                variant="ghost"
                 onClick={goBack}
-                className="rounded-lg border border-gray-600 px-6 py-2.5 text-gray-300 transition-all duration-200 hover:border-gray-500 hover:bg-gray-800/50 active:scale-[0.98]"
               >
                 Back
-              </button>
-              <button
+              </Button>
+              <Button
                 type="button"
                 onClick={() => validateAndAdvance("email", emailSchema)}
-                className="group relative rounded-lg bg-blue-600 px-6 py-2.5 text-white transition-all duration-200 hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-600/25 active:scale-[0.98]"
               >
                 Continue
-              </button>
+              </Button>
             </div>
           </div>
         )}
@@ -252,7 +310,7 @@ export function ContactForm({ turnstileToken, onTurnstileReset }: ContactFormPro
             className={cn("space-y-4", animationDirection === "up" ? "animate-typeform-up" : "animate-typeform-down")}
           >
             <label className="block">
-              <span className="mb-2 block text-lg text-white">
+              <span className="mb-2 block text-lg text-text-primary">
                 What would you like to say?
               </span>
               <form.Field name="message">
@@ -269,37 +327,38 @@ export function ContactForm({ turnstileToken, onTurnstileReset }: ContactFormPro
                     placeholder="Your message..."
                     rows={5}
                     autoFocus
-                    className="w-full resize-none rounded-lg border border-gray-700 bg-gray-800 px-4 py-3 text-white placeholder-gray-500 transition-all duration-200 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                    aria-describedby={stepErrors.message ? "message-error" : undefined}
+                    aria-invalid={!!stepErrors.message}
+                    className="w-full resize-none rounded-xl border-4 border-vhs-black dark:border-vhs-cream bg-background px-4 py-3 text-text-primary placeholder-text-secondary/50 transition-all duration-200 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20"
                   />
                 )}
               </form.Field>
               {stepErrors.message && (
-                <span className="mt-2 block text-sm text-red-400 animate-typeform-fade">
+                <span id="message-error" role="alert" className="mt-2 block text-sm text-vhs-red animate-typeform-fade">
                   {stepErrors.message}
                 </span>
               )}
             </label>
             {submitError && (
-              <div className="rounded-lg bg-red-900/50 p-3 text-sm text-red-400 animate-typeform-fade">
+              <div role="alert" className="rounded-xl border-2 border-vhs-red/30 bg-vhs-red/10 p-3 text-sm text-vhs-red animate-typeform-fade">
                 {submitError}
               </div>
             )}
             <div className="flex justify-between pt-2">
-              <button
+              <Button
                 type="button"
+                variant="ghost"
                 onClick={goBack}
-                className="rounded-lg border border-gray-600 px-6 py-2.5 text-gray-300 transition-all duration-200 hover:border-gray-500 hover:bg-gray-800/50 active:scale-[0.98]"
               >
                 Back
-              </button>
-              <button
+              </Button>
+              <Button
                 type="button"
                 onClick={() => validateAndAdvance("message", messageSchema)}
                 disabled={isSubmitting}
-                className="group relative rounded-lg bg-blue-600 px-6 py-2.5 text-white transition-all duration-200 hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-600/25 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:shadow-none"
               >
                 {isSubmitting ? "Sending..." : "Send Message"}
-              </button>
+              </Button>
             </div>
           </div>
         )}

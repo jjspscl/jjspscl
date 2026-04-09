@@ -11,3 +11,50 @@
   background-size: 100% 100%;
 }
 
+.highlight-text.is-visible {
+  background-size: 100% 100%;
+}
+
+/* ─── Scroll-triggered entrance animations ─── */
+[data-animate] {
+  opacity: 0;
+}
+
+[data-animate].is-visible {
+  opacity: 1;
+}
+
+[data-animate="fade-up"] {
+  transform: translateY(24px);
+  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+[data-animate="fade-up"].is-visible {
+  transform: translateY(0);
+}
+
+[data-animate="fade-in"] {
+  transition: opacity 0.5s ease-out;
+}
+
+[data-animate="scale-up"] {
+  transform: scale(0.92);
+  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+[data-animate="scale-up"].is-visible {
+  transform: scale(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .highlight-text,
+  [data-animate] {
+    transition: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+  }
+
+  .highlight-text {
+    background-size: 100% 100%;
+  }
+}

@@ -6,13 +6,13 @@ const filteredLinks = links.filter(link => link.href !== currentPath);
 ---
 
 <header>
-    <nav class="text-white py-4">
+    <nav aria-label="Main navigation" class="py-4">
         <div class="container mx-auto flex justify-center">
             <div class="flex justify-between items-center">
                 <div class="flex gap-x-10 py-5">
                     {filteredLinks.map(({ href, text }) => (
                             <a 
-                                class="text-xl md:text-2xl font-bold hover:underline" 
+                                class="text-xl md:text-2xl font-bold transition-colors duration-200 hover:text-accent" 
                                 data-astro-prefetch
                                 href={href}  
                             >

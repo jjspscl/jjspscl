@@ -1,48 +1,172 @@
 ---
 import MyImage from "@components/assets/Me.astro";
 import Root from "@components/layouts/root.astro";
+import Footer from "@components/Footer.astro";
+import { Card } from "@components/Card";
+import Tag from "@lib/tag/Tag.astro";
 import { links } from "@lib/constants/links";
 import { TRANSITION_NAMES } from "@lib/constants/transition";
+import { AUTHOR } from "@features/seo/seo.constant";
+import { getProjects } from "@features/projects/project.service";
+import type { ISbResult } from "@features/storyblok/storyblok.type";
+import type { IProject } from "@features/projects/project.type";
 
 export const prerender = true;
+
+let projects: ISbResult<IProject>[] = [];
+try {
+    const allProjects = await getProjects();
+    projects = allProjects.slice(0, 4);
+} catch {
+    projects = [];
+}
 ---
 
 <Root schemaType="home">
-    <main
-        class="flex-1 container mx-auto flex flex-col justify-center items-center"
-    >
-        <section class="flex justify-center mb-10">
-            <div class="flex flex-col sm:flex-row items-center">
+    <main class="flex-1 flex flex-col" id="main-content">
+
+        <section class="container mx-auto flex flex-col justify-center items-center min-h-[80vh] px-4">
+            <div class="flex flex-col sm:flex-row items-center" data-animate="fade-up">
                 <span class="mb-10 sm:mb-0" transition:name={TRANSITION_NAMES.MY_IMAGE}>
-                    <a 
-                        aria-label="Go to me"             
+                    <a
+                        aria-label="About me"
                         class="flex items-center"
                         href="/about"
                     >
-                        <MyImage/>
+                        <MyImage />
                     </a>
                 </span>
-                <a 
-                    aria-label="Go to me"             
-                    class="flex items-center"
-                    href="/about"
+                <div class="md:ml-10 text-center md:text-left">
+                    <a
+                        aria-label="About me"
+                        class="flex items-center"
+                        href="/about"
+                    >
+                        <h1 class="text-5xl md:text-7xl lg:text-8xl font-bold highlight-text leading-tight">
+                            i'm <br />joshua
+                        </h1>
+                    </a>
+                    <p
+                        class="text-lg md:text-xl text-text-secondary mt-4 font-medium"
+                        data-animate="fade-up"
+                        data-delay="200"
+                    >
+                        {AUTHOR.jobTitle}
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        {projects.length > 0 && (
+            <section class="container mx-auto max-w-screen-lg px-4 py-16">
+                <div class="flex items-baseline justify-between mb-8" data-animate="fade-up">
+                    <h2 class="text-3xl md:text-4xl font-bold">projects</h2>
+                    <a
+                        href="/projects"
+                        class="text-sm font-medium text-text-secondary hover:text-text-primary transition-colors duration-200"
+                        data-astro-prefetch
+                    >
+                        view all &rarr;
+                    </a>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {projects.map((project, i) => (
+                        <div data-animate="fade-up" data-delay={String(i * 100)}>
+                            <Card>
+                                <div class="absolute top-4 right-4 flex items-center gap-3">
+                                    {project.content.repository?.cached_url && (
+                                        <a
+                                            class="hover:opacity-70 transition-opacity"
+                                            href={project.content.repository.cached_url}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            aria-label={`${project.content.title} GitHub repository`}
+                                        >
+                                            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                                                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
+                                            </svg>
+                                        </a>
+                                    )}
+                                    {project.content.demo_url && (
+                                        <a
+                                            class="hover:underline text-sm"
+                                            href={project.content.demo_url}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            aria-label={`View demo for ${project.content.title}`}
+                                        >
+                                            View Demo
+                                        </a>
+                                    )}
+                                </div>
+                                <h3 class="text-xl md:text-2xl font-bold mb-2 break-words pr-20">
+                                    {project.content.title}
+                                </h3>
+                                <p class="text-base text-text-secondary mb-4">
+                                    {project.content.headline}
+                                </p>
+                                {project.content.technology?.length > 0 && (
+                                    <div class="flex flex-wrap gap-2">
+                                        {project.content.technology.map((tech) => (
+                                            <Tag
+                                                tag={{
+                                                    _uid: tech.content._uid,
+                                                    title: tech.content.name,
+                                                    icon: tech.content.logo,
+                                                    component: tech.content.component,
+                                                }}
+                                                href={tech.content.source?.cached_url}
+                                                colorful
+                                            />
+                                        ))}
+                                    </div>
+                                )}
+                            </Card>
+                        </div>
+                    ))}
+                </div>
+            </section>
+        )}
+
+        <section class="container mx-auto max-w-screen-md px-4 py-16">
+            <div
+                class="text-center"
+                data-animate="fade-up"
+            >
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">let's connect</h2>
+                <p class="text-lg text-text-secondary mb-8 max-w-md mx-auto">
+                    Have a project in mind or just want to say hello? I'd love to hear from you.
+                </p>
+                <!-- TODO: consolidate with Button component (outline variant, lg size) -->
+                <a
+                    href="/contact"
+                    class="inline-flex items-center justify-center rounded-xl border-4 border-vhs-black dark:border-vhs-cream font-bold text-lg vhs-shadow-lg px-8 py-3 transition-all duration-200 active:scale-[0.98]"
+                    data-astro-prefetch
                 >
-                    <h1 class="text-5xl md:text-7xl lg:text-8xl font-bold mb-10 highlight-text md:ml-10 text-center md:text-left leading-tight">i'm <br/>joshua</h1>
+                    get in touch
                 </a>
             </div>
         </section>
-        <section class="flex gap-x-10 justify-center">
-            {
-                links.map(({ href, text }) => (
-                    <a 
-                        class="text-xl md:text-2xl font-bold hover:underline" 
+
+        <section class="container mx-auto max-w-screen-md px-4 pt-8 pb-4">
+            <nav
+                aria-label="Page navigation"
+                class="flex flex-wrap gap-x-8 gap-y-2 justify-center"
+                data-animate="fade-in"
+            >
+                {links.map(({ href, text }) => (
+                    <a
+                        class="text-xl md:text-2xl font-bold hover:text-accent transition-colors duration-200"
                         data-astro-prefetch
-                        href={href}  
+                        href={href}
                     >
                         {text}
                     </a>
-                ))
-            }
+                ))}
+            </nav>
         </section>
+
     </main>
+
+    <Footer />
 </Root>

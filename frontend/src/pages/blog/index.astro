@@ -34,7 +34,16 @@ try {
                     <BlogCard blog={story.content} slug={story.slug} />
                 ))
             ) : (
-                <p class="text-text-secondary text-center py-8">No articles found.</p>
+                <div class="text-center py-16">
+                    <svg class="w-12 h-12 mx-auto mb-4 text-text-secondary/40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+                        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+                    </svg>
+                    <p class="text-text-secondary mb-4">No articles found.</p>
+                    <a href="/blog" class="text-accent hover:underline text-sm font-medium">
+                        View all articles
+                    </a>
+                </div>
             )}
         </section>
     </main>

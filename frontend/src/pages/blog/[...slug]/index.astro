@@ -47,6 +47,19 @@ const blogImage = blok?.image?.filename;
     <main
         class="container grid items-center mx-auto max-w-screen-md px-4"
     >
+        <nav class="pt-4 pb-2">
+            <a
+                href="/blog"
+                class="inline-flex items-center gap-1 text-sm font-medium text-text-secondary hover:text-text-primary transition-colors duration-200"
+                data-astro-prefetch
+            >
+                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <line x1="19" y1="12" x2="5" y2="12" />
+                    <polyline points="12 19 5 12 12 5" />
+                </svg>
+                Back to Blog
+            </a>
+        </nav>
         {blok && <StoryblokComponent blok={blok} />}
     </main>
 </BaseLayout>

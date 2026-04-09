@@ -37,7 +37,7 @@ const description = "Browse all article tags";
                             {tag.icon?.filename && (
                                 <span class:list={[
                                     "flex items-center justify-center px-3 py-2",
-                                    "bg-black/20 dark:bg-white/10"
+                                    "bg-vhs-black/20 dark:bg-vhs-cream/10"
                                 ]}>
                                     <img
                                         src={tag.icon.filename}
@@ -59,7 +59,16 @@ const description = "Browse all article tags";
                 })}
             </section>
         ) : (
-            <p class="text-text-secondary text-center py-8">No tags found.</p>
+            <div class="text-center py-16">
+                <svg class="w-12 h-12 mx-auto mb-4 text-text-secondary/40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z" />
+                    <line x1="7" y1="7" x2="7.01" y2="7" />
+                </svg>
+                <p class="text-text-secondary mb-4">No tags found.</p>
+                <a href="/blog" class="text-accent hover:underline text-sm font-medium">
+                    Browse articles
+                </a>
+            </div>
         )}
     </main>
 </Base>

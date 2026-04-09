@@ -40,9 +40,14 @@ const webSiteSchema = createWebSiteSchema();
         <meta content={Astro.generator} name="generator" />
         
         <!-- Preconnect to external origins -->
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link rel="preconnect" href="https://api-ap.storyblok.com" />
         <link rel="preconnect" href="https://a-ap.storyblok.com" crossorigin />
         <link rel="preconnect" href="https://challenges.cloudflare.com" />
+        
+        <!-- Google Fonts: Inter -->
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
         
         <!-- Primary Meta Tags -->
         <title>{fullTitle}</title>
@@ -95,6 +100,34 @@ const webSiteSchema = createWebSiteSchema();
         <ClientRouter />
     </head>
     <body class="flex flex-col min-h-screen">
+        <a href="#main-content" class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:rounded-lg focus:bg-primary focus:px-4 focus:py-2 focus:text-white focus:outline-none">
+            Skip to content
+        </a>
         <slot/>
+        <script is:inline>
+            (function initAnimations() {
+                function setup() {
+                    var mm = window.matchMedia('(prefers-reduced-motion: reduce)');
+                    if (mm.matches) return;
+                    var observer = new IntersectionObserver(function(entries) {
+                        entries.forEach(function(entry) {
+                            if (entry.isIntersecting) {
+                                var delay = entry.target.getAttribute('data-delay');
+                                if (delay) {
+                                    setTimeout(function() { entry.target.classList.add('is-visible'); }, parseInt(delay));
+                                } else {
+                                    entry.target.classList.add('is-visible');
+                                }
+                                observer.unobserve(entry.target);
+                            }
+                        });
+                    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+                    document.querySelectorAll('[data-animate]').forEach(function(el) { observer.observe(el); });
+                    document.querySelectorAll('.highlight-text').forEach(function(el) { observer.observe(el); });
+                }
+                setup();
+                document.addEventListener('astro:page-load', setup);
+            })();
+        </script>
     </body>
 </html>

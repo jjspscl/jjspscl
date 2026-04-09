@@ -14,7 +14,7 @@ const filteredLinks = links.filter(link => link.href !== currentPath);
     <a class="font-bold flex items-center gap-2" href="/">
         <Logo width="36" height="36" />
     </a>
-    <nav class="flex text-lg md:text-xl my-auto">
+    <nav aria-label="Main navigation" class="flex text-lg md:text-xl my-auto gap-1">
         {
             filteredLinks.map(({ href, text }) => (
                 <HeaderLink 
