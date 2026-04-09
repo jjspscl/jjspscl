@@ -125,38 +125,40 @@ const isRateLimited = !initialRateLimitStatus.allowed;
                         </div>
                     </div>
                 </div>
-                <script>
-                    (() => {
-                        const countdownEl = document.getElementById('countdown');
-                        let count = 5;
-                        let redirectCancelled = false;
-                        
-                        const interval = setInterval(() => {
-                            if (redirectCancelled) return;
-                            count--;
-                            if (countdownEl) countdownEl.textContent = String(count);
-                            if (count <= 0) {
-                                clearInterval(interval);
-                                if (!redirectCancelled) {
-                                    window.location.href = '/';
-                                }
-                            }
-                        }, 1000);
-
-                        const cleanup = () => {
-                            redirectCancelled = true;
-                            clearInterval(interval);
-                        };
-
-                        document.addEventListener('astro:before-preparation', cleanup);
-                        document.addEventListener('astro:before-swap', cleanup);
-                        window.addEventListener('beforeunload', cleanup);
-                        window.addEventListener('pagehide', cleanup);
-                    })();
-                </script>
             ) : (
                 <ContactFormWrapper client:only="react" turnstileSiteKey={siteKey} />
             )}
         </section>
     </main>
+    <script>
+        (() => {
+            const countdownEl = document.getElementById('countdown');
+            if (!countdownEl) return;
+
+            let count = 5;
+            let redirectCancelled = false;
+
+            const interval = setInterval(() => {
+                if (redirectCancelled) return;
+                count--;
+                countdownEl.textContent = String(count);
+                if (count <= 0) {
+                    clearInterval(interval);
+                    if (!redirectCancelled) {
+                        window.location.href = '/';
+                    }
+                }
+            }, 1000);
+
+            const cleanup = () => {
+                redirectCancelled = true;
+                clearInterval(interval);
+            };
+
+            document.addEventListener('astro:before-preparation', cleanup);
+            document.addEventListener('astro:before-swap', cleanup);
+            window.addEventListener('beforeunload', cleanup);
+            window.addEventListener('pagehide', cleanup);
+        })();
+    </script>
 </Base>
