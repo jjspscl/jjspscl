@@ -2,6 +2,10 @@
   "name": "jjspscl",
   "main": "@astrojs/cloudflare/entrypoints/server",
   "compatibility_date": "2026-04-01",
+  "workers_dev": true,
+  "routes": [
+    { "pattern": "jjspscl.com", "custom_domain": true }
+  ],
   "d1_databases": [
     {
       "binding": "DB",
