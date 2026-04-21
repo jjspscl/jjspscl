@@ -24,7 +24,7 @@
     "@tanstack/react-form": "^1.28.6",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
-    "astro": "^6.1.5",
+    "astro": "^6.1.8",
     "clsx": "^2.1.1",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
