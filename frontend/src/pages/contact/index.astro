@@ -14,7 +14,7 @@ import { TURNSTILE_SECRET_KEY, RESEND_API_KEY } from "astro:env/server";
 import { env } from "cloudflare:workers";
 
 const headers = Astro.request.headers;
-const ip = headers.get("CF-Connecting-IP") || headers.get("X-Forwarded-For") || "unknown";
+const ip = headers.get("CF-Connecting-IP") || "unknown";
 const db = env.DB;
 
 const initialRateLimitStatus = await getRateLimitStatus(db, ip);
@@ -23,7 +23,7 @@ if (Astro.request.method === "POST") {
     const contentType = Astro.request.headers.get("Content-Type") || "";
 
     try {
-        let rawData: { name?: string; email?: string; message?: string; turnstileToken?: string };
+        let rawData: unknown;
 
         if (contentType.includes("application/json")) {
             rawData = await Astro.request.json();
@@ -37,7 +37,26 @@ if (Astro.request.method === "POST") {
             };
         }
 
-        const turnstileToken = rawData.turnstileToken;
+        if (!rawData || typeof rawData !== "object" || Array.isArray(rawData)) {
+            return new Response(JSON.stringify({ error: "Invalid request body." }), { status: 400, headers: { "Content-Type": "application/json" } });
+        }
+
+        const body = rawData as Record<string, unknown>;
+        const turnstileToken = typeof body.turnstileToken === "string"
+            ? body.turnstileToken
+            : typeof body["cf-turnstile-response"] === "string"
+                ? body["cf-turnstile-response"]
+                : undefined;
+
+        const validationResult = contactFormSchema.safeParse({
+            name: typeof body.name === "string" ? body.name.trim() : body.name,
+            email: typeof body.email === "string" ? body.email.trim() : body.email,
+            message: typeof body.message === "string" ? body.message.trim() : body.message,
+        });
+
+        if (!validationResult.success) {
+            return new Response(JSON.stringify({ error: validationResult.error.issues.map((issue) => issue.message).join(", ") }), { status: 400, headers: { "Content-Type": "application/json" } });
+        }
 
         if (!turnstileToken) {
             return new Response(
@@ -46,7 +65,7 @@ if (Astro.request.method === "POST") {
             );
         }
 
-        const verification = await verifyTurnstileToken(turnstileToken, TURNSTILE_SECRET_KEY);
+        const verification = await verifyTurnstileToken(turnstileToken, TURNSTILE_SECRET_KEY, ip);
         
         if (!verification.success) {
             return new Response(
@@ -56,24 +75,15 @@ if (Astro.request.method === "POST") {
         }
 
         const limitCheck = await checkRateLimit(db, ip);
+
+        if (limitCheck.error) {
+            return new Response(JSON.stringify({ error: limitCheck.error }), { status: 503, headers: { "Content-Type": "application/json" } });
+        }
         
         if (!limitCheck.allowed) {
             return new Response(
                 JSON.stringify({ error: "Daily message limit reached. Please try again tomorrow." }),
                 { status: 429, headers: { "Content-Type": "application/json" } }
-            );
-        }
-
-        const validationResult = contactFormSchema.safeParse({
-            name: rawData.name?.trim() ?? "",
-            email: rawData.email?.trim() ?? "",
-            message: rawData.message?.trim() ?? "",
-        });
-        
-        if (!validationResult.success) {
-            return new Response(
-                JSON.stringify({ error: validationResult.error.issues.map(e => e.message).join(", ") }),
-                { status: 400, headers: { "Content-Type": "application/json" } }
             );
         }
 
@@ -84,10 +94,13 @@ if (Astro.request.method === "POST") {
             userAgent: headers.get("User-Agent") || "unknown",
             country: headers.get("CF-IPCountry") || "unknown",
             city: headers.get("CF-IPCity") || "unknown",
-            turnstileToken,
         };
 
-        await submitContactForm(db, RESEND_API_KEY, { name, email, message }, metadata);
+        const submission = await submitContactForm(db, RESEND_API_KEY, { name, email, message }, metadata, Astro.locals.cfContext.waitUntil.bind(Astro.locals.cfContext));
+
+        if (!submission.success) {
+            return new Response(JSON.stringify({ error: submission.error }), { status: 503, headers: { "Content-Type": "application/json" } });
+        }
 
         return new Response(
             JSON.stringify({ success: true, remaining: limitCheck.remaining }),
@@ -104,12 +117,18 @@ if (Astro.request.method === "POST") {
 
 const siteKey = TURNSTILE_SITE_KEY;
 const isRateLimited = !initialRateLimitStatus.allowed;
+const rateLimitUnavailable = Boolean(initialRateLimitStatus.error);
 ---
 <Base title="Contact" description="Get in touch with Joshua Pascual for collaboration opportunities, questions, or just to say hello.">
     <link slot="head" rel="preconnect" href="https://challenges.cloudflare.com" />
     <main class="container mx-auto max-w-screen-md h-full py-10 px-4">
         <section class="max-w-xl mx-auto">
-            {isRateLimited ? (
+            {rateLimitUnavailable ? (
+                <div class="flex min-h-[400px] flex-col items-center justify-center text-center">
+                    <h2 class="mb-2 text-2xl font-bold text-text-primary">Contact form unavailable</h2>
+                    <p class="text-text-secondary">Please try again later.</p>
+                </div>
+            ) : isRateLimited ? (
                 <div class="flex min-h-[400px] flex-col items-center justify-center">
                     <div class="text-center">
                         <div class="mb-4 flex justify-center">

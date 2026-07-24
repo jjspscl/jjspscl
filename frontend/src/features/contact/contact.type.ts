@@ -15,7 +15,6 @@ export interface ContactSubmissionMetadata {
   userAgent: string;
   country: string;
   city: string;
-  turnstileToken: string;
 }
 
 export interface SubmissionResult {
@@ -31,4 +30,6 @@ export interface TurnstileVerificationResult {
 export interface TurnstileResponse {
   success: boolean;
   "error-codes"?: string[];
+  hostname?: string;
+  action?: string;
 }

@@ -20,30 +20,31 @@ export function ContactFormWrapper({ turnstileSiteKey }: ContactFormWrapperProps
     setTurnstileKey((prev) => prev + 1);
   };
 
-  if (!turnstileToken) {
-    return (
-      <div className="text-center">
-        <p className="text-base text-text-secondary mb-6">
-          Please verify you're human to access the contact form.
+  return (
+    <div>
+      <div className="mb-6 text-center">
+        <p className="mb-4 text-base text-text-secondary">
+          Please verify you're human before sending your message.
         </p>
         <div className="flex justify-center">
           <Turnstile
             key={turnstileKey}
             siteKey={turnstileSiteKey}
             onSuccess={handleTurnstileSuccess}
+            onExpire={handleTurnstileReset}
+            onError={handleTurnstileReset}
+            onTimeout={handleTurnstileReset}
             options={{
               theme: "auto",
+              action: "contact",
             }}
           />
         </div>
       </div>
-    );
-  }
-
-  return (
-    <ContactForm
-      turnstileToken={turnstileToken}
-      onTurnstileReset={handleTurnstileReset}
-    />
+      <ContactForm
+        turnstileToken={turnstileToken}
+        onTurnstileReset={handleTurnstileReset}
+      />
+    </div>
   );
 }

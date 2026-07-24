@@ -11,7 +11,7 @@ import {
 import { getZodError, submitContactFormRequest } from "../contact.util";
 
 interface ContactFormProps {
-  turnstileToken: string;
+  turnstileToken: string | null;
   onTurnstileReset?: () => void;
 }
 
@@ -110,6 +110,11 @@ export function ContactForm({ turnstileToken, onTurnstileReset }: ContactFormPro
       message: "",
     },
     onSubmit: async ({ value }) => {
+      if (!turnstileToken) {
+        setSubmitError("Please complete the verification challenge.");
+        return;
+      }
+
       setIsSubmitting(true);
       setSubmitError(null);
 

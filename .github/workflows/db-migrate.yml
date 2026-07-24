@@ -22,6 +22,7 @@ jobs:
   migrate:
     runs-on: ubuntu-latest
     name: Run D1 Migrations
+    environment: production
     
     steps:
       - name: Checkout
@@ -32,27 +33,40 @@ jobs:
         with:
           node-version: '22'
 
-      - name: Install Wrangler
-        run: npm install -g wrangler
+      - name: Install Dependencies
+        working-directory: frontend
+        run: npm ci
 
       - name: Run Migrations
         working-directory: frontend
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          TARGET_ENVIRONMENT: ${{ github.event.inputs.environment || 'production' }}
         run: |
-          echo "Running D1 migrations..."
-          for migration in ./db/migrations/*.sql; do
-            echo "Applying: $migration"
-            wrangler d1 execute jjspscl --remote --file="$migration"
-          done
-          echo "All migrations applied!"
+          if [ "$TARGET_ENVIRONMENT" = "preview" ]; then
+            DATABASE_NAME="jjspscl-preview"
+          elif [ "$TARGET_ENVIRONMENT" = "production" ]; then
+            DATABASE_NAME="jjspscl"
+          else
+            echo "Unsupported migration environment: $TARGET_ENVIRONMENT"
+            exit 1
+          fi
+
+          echo "Applying tracked migrations to $TARGET_ENVIRONMENT..."
+          npx wrangler d1 migrations apply "$DATABASE_NAME" --remote
 
       - name: Verify Tables
         working-directory: frontend
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          TARGET_ENVIRONMENT: ${{ github.event.inputs.environment || 'production' }}
         run: |
+          if [ "$TARGET_ENVIRONMENT" = "preview" ]; then
+            DATABASE_NAME="jjspscl-preview"
+          else
+            DATABASE_NAME="jjspscl"
+          fi
           echo "Verifying tables..."
-          wrangler d1 execute jjspscl --remote --command="SELECT name FROM sqlite_master WHERE type='table';"
+          npx wrangler d1 execute "$DATABASE_NAME" --remote --command="SELECT name FROM sqlite_master WHERE type='table';"

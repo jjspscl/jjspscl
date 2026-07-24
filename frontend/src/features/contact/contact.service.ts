@@ -1,5 +1,5 @@
-import { TURNSTILE_VERIFY_URL } from "./contact.constant";
-import { checkAndIncrementDailyLimit, checkDailyLimit, storeContactSubmission } from "./contact.db";
+import { TURNSTILE_ACTION, TURNSTILE_ALLOWED_HOSTNAMES, TURNSTILE_VERIFY_URL } from "./contact.constant";
+import { checkAndIncrementDailyLimit, checkDailyLimit, releaseDailyLimit, storeContactSubmission } from "./contact.db";
 import type {
   ContactSubmissionData,
   ContactSubmissionMetadata,
@@ -20,7 +20,8 @@ export interface ContactServiceDeps {
 
 export async function verifyTurnstileToken(
   token: string,
-  secretKey: string
+  secretKey: string,
+  remoteIp?: string
 ): Promise<TurnstileVerificationResult> {
   if (!secretKey) {
     console.error("Turnstile secret key not configured");
@@ -31,6 +32,7 @@ export async function verifyTurnstileToken(
     const formData = new FormData();
     formData.append("secret", secretKey);
     formData.append("response", token);
+    formData.append("remoteip", remoteIp ?? "");
 
     const response = await fetch(TURNSTILE_VERIFY_URL, {
       method: "POST",
@@ -42,7 +44,16 @@ export async function verifyTurnstileToken(
     }
 
     const result = (await response.json()) as TurnstileResponse;
-    return { success: result.success, error: result["error-codes"]?.join(", ") };
+    const hostnameAllowed = result.hostname
+      ? TURNSTILE_ALLOWED_HOSTNAMES.includes(result.hostname as (typeof TURNSTILE_ALLOWED_HOSTNAMES)[number])
+      : false;
+    const actionAllowed = result.action === TURNSTILE_ACTION;
+
+    if (!result.success || !hostnameAllowed || !actionAllowed) {
+      return { success: false, error: "Security verification failed" };
+    }
+
+    return { success: true };
   } catch (error) {
     console.error("Turnstile verification error:", error);
     return { success: false, error: "Failed to verify token" };
@@ -67,12 +78,13 @@ export async function submitContactForm(
   db: D1Database | undefined,
   resendApiKey: string | undefined,
   data: ContactSubmissionData,
-  metadata: ContactSubmissionMetadata
+  metadata: ContactSubmissionMetadata,
+  waitUntil?: (promise: Promise<unknown>) => void
 ): Promise<SubmissionResult> {
   const result = await storeContactSubmission(db, data, metadata);
 
   if (result.success) {
-    sendContactNotification(resendApiKey, {
+    const emailPromise = sendContactNotification(resendApiKey, {
       name: data.name,
       email: data.email,
       message: data.message,
@@ -80,9 +92,14 @@ export async function submitContactForm(
       country: metadata.country,
       city: metadata.city,
       submittedAt: new Date(),
-    }).catch((error) => {
-      console.error("Failed to send contact notification:", error);
+    }).then((emailResult) => {
+      if (!emailResult.success) console.error("Failed to send contact notification:", emailResult.error);
     });
+
+    if (waitUntil) waitUntil(emailPromise);
+    else await emailPromise;
+  } else {
+    await releaseDailyLimit(db, metadata.ip);
   }
 
   return result;

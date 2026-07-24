@@ -74,6 +74,7 @@ jobs:
 
       - name: 🚀 Deploy to Cloudflare Workers
         id: deploy
+        if: github.event_name != 'pull_request' && (github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch' || github.event_name == 'repository_dispatch')
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
