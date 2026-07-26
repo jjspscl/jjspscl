@@ -47,7 +47,7 @@ Cloudflare compatibility behavior is controlled by `compatibility_date` and `nod
 
 ## Storyblok
 
-Development enables the Storyblok Bridge and live preview, including `article.tags` relation resolution. Preview routes prefer the Storyblok live payload and fall back to the CMS API. Production requests published content and does not enable the Bridge.
+Development enables the Storyblok Bridge and live preview, including `article.tags` and `project.technology` relation resolution. Project detail preview routes validate the live payload and fall back to the CMS API. Production requests published content and does not enable the Bridge. Project editorial guidance lives in `frontend/docs/project-editorial-guide.md`.
 
 Storyblok publish events trigger the deployment workflow so prerendered CMS pages can refresh. SSR blog routes fetch published content at request time.
 

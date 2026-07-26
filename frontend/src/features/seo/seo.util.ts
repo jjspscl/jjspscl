@@ -1,5 +1,5 @@
 import { AUTHOR, SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "./seo.constant";
-import type { BlogPostingSchema, PersonSchema, WebSiteSchema } from "./seo.type";
+import type { BlogPostingSchema, PersonSchema, ProjectStructuredData, WebSiteSchema } from "./seo.type";
 
 export function createPersonSchema(): PersonSchema {
   return {
@@ -65,6 +65,33 @@ export function createBlogPostingSchema(options: BlogPostingOptions): BlogPostin
     mainEntityOfPage: {
       "@type": "WebPage",
       "@id": options.url,
+    },
+  };
+}
+
+interface ProjectSchemaOptions {
+  name: string;
+  description?: string;
+  image?: string;
+  dateCreated?: string;
+  dateModified?: string;
+  url: string;
+}
+
+export function createProjectSchema(options: ProjectSchemaOptions): ProjectStructuredData {
+  return {
+    "@context": "https://schema.org",
+    "@type": "CreativeWork",
+    name: options.name,
+    description: options.description,
+    image: options.image,
+    dateCreated: options.dateCreated,
+    dateModified: options.dateModified,
+    url: options.url,
+    author: {
+      "@type": "Person",
+      name: AUTHOR.name,
+      url: AUTHOR.url,
     },
   };
 }

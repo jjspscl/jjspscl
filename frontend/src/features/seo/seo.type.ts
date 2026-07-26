@@ -50,3 +50,19 @@ export interface BlogPostingSchema {
     "@id": string;
   };
 }
+
+export interface ProjectStructuredData {
+  "@context": "https://schema.org";
+  "@type": "CreativeWork";
+  name: string;
+  description?: string;
+  image?: string;
+  dateCreated?: string;
+  dateModified?: string;
+  url: string;
+  author: {
+    "@type": "Person";
+    name: string;
+    url: string;
+  };
+}

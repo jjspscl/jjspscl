@@ -2,18 +2,17 @@
 import { Card } from "@components/Card";
 import Tag from "@lib/tag/Tag.astro";
 
-import type { IProject } from "../project.type";
+import type { IProjectCardData } from "../project.type";
 
 interface Props {
   slug: string;
-  project: IProject;
+  project: IProjectCardData;
 }
 
-const { project } = Astro.props;
-const demoUrl = project.demo_url;
-const repository = project.repository?.cached_url;
-const technology = project.technology || [];
-const primaryLink = demoUrl || repository;
+const { project, slug } = Astro.props;
+const demoUrl = project.demoUrl;
+const repository = project.repositoryUrl;
+const technology = project.technology;
 ---
 
 <Card>
@@ -28,22 +27,22 @@ const primaryLink = demoUrl || repository;
                 {demoUrl && (
                     <a class="inline-flex min-h-11 items-center text-sm font-medium hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent" href={demoUrl} target="_blank" rel="noopener noreferrer">View Demo</a>
                 )}
-            </div>
-            <h2 class="text-xl md:text-2xl font-bold mb-2 break-words pr-20">
-                {primaryLink ? <a href={primaryLink} target="_blank" rel="noopener noreferrer" class="hover:text-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">{project.title}</a> : project.title}
-            </h2>
+             </div>
+             <h2 class="text-xl md:text-2xl font-bold mb-2 break-words pr-20">
+                 <a href={`/projects/${slug}`} class="hover:text-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">{project.title}</a>
+             </h2>
             <p class="text-base text-text-secondary mb-4">{project.headline}</p>
             {technology.length > 0 && (
                 <div class="flex flex-wrap gap-2">
                     {technology.map((tech) => (
                         <Tag 
                             tag={{ 
-                                _uid: tech.content._uid, 
-                                title: tech.content.name, 
-                                icon: tech.content.logo,
-                                component: tech.content.component 
-                            }} 
-                            href={tech.content.source?.cached_url}
+                                 _uid: tech.uuid,
+                                 title: tech.name,
+                                 icon: tech.logo,
+                                 component: "tech-stack"
+                             }}
+                             href={tech.source?.cachedUrl || tech.source?.url}
                             colorful 
                         />
                     ))}

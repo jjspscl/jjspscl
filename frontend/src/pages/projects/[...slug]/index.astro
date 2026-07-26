@@ -1,0 +1,99 @@
+---
+import BaseLayout from "@components/layouts/base.astro";
+import ProjectDetail from "@features/projects/components/ProjectDetail.astro";
+import {
+    getProjectBySlug,
+    getProjectNavigation,
+    getProjects,
+    normalizeProjectStory,
+    parseProjectStory,
+} from "@features/projects/project.service";
+import { SITE_URL } from "@features/seo";
+import ProjectSchema from "@features/seo/components/ProjectSchema.astro";
+import { getPayload } from "@storyblok/astro";
+
+import type { IProjectRecord } from "@features/projects/project.type";
+
+const { slug } = Astro.params;
+if (!slug || slug.includes("/") || slug.includes("..")) {
+    Astro.response.status = 404;
+    return Astro.rewrite("/404");
+}
+
+let project: IProjectRecord | undefined;
+try {
+    const payload = await getPayload({
+        locals: Astro.locals as Parameters<typeof getPayload>[0]["locals"],
+    });
+    const previewStory = payload?.story;
+    const previewServerData = payload?.serverData;
+    const requestedPreviewSlug = typeof previewServerData === "object" && previewServerData !== null && "requestedSlug" in previewServerData && typeof previewServerData.requestedSlug === "string"
+        ? previewServerData.requestedSlug
+        : undefined;
+    const previewMatchesRoute = previewStory && (
+        previewStory.full_slug === `projects/${slug}` ||
+        requestedPreviewSlug === slug
+    );
+
+    if (previewStory && previewMatchesRoute) {
+        const parsedPreview = parseProjectStory(previewStory);
+        if ("code" in parsedPreview || parsedPreview.full_slug && parsedPreview.full_slug !== `projects/${slug}` || parsedPreview.content.component !== "project") {
+            Astro.response.status = 503;
+            return Astro.rewrite("/500");
+        }
+        const normalizedPreview = normalizeProjectStory(parsedPreview);
+        if ("code" in normalizedPreview) {
+            Astro.response.status = 503;
+            return Astro.rewrite("/500");
+        }
+        project = normalizedPreview;
+    }
+
+    if (!project) {
+        const result = await getProjectBySlug(slug);
+        if (!result.ok) {
+            Astro.response.status = 503;
+            return Astro.rewrite("/500");
+        }
+        if (result.status === "not_found") {
+            Astro.response.status = 404;
+            return Astro.rewrite("/404");
+        }
+        project = result.project;
+    }
+
+    const collection = await getProjects();
+    if (collection.ok) {
+        project.detail.navigation = getProjectNavigation(project, collection.projects);
+    }
+} catch (error: unknown) {
+    console.error("Unexpected project detail failure", { slug, error });
+    Astro.response.status = 503;
+    return Astro.rewrite("/500");
+}
+
+if (!project) {
+    Astro.response.status = 404;
+    return Astro.rewrite("/404");
+}
+
+const title = project.detail.seo.title || project.detail.title;
+const description = project.detail.seo.description || project.detail.headline || `View ${project.detail.title}, a software project by Joshua Pascual.`;
+const image = project.detail.seo.image?.filename || project.detail.cover?.image?.filename;
+const publishedDate = project.story.first_published_at || project.story.published_at || undefined;
+const projectUrl = `${SITE_URL}/${project.story.full_slug}`;
+---
+
+<BaseLayout title={title} description={description} image={image} type="article" publishedDate={publishedDate} robots={project.detail.seo.noindex ? "noindex, follow" : "index, follow"}>
+    <ProjectSchema
+        name={project.detail.title}
+        description={description}
+        image={image}
+        url={projectUrl}
+        dateCreated={project.story.created_at || undefined}
+        dateModified={project.story.updated_at || project.story.published_at || undefined}
+    />
+    <div class="container mx-auto max-w-screen-md px-4">
+        <ProjectDetail project={project} />
+    </div>
+</BaseLayout>

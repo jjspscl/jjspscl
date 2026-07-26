@@ -64,7 +64,7 @@ export default defineConfig({
         storyblok({
             accessToken: env.STORYBLOK_TOKEN,
             bridge: import.meta.env.DEV ? {
-                resolveRelations: ["article.tags"],
+                resolveRelations: ["article.tags", "project.technology"],
             } : false,
             livePreview: import.meta.env.DEV,
             componentsDir: "src/features",

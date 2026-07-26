@@ -1,0 +1,107 @@
+---
+import { storyblokEditable } from "@storyblok/astro";
+import { renderRichText } from "@storyblok/js";
+
+import type { IProjectRecord } from "../project.type";
+
+interface Props {
+    project: IProjectRecord;
+}
+
+const { project } = Astro.props;
+const { detail, story } = project;
+
+const renderDocument = (document: Parameters<typeof renderRichText>[0] | undefined): string => {
+    if (!document) {
+        return "";
+    }
+
+    try {
+        return renderRichText(document).replace(/<h1\b/gi, "<h2").replace(/<\/h1>/gi, "</h2>");
+    } catch (error: unknown) {
+        console.error("Failed to render project rich text", { slug: story.full_slug, error });
+        return "";
+    }
+};
+
+const coverFilename = detail.cover?.image?.filename;
+const coverAlt = detail.cover?.altText || detail.cover?.image?.alt || detail.title;
+---
+
+<article {...storyblokEditable(story.content)} class="grid gap-10">
+    <header class="grid gap-4">
+        <p class="text-sm font-medium uppercase tracking-wide text-text-secondary">Project</p>
+        <h1 class="text-4xl font-bold md:text-6xl">{detail.title}</h1>
+        {detail.headline && <p class="max-w-2xl text-lg text-text-secondary md:text-xl">{detail.headline}</p>}
+        <nav aria-label="Project navigation" class="flex flex-wrap gap-4 text-sm font-medium">
+            <a href="/projects" class="inline-flex min-h-11 items-center hover:text-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">Back to projects</a>
+            {(detail.demo?.url || detail.demo?.cachedUrl) && <a href={detail.demo?.url || detail.demo?.cachedUrl} target="_blank" rel="noopener noreferrer" class="inline-flex min-h-11 items-center hover:text-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">View demo</a>}
+            {(detail.repository?.url || detail.repository?.cachedUrl) && <a href={detail.repository?.url || detail.repository?.cachedUrl} target="_blank" rel="noopener noreferrer" class="inline-flex min-h-11 items-center hover:text-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">View repository</a>}
+        </nav>
+    </header>
+
+    {coverFilename && <img src={coverFilename} alt={coverAlt} width={detail.cover?.image?.dimensions?.width} height={detail.cover?.image?.dimensions?.height} loading="eager" class="w-full rounded-xl object-cover" />}
+
+    {detail.technology.length > 0 && (
+        <section aria-labelledby="project-technologies" class="grid gap-3">
+            <h2 id="project-technologies" class="text-2xl font-bold">Technologies</h2>
+            <ul class="flex flex-wrap gap-2">
+                {detail.technology.map((technology) => <li class="rounded-full border px-3 py-1 text-sm">{technology.name}</li>)}
+            </ul>
+        </section>
+    )}
+
+    {detail.metadata.role || detail.metadata.team || detail.metadata.scope.length > 0 ? (
+        <section aria-labelledby="project-metadata" class="grid gap-4 rounded-xl border p-6">
+            <h2 id="project-metadata" class="text-2xl font-bold">Role and scope</h2>
+            <dl class="grid gap-3 sm:grid-cols-2">
+                {detail.metadata.role && <div><dt class="font-semibold">Role</dt><dd class="text-text-secondary">{detail.metadata.role}</dd></div>}
+                {detail.metadata.team && <div><dt class="font-semibold">Team</dt><dd class="text-text-secondary">{detail.metadata.team}</dd></div>}
+                {detail.metadata.scope.length > 0 && <div class="sm:col-span-2"><dt class="font-semibold">Scope</dt><dd class="text-text-secondary">{detail.metadata.scope.join(", ")}</dd></div>}
+            </dl>
+        </section>
+    ) : null}
+
+    {detail.narrativeSections.map((section) => {
+        const body = renderDocument(section.body);
+        return (
+            <section {...storyblokEditable({ _editable: section.editable })} class="grid gap-4">
+                {section.heading && <h2 class="text-3xl font-bold">{section.heading}</h2>}
+                {body && <div class="prose max-w-none dark:prose-invert" set:html={body} />}
+                {section.media?.image?.filename && <figure class="grid gap-2"><img src={section.media.image.filename} alt={section.media.altText || section.media.image.alt || section.heading || detail.title} width={section.media.image.dimensions?.width} height={section.media.image.dimensions?.height} loading="lazy" class="w-full rounded-xl object-cover" />{section.media.caption && <figcaption class="text-sm text-text-secondary">{section.media.caption}</figcaption>}</figure>}
+            </section>
+        );
+    })}
+
+    {detail.gallery.length > 0 && (
+        <section aria-labelledby="project-gallery" class="grid gap-6">
+            <h2 id="project-gallery" class="text-3xl font-bold">Gallery</h2>
+            {detail.gallery.map((media) => media.mediaType === "video" && (media.videoUrl?.url || media.videoUrl?.cachedUrl) ? (
+                <figure class="grid gap-2">{media.posterImage?.filename && <img src={media.posterImage.filename} alt={media.altText || media.posterImage.alt || detail.title} width={media.posterImage.dimensions?.width} height={media.posterImage.dimensions?.height} loading="lazy" class="w-full rounded-xl object-cover" />}<a href={media.videoUrl.url || media.videoUrl.cachedUrl} target="_blank" rel="noopener noreferrer" class="inline-flex min-h-11 items-center hover:text-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">Open video</a>{media.caption && <figcaption class="text-sm text-text-secondary">{media.caption}</figcaption>}</figure>
+            ) : media.image?.filename ? (
+                <figure class="grid gap-2"><img src={media.image.filename} alt={media.altText || media.image.alt || detail.title} width={media.image.dimensions?.width} height={media.image.dimensions?.height} loading="lazy" class="w-full rounded-xl object-cover" />{media.caption && <figcaption class="text-sm text-text-secondary">{media.caption}</figcaption>}</figure>
+            ) : null)}
+        </section>
+    )}
+
+    {detail.decisions.length > 0 && (
+        <section aria-labelledby="project-decisions" class="grid gap-6">
+            <h2 id="project-decisions" class="text-3xl font-bold">Decisions</h2>
+            {detail.decisions.map((decision) => <article class="grid gap-3 rounded-xl border p-6"><h3 class="text-xl font-bold">{decision.title}</h3>{decision.context && <div class="prose max-w-none dark:prose-invert" set:html={renderDocument(decision.context)} />}{decision.decision && <div class="prose max-w-none dark:prose-invert" set:html={renderDocument(decision.decision)} />}{decision.rationale && <div class="prose max-w-none dark:prose-invert" set:html={renderDocument(decision.rationale)} />}{decision.tradeoffs && <div class="prose max-w-none dark:prose-invert" set:html={renderDocument(decision.tradeoffs)} />}</article>)}
+        </section>
+    )}
+
+    {detail.outcomes.length > 0 && (
+        <section aria-labelledby="project-outcomes" class="grid gap-6">
+            <h2 id="project-outcomes" class="text-3xl font-bold">Outcomes</h2>
+            {detail.outcomes.map((outcome) => <article class="grid gap-3 rounded-xl border p-6"><h3 class="text-xl font-bold">{outcome.title}</h3>{outcome.summary && <div class="prose max-w-none dark:prose-invert" set:html={renderDocument(outcome.summary)} />}{outcome.metrics.length > 0 && <dl class="grid gap-3 sm:grid-cols-2">{outcome.metrics.map((metric) => <div><dt class="font-semibold">{metric.label}</dt><dd class="text-text-secondary">{metric.value}{metric.context && ` — ${metric.context}`}{(metric.source?.url || metric.source?.cachedUrl) && <a href={metric.source.url || metric.source.cachedUrl} target="_blank" rel="noopener noreferrer" class="ml-2 underline hover:text-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">Source</a>}</dd></div>)}</dl>}</article>)}
+        </section>
+    )}
+
+    {(detail.navigation?.previous || detail.navigation?.next) && (
+        <nav aria-label="Adjacent projects" class="flex flex-wrap justify-between gap-4 border-t pt-6">
+            {detail.navigation.previous ? <a href={`/projects/${detail.navigation.previous.slug}`} class="inline-flex min-h-11 items-center hover:text-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">← {detail.navigation.previous.title}</a> : <span />}
+            {detail.navigation.next && <a href={`/projects/${detail.navigation.next.slug}`} class="inline-flex min-h-11 items-center hover:text-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">{detail.navigation.next.title} →</a>}
+        </nav>
+    )}
+</article>
