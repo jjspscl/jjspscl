@@ -21,14 +21,6 @@ export interface WebSiteSchema {
     "@type": "Person";
     name: string;
   };
-  potentialAction?: {
-    "@type": "SearchAction";
-    target: {
-      "@type": "EntryPoint";
-      urlTemplate: string;
-    };
-    "query-input": string;
-  };
 }
 
 export interface BlogPostingSchema {

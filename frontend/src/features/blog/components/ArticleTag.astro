@@ -27,7 +27,7 @@ const Element = href ? "a" : "span";
     <Element 
         href={href}
         class:list={[
-            "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium transition-all",
+            "inline-flex min-h-11 items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium transition-all",
             colorClasses,
             activeClasses,
             href && "hover:opacity-80 cursor-pointer"
@@ -36,7 +36,8 @@ const Element = href ? "a" : "span";
         {data.icon?.filename && (
             <img
                 src={data.icon.filename}
-                alt={data.icon.alt || data.title}
+                alt=""
+                aria-hidden="true"
                 class="w-3.5 h-3.5 dark:invert"
                 loading="lazy"
             />

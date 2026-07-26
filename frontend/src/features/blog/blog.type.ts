@@ -17,10 +17,10 @@ export interface IBlog {
 
 export interface IArticleBlok extends SbBlokData {
     title: string;
-    subtitle: string;
+    subtitle?: string;
     content: StoryblokRichTextNode<string>;
-    tags: IArticleTagResolved[];
-    created_at: string;
+    tags?: IArticleTagResolved[];
+    created_at?: string;
 }
 
 export interface GetBlogPostsOptions {

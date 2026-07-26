@@ -21,13 +21,17 @@ try {
     }
 } catch (error: unknown) {
     if (typeof error === "object" && error !== null && "status" in error && (error as { status: number }).status === 404) {
+        Astro.response.status = 404;
         return Astro.rewrite("/404");
     }
+    Astro.response.status = 503;
+    return Astro.rewrite("/500");
 }
 ---
 
 <Base title="Blog" description="Read articles about software development, web technologies, and personal projects by Joshua Pascual.">
-    <main class="container mx-auto max-w-screen-md px-4">
+    <div class="container mx-auto max-w-screen-md px-4">
+        <h1 class="mb-8 text-4xl font-bold">Blog</h1>
         <section class="grid gap-4 mb-10">
             {stories.length > 0 ? (
                 stories.map((story) => (
@@ -40,11 +44,11 @@ try {
                         <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
                     </svg>
                     <p class="text-text-secondary mb-4">No articles found.</p>
-                    <a href="/blog" class="text-accent hover:underline text-sm font-medium">
+                    <a href="/blog" class="inline-flex min-h-11 items-center text-accent hover:underline text-sm font-medium focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">
                         View all articles
                     </a>
                 </div>
             )}
         </section>
-    </main>
+    </div>
 </Base>

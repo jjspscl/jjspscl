@@ -50,34 +50,6 @@ const getBlogSlugs = async (client: StoryblokClient): Promise<SitemapEntry[]> =>
     }));
 };
 
-const getTagSlugs = async (client: StoryblokClient): Promise<SitemapEntry[]> => {
-    const res = await client.get("cdn/stories", {
-        starts_with: "blog/tags/",
-        content_type: "article-tag",
-        version: "published",
-    });
-
-    const data = res.data as StoryblokResponse;
-    return (data?.stories || []).map((story) => ({
-        url: `${SITE_URL}/${story.full_slug}`,
-        lastmod: story.published_at || story.first_published_at,
-    }));
-};
-
-const getProjectSlugs = async (client: StoryblokClient): Promise<SitemapEntry[]> => {
-    const res = await client.get("cdn/stories", {
-        starts_with: "projects/",
-        content_type: "project",
-        version: "published",
-    });
-
-    const data = res.data as StoryblokResponse;
-    return (data?.stories || []).map((story) => ({
-        url: `${SITE_URL}/${story.full_slug}`,
-        lastmod: story.published_at || story.first_published_at,
-    }));
-};
-
 export const getSitemapEntries = async (storyblokToken: string): Promise<SitemapEntry[]> => {
     const client = createBuildTimeClient(storyblokToken);
 
@@ -85,13 +57,9 @@ export const getSitemapEntries = async (storyblokToken: string): Promise<Sitemap
         url: `${SITE_URL}${page}`,
     }));
 
-    const [blogEntries, tagEntries, projectEntries] = await Promise.all([
-        getBlogSlugs(client),
-        getTagSlugs(client),
-        getProjectSlugs(client),
-    ]);
+    const blogEntries = await getBlogSlugs(client);
 
-    return [...staticEntries, ...blogEntries, ...tagEntries, ...projectEntries];
+    return [...staticEntries, ...blogEntries];
 };
 
 export const getCustomPages = async (storyblokToken: string): Promise<string[]> => {
@@ -113,7 +81,7 @@ export const createSitemapSerializer = (storyblokToken: string) => {
             item.lastmod = new Date(entry.lastmod).toISOString();
         }
 
-        if (item.url.includes("/blog/") && !item.url.includes("/tags/")) {
+        if (item.url.includes("/blog/") && !item.url.endsWith("/blog/tags")) {
             item.changefreq = EnumChangefreq.MONTHLY;
             item.priority = 0.8;
         } else if (item.url.includes("/projects/")) {

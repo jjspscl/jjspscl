@@ -8,8 +8,8 @@ const message =
   language === "en-ph" ? "Wala dito hinahanap mo" : "Page not found";
 ---
 
-<BaseLayout title="Page Not Found">
-    <main
+<BaseLayout title="Page Not Found" robots="noindex, follow" canonical="">
+    <div
         class="grid items-center container mx-auto max-w-screen-md align-middle my-auto px-4"
     >
         <section class="text-center py-16">
@@ -23,5 +23,5 @@ const message =
                 Go home
             </a>
         </section>
-    </main>
+    </div>
 </BaseLayout>

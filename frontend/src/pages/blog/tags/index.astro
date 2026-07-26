@@ -11,8 +11,11 @@ try {
     allTags = await getAllTags();
 } catch (error: unknown) {
     if (typeof error === "object" && error !== null && "status" in error && (error as { status: number }).status === 404) {
-        return Astro.redirect("/404");
+        Astro.response.status = 404;
+        return Astro.rewrite("/404");
     }
+    Astro.response.status = 503;
+    return Astro.rewrite("/500");
 }
 
 const title = "Blog Tags";
@@ -20,7 +23,8 @@ const description = "Browse all article tags";
 ---
 
 <Base title={title} description={description}>
-    <main class="container mx-auto max-w-screen-md px-4">
+    <div class="container mx-auto max-w-screen-md px-4">
+        <h1 class="mb-8 text-4xl font-bold">{title}</h1>
         {allTags.length > 0 ? (
             <section class="flex flex-wrap gap-3">
                 {allTags.map((tagStory) => {
@@ -43,7 +47,8 @@ const description = "Browse all article tags";
                                 ]}>
                                     <img
                                         src={tag.icon.filename}
-                                        alt={tag.icon.alt || tag.title}
+                                        alt=""
+                                        aria-hidden="true"
                                         class="w-5 h-5 dark:invert"
                                         loading="lazy"
                                     />
@@ -67,10 +72,10 @@ const description = "Browse all article tags";
                     <line x1="7" y1="7" x2="7.01" y2="7" />
                 </svg>
                 <p class="text-text-secondary mb-4">No tags found.</p>
-                <a href="/blog" class="text-accent hover:underline text-sm font-medium">
+                <a href="/blog" class="inline-flex min-h-11 items-center text-accent hover:underline text-sm font-medium focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">
                     Browse articles
                 </a>
             </div>
         )}
-    </main>
+    </div>
 </Base>

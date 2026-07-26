@@ -1,5 +1,5 @@
 import { Turnstile } from "@marsidev/react-turnstile";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { ContactForm } from "./ContactForm";
 
@@ -10,6 +10,13 @@ interface ContactFormWrapperProps {
 export function ContactFormWrapper({ turnstileSiteKey }: ContactFormWrapperProps) {
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const [turnstileKey, setTurnstileKey] = useState(0);
+  const formRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!turnstileToken) return;
+
+    formRef.current?.querySelector<HTMLInputElement | HTMLTextAreaElement>("input, textarea")?.focus();
+  }, [turnstileToken]);
 
   const handleTurnstileSuccess = (token: string) => {
     setTurnstileToken(token);
@@ -22,7 +29,10 @@ export function ContactFormWrapper({ turnstileSiteKey }: ContactFormWrapperProps
 
   return (
     <div>
-      <div className="mb-6 text-center">
+      <div
+        className={turnstileToken ? "hidden" : "flex min-h-[400px] flex-col items-center justify-center text-center"}
+        aria-hidden={Boolean(turnstileToken)}
+      >
         <p className="mb-4 text-base text-text-secondary">
           Please verify you're human before sending your message.
         </p>
@@ -41,10 +51,12 @@ export function ContactFormWrapper({ turnstileSiteKey }: ContactFormWrapperProps
           />
         </div>
       </div>
-      <ContactForm
-        turnstileToken={turnstileToken}
-        onTurnstileReset={handleTurnstileReset}
-      />
+      <div ref={formRef} className={turnstileToken ? undefined : "hidden"} aria-hidden={!turnstileToken}>
+        <ContactForm
+          turnstileToken={turnstileToken}
+          onTurnstileReset={handleTurnstileReset}
+        />
+      </div>
     </div>
   );
 }

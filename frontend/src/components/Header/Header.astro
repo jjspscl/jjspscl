@@ -5,21 +5,23 @@ import HeaderLink from "./HeaderLink.astro";
 import Logo from "../assets/Logo.astro";
 
 const currentPath = Astro.url.pathname;
-const filteredLinks = links.filter(link => link.href !== currentPath);
+const normalizePath = (path: string) => path === "/" ? path : path.replace(/\/$/, "");
+const normalizedCurrentPath = normalizePath(currentPath);
 ---
 
 <header
     class="container flex justify-between items-center mx-auto max-w-screen-md px-4 my-5"
 >
-    <a class="font-bold flex items-center gap-2" href="/">
+        <a class="inline-flex min-h-11 min-w-11 items-center justify-center rounded font-bold gap-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent" href="/">
         <Logo width={36} height={36} />
     </a>
     <nav aria-label="Main navigation" class="flex text-lg md:text-xl my-auto gap-1">
         {
-            filteredLinks.map(({ href, text }) => (
+            links.map(({ href, text }) => (
                 <HeaderLink 
                     href={href} 
                     label={text} 
+                    active={normalizedCurrentPath === normalizePath(href) || normalizedCurrentPath.startsWith(`${normalizePath(href)}/`)}
                 />
             ))
         }

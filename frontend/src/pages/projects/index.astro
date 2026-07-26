@@ -17,13 +17,17 @@ try {
     }
 } catch (error: unknown) {
     if (typeof error === "object" && error !== null && "status" in error && (error as { status: number }).status === 404) {
+        Astro.response.status = 404;
         return Astro.rewrite("/404");
     }
+    Astro.response.status = 503;
+    return Astro.rewrite("/500");
 }
 ---
 
 <BaseLayout title="Projects" description="Explore software projects and side projects built by Joshua Pascual, showcasing web development and engineering skills.">
-    <main class="container mx-auto max-w-screen-md px-4">
+    <div class="container mx-auto max-w-screen-md px-4">
+        <h1 class="mb-8 text-4xl font-bold">Projects</h1>
         <section class="grid gap-4 mb-10">
             {stories.length > 0 ? (
                 stories.map((story) => <ProjectCard project={story.content} slug={story.slug}/>)
@@ -36,5 +40,5 @@ try {
                 </div>
             )}
         </section>
-    </main>
+    </div>
 </BaseLayout>
