@@ -1,5 +1,6 @@
 ---
 import { getTagColor } from "@lib/tag";
+import { storyblokEditable } from "@storyblok/astro";
 
 import type { IArticleTag } from "../blog.type";
 
@@ -26,6 +27,7 @@ const Element = href ? "a" : "span";
 {data && (
     <Element 
         href={href}
+        {...storyblokEditable(data)}
         class:list={[
             "inline-flex min-h-11 items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium transition-all",
             colorClasses,

@@ -1,4 +1,4 @@
-import type { SbBlokData, StoryblokRichTextNode } from "@storyblok/js";
+import type { SbBlokData, SbRichTextDoc } from "@storyblok/js";
 import type { ITag, ITagAsset, ITagResolved } from "@lib/tag";
 
 export interface IArticleTag extends ITag {
@@ -18,7 +18,7 @@ export interface IBlog {
 export interface IArticleBlok extends SbBlokData {
     title: string;
     subtitle?: string;
-    content: StoryblokRichTextNode<string>;
+    content: SbRichTextDoc;
     tags?: IArticleTagResolved[];
     created_at?: string;
 }

@@ -7,6 +7,7 @@ export type TagColor = {
 
 export interface ITag {
     _uid: string;
+    _editable?: string;
     title: string;
     icon?: ITagAsset;
     component: string;

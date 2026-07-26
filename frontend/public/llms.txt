@@ -24,10 +24,10 @@ Key information:
 ## Technical Stack
 
 This portfolio website is built with:
-- **Framework**: Astro (static site generator with islands architecture)
+- **Framework**: Astro (SSR application with islands architecture)
 - **Styling**: Tailwind CSS
 - **CMS**: Storyblok (headless CMS)
-- **Hosting**: Cloudflare Pages
+- **Hosting**: Cloudflare Workers
 - **Language**: TypeScript
 
 ## Optional
