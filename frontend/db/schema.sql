@@ -17,7 +17,6 @@ CREATE TABLE IF NOT EXISTS contact_submissions (
     user_agent TEXT,
     country TEXT,
     city TEXT,
-    turnstile_token TEXT,
     created_at TEXT DEFAULT CURRENT_TIMESTAMP
 );
 

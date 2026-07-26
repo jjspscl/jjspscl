@@ -8,13 +8,18 @@ interface Props {
   image?: string;
   type?: "website" | "article";
   publishedDate?: string;
+  robots?: string;
+  canonical?: string;
+  mainClass?: string;
 }
 
-const { title, description, image, type, publishedDate } = Astro.props;
+const { title, description, image, type, publishedDate, robots, canonical, mainClass = "" } = Astro.props;
 ---
 
-<RootLayout title={title} description={description} image={image} type={type} publishedDate={publishedDate}>
+<RootLayout title={title} description={description} image={image} type={type} publishedDate={publishedDate} robots={robots} canonical={canonical}>
     <slot name="head" slot="head" />
     <FullHeader />
-    <slot />
+    <main id="main-content" class={mainClass}>
+        <slot />
+    </main>
 </RootLayout>

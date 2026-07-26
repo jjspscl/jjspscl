@@ -13,6 +13,8 @@ interface Props {
   type?: "website" | "article";
   publishedDate?: string;
   schemaType?: "home" | "page" | "article";
+  robots?: string;
+  canonical?: string;
 }
 
 const { 
@@ -21,13 +23,15 @@ const {
   image = "/og-me.png",
   type = "website",
   publishedDate,
-  schemaType = "page"
+  schemaType = "page",
+  robots = "index, follow",
+  canonical
 } = Astro.props;
 
 const language = Astro.url.searchParams.get("lang") as string;
 const defaultTitle = "Joshua Pascual | Software Engineer";
 const fullTitle = title ? `${title} | Joshua Pascual` : defaultTitle;
-const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const canonicalURL = canonical ? new URL(canonical, Astro.site) : new URL(Astro.url.pathname, Astro.site);
 const imageURL = new URL(image, Astro.site);
 
 const personSchema = createPersonSchema();
@@ -52,7 +56,7 @@ const webSiteSchema = createWebSiteSchema();
         <meta name="description" content={description} />
         <meta name="author" content={SITE_NAME} />
         <meta name="keywords" content="Joshua Pascual, jjspscl, software developer, web developer, full stack developer, portfolio, blog, projects" />
-        <link rel="canonical" href={canonicalURL} />
+        {canonical !== "" && <link rel="canonical" href={canonicalURL} />}
         
         <!-- Favicon -->
         <link href="/favicon.svg" rel="icon" type="image/svg+xml" />
@@ -77,8 +81,8 @@ const webSiteSchema = createWebSiteSchema();
         <meta name="twitter:image" content={imageURL} />
         
         <!-- Additional SEO -->
-        <meta name="robots" content="index, follow" />
-        <meta name="googlebot" content="index, follow, max-video-preview:-1, max-image-preview:large, max-snippet:-1" />
+        <meta name="robots" content={robots} />
+        <meta name="googlebot" content={robots === "index, follow" ? "index, follow, max-video-preview:-1, max-image-preview:large, max-snippet:-1" : robots} />
         
         <!-- Sitemap -->
         <link href="/sitemap-index.xml" rel="sitemap" />

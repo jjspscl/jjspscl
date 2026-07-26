@@ -2,11 +2,13 @@
 import BaseLayout from "@components/layouts/base.astro";
 import { getBlogPost } from "@features/blog/blog.service";
 import { BlogPostSchema, SITE_URL } from "@features/seo";
+import { getPayload } from "@storyblok/astro";
 import StoryblokComponent from "@storyblok/astro/StoryblokComponent.astro";
 
 
 const { slug } = Astro.params;
 if (!slug) {
+    Astro.response.status = 404;
     return Astro.rewrite("/404");
 }
 
@@ -14,7 +16,10 @@ let blok;
 let story;
 
 try {
-    const data = await getBlogPost(slug);
+    const payload = await getPayload({
+        locals: Astro.locals as Parameters<typeof getPayload>[0]["locals"],
+    });
+    const data = payload?.story ? { story: payload.story } : await getBlogPost(slug);
 
     if (data?.story?.content) {
         blok = data.story.content;
@@ -22,8 +27,16 @@ try {
     }
 } catch (error: unknown) {
     if (typeof error === "object" && error !== null && "status" in error && (error as { status: number }).status === 404) {
+        Astro.response.status = 404;
         return Astro.rewrite("/404");
     }
+    Astro.response.status = 503;
+    return Astro.rewrite("/500");
+}
+
+if (!blok || !story) {
+    Astro.response.status = 404;
+    return Astro.rewrite("/404");
 }
 
 const blogTitle = blok?.title;
@@ -44,13 +57,13 @@ const blogImage = blok?.image?.filename;
       dateModified={modifiedDate}
       url={blogUrl}
     />
-    <main
+    <div
         class="container grid items-center mx-auto max-w-screen-md px-4"
     >
         <nav class="pt-4 pb-2">
             <a
                 href="/blog"
-                class="inline-flex items-center gap-1 text-sm font-medium text-text-secondary hover:text-text-primary transition-colors duration-200"
+                class="inline-flex min-h-11 items-center gap-1 px-2 text-sm font-medium text-text-secondary hover:text-text-primary transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
                 data-astro-prefetch
             >
                 <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -60,6 +73,6 @@ const blogImage = blok?.image?.filename;
                 Back to Blog
             </a>
         </nav>
-        {blok && <StoryblokComponent blok={blok} />}
-    </main>
+        <StoryblokComponent blok={blok} slug={slug} />
+    </div>
 </BaseLayout>

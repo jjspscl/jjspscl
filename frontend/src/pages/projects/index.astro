@@ -5,28 +5,33 @@ import BaseLayout from "@components/layouts/base.astro";
 import ProjectCard from "@features/projects/components/ProjectCard.astro";
 import { getProjects } from "@features/projects/project.service";
 
-import type { IProject } from "@features/projects/project.type";
-import type { ISbResult } from "@sb/storyblok.type";
+import type { IProjectRecord } from "@features/projects/project.type";
 
-let stories: ISbResult<IProject>[] = [];
+let projects: IProjectRecord[] = [];
 try {
-    const data = await getProjects();
-
-    if (data) {
-        stories = data;
+    const result = await getProjects();
+    if (!result.ok) {
+        if (result.error.code === "not_found") {
+            Astro.response.status = 404;
+            return Astro.rewrite("/404");
+        }
+        Astro.response.status = 503;
+        return Astro.rewrite("/500");
     }
+    projects = result.projects;
 } catch (error: unknown) {
-    if (typeof error === "object" && error !== null && "status" in error && (error as { status: number }).status === 404) {
-        return Astro.rewrite("/404");
-    }
+    console.error("Unexpected project list failure", error);
+    Astro.response.status = 503;
+    return Astro.rewrite("/500");
 }
 ---
 
 <BaseLayout title="Projects" description="Explore software projects and side projects built by Joshua Pascual, showcasing web development and engineering skills.">
-    <main class="container mx-auto max-w-screen-md px-4">
+    <div class="container mx-auto max-w-screen-md px-4">
+        <h1 class="mb-8 text-4xl font-bold">Projects</h1>
         <section class="grid gap-4 mb-10">
-            {stories.length > 0 ? (
-                stories.map((story) => <ProjectCard project={story.content} slug={story.slug}/>)
+            {projects.length > 0 ? (
+                projects.map((project) => <ProjectCard project={project.card} slug={project.story.slug}/>)
             ) : (
                 <div class="text-center py-16">
                     <svg class="w-12 h-12 mx-auto mb-4 text-text-secondary/40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -36,5 +41,5 @@ try {
                 </div>
             )}
         </section>
-    </main>
+    </div>
 </BaseLayout>

@@ -10,7 +10,7 @@ interface Props {
   slug: string;
 }
 const { blok, slug } = Astro.props;
-const renderedRichText = renderRichText(blok.content);
+const renderedRichText = renderRichText(blok.content)?.replace(/<h1(\s[^>]*)?>/gi, "<h2$1>").replace(/<\/h1>/gi, "</h2>") ?? "";
 const tags = blok.tags || [];
 ---
 
@@ -63,9 +63,7 @@ const tags = blok.tags || [];
         >
             {blok.title}
         </h1>
-        <p class="text-base text-text-secondary mb-4">
-            {blok.created_at}
-        </p>
+        {blok.created_at && <time class="block text-base text-text-secondary mb-4" datetime={blok.created_at}>{blok.created_at}</time>}
         {tags.length > 0 && (
             <div class="flex flex-wrap gap-2 mb-6">
                 {tags.map((tag) => (
@@ -77,9 +75,7 @@ const tags = blok.tags || [];
                 ))}
             </div>
         )}
-        <h2 class="text-xl md:text-2xl font-semibold mb-6">
-            {blok.subtitle}
-        </h2>
+        {blok.subtitle && <h2 class="text-xl md:text-2xl font-semibold mb-6">{blok.subtitle}</h2>}
         <div
             class="prose-override prose prose-base md:prose-lg max-w-none dark:prose-invert prose-headings:font-bold prose-headings:mb-2 prose-p:leading-relaxed prose-pre:bg-[#1e1e1e] prose-code:text-sm"
             set:html={renderedRichText}

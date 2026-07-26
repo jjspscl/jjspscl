@@ -2,7 +2,8 @@
 import { links } from "@lib/constants/links";
 
 const currentPath = Astro.url.pathname;
-const filteredLinks = links.filter(link => link.href !== currentPath);
+const normalizePath = (path: string) => path === "/" ? path : path.replace(/\/$/, "");
+const normalizedCurrentPath = normalizePath(currentPath);
 ---
 
 <header>
@@ -10,9 +11,10 @@ const filteredLinks = links.filter(link => link.href !== currentPath);
         <div class="container mx-auto flex justify-center">
             <div class="flex justify-between items-center">
                 <div class="flex gap-x-10 py-5">
-                    {filteredLinks.map(({ href, text }) => (
+                    {links.map(({ href, text }) => (
                             <a 
-                                class="text-xl md:text-2xl font-bold transition-colors duration-200 hover:text-accent" 
+                                class:list={["inline-flex min-h-11 items-center rounded px-2 text-xl md:text-2xl font-bold transition-colors duration-200 hover:text-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent", (normalizedCurrentPath === normalizePath(href) || normalizedCurrentPath.startsWith(`${normalizePath(href)}/`)) && "text-accent"]}
+                                aria-current={(normalizedCurrentPath === normalizePath(href) || normalizedCurrentPath.startsWith(`${normalizePath(href)}/`)) ? "page" : undefined}
                                 data-astro-prefetch
                                 href={href}  
                             >
