@@ -1,0 +1,26 @@
+---
+interface Props {
+  spacing?: "none" | "sm" | "md" | "lg";
+  labelledBy?: string;
+  class?: string;
+}
+
+const { spacing = "md", labelledBy, class: className = "" } = Astro.props;
+
+const spacingClasses = {
+  none: "",
+  sm: "py-8",
+  md: "py-12",
+  lg: "py-section",
+};
+---
+
+{labelledBy ? (
+  <section aria-labelledby={labelledBy} class:list={[spacingClasses[spacing], className]}>
+    <slot />
+  </section>
+) : (
+  <div class:list={[spacingClasses[spacing], className]}>
+    <slot />
+  </div>
+)}

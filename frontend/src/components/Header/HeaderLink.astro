@@ -1,13 +1,16 @@
 ---
+import TextLink from "@components/TextLink.astro";
+
 interface Props {
     label: string;
     href: string;
     active?: boolean;
+    class?: string;
 }
 
-const { label, href, active = false } = Astro.props;
+const { label, href, active = false, class: className = "" } = Astro.props;
 ---
 
-<a class:list={["inline-flex min-h-11 items-center rounded px-2 py-1 font-bold transition-colors duration-200 hover:text-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent", active && "text-accent"]} aria-current={active ? "page" : undefined} data-astro-prefetch href={href}>
+<TextLink href={href} variant="navigation" current={active ? "page" : undefined} prefetch class={className}>
     {label}
-</a>
+</TextLink>

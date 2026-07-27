@@ -1,0 +1,12 @@
+---
+interface Props {
+  size?: "base" | "large";
+  class?: string;
+}
+
+const { size = "base", class: className = "" } = Astro.props;
+---
+
+<div class:list={["ds-prose prose max-w-none", size === "large" && "md:prose-lg", className]}>
+  <slot />
+</div>

@@ -1,6 +1,8 @@
 ---
 import { links } from "@lib/constants/links";
 
+import HeaderLink from "./HeaderLink.astro";
+
 const currentPath = Astro.url.pathname;
 const normalizePath = (path: string) => path === "/" ? path : path.replace(/\/$/, "");
 const normalizedCurrentPath = normalizePath(currentPath);
@@ -8,21 +10,16 @@ const normalizedCurrentPath = normalizePath(currentPath);
 
 <header>
     <nav aria-label="Main navigation" class="py-4">
-        <div class="container mx-auto flex justify-center">
-            <div class="flex justify-between items-center">
-                <div class="flex gap-x-10 py-5">
+        <div class="ds-container-wide flex justify-center">
+            <div class="flex flex-wrap justify-center gap-x-4 gap-y-1 py-3 text-lg md:gap-x-8 md:text-2xl">
                     {links.map(({ href, text }) => (
-                            <a 
-                                class:list={["inline-flex min-h-11 items-center rounded px-2 text-xl md:text-2xl font-bold transition-colors duration-200 hover:text-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent", (normalizedCurrentPath === normalizePath(href) || normalizedCurrentPath.startsWith(`${normalizePath(href)}/`)) && "text-accent"]}
-                                aria-current={(normalizedCurrentPath === normalizePath(href) || normalizedCurrentPath.startsWith(`${normalizePath(href)}/`)) ? "page" : undefined}
-                                data-astro-prefetch
-                                href={href}  
-                            >
-                                {text}
-                            </a>
+                            <HeaderLink
+                                href={href}
+                                label={text}
+                                active={normalizedCurrentPath === normalizePath(href) || normalizedCurrentPath.startsWith(`${normalizePath(href)}/`)}
+                            />
                         ))
                     }
-                </div>
             </div>
         </div>
     </nav>
