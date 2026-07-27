@@ -15,7 +15,10 @@ Tailwind CSS-first tokens live in `src/styles/tailwind.css`.
 - `border`, `border-muted`
 - `action`, `action-hover`, `action-contrast`
 - `link`, `link-hover`, `focus`
+- `highlight`, `placeholder`
 - `feedback-info`, `feedback-success`, `feedback-warning`, `feedback-danger`
+- `feedback-info-surface`, `feedback-success-surface`, `feedback-warning-surface`, `feedback-danger-surface`
+- `code-ink`, `code-surface`
 - `paper`, `paper-ink`, `paper-border`
 
 Legacy `background`, `text-primary`, `text-secondary`, `surface-secondary`, `accent`, and `primary` names remain aliases while consumers migrate.

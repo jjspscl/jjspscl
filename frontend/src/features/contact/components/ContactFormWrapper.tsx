@@ -42,7 +42,7 @@ export function ContactFormWrapper({ turnstileSiteKey }: ContactFormWrapperProps
         className={turnstileToken ? "hidden" : "flex min-h-[400px] flex-col items-center justify-center text-center"}
         aria-hidden={Boolean(turnstileToken)}
       >
-        <p className="mb-4 text-base text-text-secondary">
+        <p className="mb-4 text-base text-ink-muted">
           Please verify you're human before sending your message.
         </p>
         {turnstileMessage && <FormStatus tone="warning" live="assertive" className="mb-4 max-w-sm">{turnstileMessage}</FormStatus>}

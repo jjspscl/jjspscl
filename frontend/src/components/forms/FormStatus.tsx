@@ -7,10 +7,10 @@ interface FormStatusProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const TONE_CLASSES: Record<FormStatusProps["tone"], string> = {
-  info: "border-feedback-info bg-feedback-info/10 text-feedback-info",
-  success: "border-feedback-success bg-feedback-success/10 text-feedback-success",
-  warning: "border-feedback-warning bg-feedback-warning/10 text-feedback-warning",
-  error: "border-feedback-danger bg-feedback-danger/10 text-feedback-danger",
+  info: "border-feedback-info bg-feedback-info-surface text-feedback-info",
+  success: "border-feedback-success bg-feedback-success-surface text-feedback-success",
+  warning: "border-feedback-warning bg-feedback-warning-surface text-feedback-warning",
+  error: "border-feedback-danger bg-feedback-danger-surface text-feedback-danger",
 };
 
 export function FormStatus({ className, tone, live = "off", busy = false, ...props }: FormStatusProps) {

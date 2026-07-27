@@ -70,22 +70,22 @@ function SuccessMessage() {
     <div className="flex min-h-[400px] flex-col items-center justify-center" role="status" aria-live="polite" aria-atomic="true">
       <div className="text-center animate-typeform-scale">
         <div className="mb-4 flex justify-center animate-typeform-check">
-          <CheckIcon className="w-14 h-14 text-vhs-green" />
+          <CheckIcon className="w-14 h-14 text-feedback-success" />
         </div>
         <h2
-          className="mb-2 text-2xl font-bold text-text-primary animate-typeform-fade"
+          className="mb-2 text-2xl font-bold text-ink animate-typeform-fade"
           style={{ animationDelay: "0.2s", animationFillMode: "backwards" }}
         >
           Message Sent!
         </h2>
         <p
-          className="text-text-secondary animate-typeform-fade"
+          className="text-ink-muted animate-typeform-fade"
           style={{ animationDelay: "0.4s", animationFillMode: "backwards" }}
         >
           Thanks for reaching out. I'll get back to you soon.
         </p>
         <div
-          className="mt-6 flex items-center justify-center gap-2 text-text-secondary animate-typeform-fade"
+          className="mt-6 flex items-center justify-center gap-2 text-ink-muted animate-typeform-fade"
           style={{ animationDelay: "0.6s", animationFillMode: "backwards" }}
         >
           <svg aria-hidden="true" className="h-4 w-4 animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -190,7 +190,7 @@ export function ContactForm({ turnstileToken, onTurnstileReset }: ContactFormPro
   return (
     <div className="flex min-h-[400px] flex-col justify-center">
         <div className="mb-6 flex items-center justify-between" aria-live="polite">
-          <span className="text-sm font-medium text-text-secondary">{stepLabel}</span>
+          <span className="text-sm font-medium text-ink-muted">{stepLabel}</span>
           <div className="flex gap-1.5" role="progressbar" aria-label="Contact form progress" aria-valuemin={1} aria-valuemax={STEP_ORDER.length} aria-valuenow={currentStepIndex}>
           {STEP_ORDER.map((step, i) => (
             <div
@@ -198,8 +198,8 @@ export function ContactForm({ turnstileToken, onTurnstileReset }: ContactFormPro
               className={cn(
                 "h-1.5 w-8 rounded-full transition-colors duration-300",
                 STEP_ORDER.indexOf(currentStep as (typeof STEP_ORDER)[number]) >= i
-                  ? "bg-accent"
-                  : "bg-surface-secondary"
+                  ? "bg-action"
+                  : "bg-surface-muted ring-1 ring-inset ring-ink-muted"
               )}
             />
           ))}
@@ -220,7 +220,7 @@ export function ContactForm({ turnstileToken, onTurnstileReset }: ContactFormPro
             className={cn("space-y-4", animationDirection === "up" ? "animate-typeform-up" : "animate-typeform-down")}
           >
             <label className="block">
-              <span className="mb-2 block text-lg text-text-primary">
+              <span className="mb-2 block text-lg text-ink">
                 What's your name?
               </span>
               <form.Field name="name">
@@ -268,7 +268,7 @@ export function ContactForm({ turnstileToken, onTurnstileReset }: ContactFormPro
             className={cn("space-y-4", animationDirection === "up" ? "animate-typeform-up" : "animate-typeform-down")}
           >
             <label className="block">
-              <span className="mb-2 block text-lg text-text-primary">
+              <span className="mb-2 block text-lg text-ink">
                 What's your email?
               </span>
               <form.Field name="email">
@@ -323,7 +323,7 @@ export function ContactForm({ turnstileToken, onTurnstileReset }: ContactFormPro
             className={cn("space-y-4", animationDirection === "up" ? "animate-typeform-up" : "animate-typeform-down")}
           >
             <label className="block">
-              <span className="mb-2 block text-lg text-text-primary">
+              <span className="mb-2 block text-lg text-ink">
                 What would you like to say?
               </span>
               <form.Field name="message">

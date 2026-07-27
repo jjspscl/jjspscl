@@ -38,10 +38,10 @@ const {
 const toneClasses = {
   neutral: "border-border-muted bg-surface-muted text-ink",
   accent: "border-action bg-action text-action-contrast",
-  info: "border-feedback-info bg-feedback-info/10 text-feedback-info",
-  success: "border-feedback-success bg-feedback-success/10 text-feedback-success",
-  warning: "border-feedback-warning bg-feedback-warning/10 text-feedback-warning",
-  danger: "border-feedback-danger bg-feedback-danger/10 text-feedback-danger",
+  info: "border-feedback-info bg-feedback-info-surface text-feedback-info",
+  success: "border-feedback-success bg-feedback-success-surface text-feedback-success",
+  warning: "border-feedback-warning bg-feedback-warning-surface text-feedback-warning",
+  danger: "border-feedback-danger bg-feedback-danger-surface text-feedback-danger",
 };
 
 const sizeClasses = {
@@ -59,7 +59,7 @@ const Element = href ? "a" : "span";
     toneClasses[tone],
     sizeClasses[size],
     current && "ring-2 ring-focus ring-offset-2 ring-offset-canvas",
-    href && "cursor-pointer hover:opacity-85",
+    href && "cursor-pointer hover:border-action-hover hover:bg-action-hover hover:text-action-contrast",
     className,
   ]}
   aria-current={current && href ? "page" : undefined}
@@ -67,6 +67,6 @@ const Element = href ? "a" : "span";
   rel={href && external ? "noopener noreferrer" : undefined}
   {...editable}
 >
-  {icon && <img src={icon.src} alt={icon.alt || ""} aria-hidden={icon.alt ? undefined : "true"} width={icon.width} height={icon.height} class="size-3.5 object-contain" loading="lazy" />}
+  {icon && <img src={icon.src} alt={icon.alt || ""} aria-hidden={icon.alt ? undefined : "true"} width={icon.width} height={icon.height} class="size-3.5 object-contain dark:invert" loading="lazy" />}
   <span>{label}</span>
 </Element>

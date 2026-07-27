@@ -1,6 +1,6 @@
 
 .highlight-text {
-  background-image: linear-gradient(transparent calc(100% - 0.42em), var(--theme-action) 0.42em);
+  background-image: linear-gradient(transparent calc(100% - 0.42em), var(--theme-highlight) 0.42em);
   background-repeat: no-repeat;
   background-size: 0% 100%;
   transition: background-size 600ms var(--ease-vhs);
