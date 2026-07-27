@@ -1,27 +1,19 @@
 ---
+import { Button } from "@components/Button";
 import BaseLayout from "@components/layouts/base.astro";
 
 export const prerender = true;
 
 const language = Astro.url.searchParams.get("lang");
-const message =
-  language === "en-ph" ? "Wala dito hinahanap mo" : "Page not found";
+const message = language === "en-ph" ? "Wala dito hinahanap mo" : "Page not found";
 ---
 
 <BaseLayout title="Page Not Found" robots="noindex, follow" canonical="">
-    <div
-        class="grid items-center container mx-auto max-w-screen-md align-middle my-auto px-4"
-    >
-        <section class="text-center py-16">
-            <h1 class="text-4xl md:text-5xl font-bold mb-4">404</h1>
-            <p class="text-lg text-text-secondary mb-8">{message}</p>
-            <!-- TODO: consolidate with Button component (outline variant, md size) -->
-            <a
-                href="/"
-                class="inline-flex items-center justify-center rounded-xl border-4 border-vhs-black dark:border-vhs-cream font-bold vhs-shadow px-6 py-2.5 transition-all duration-200 active:scale-[0.98]"
-            >
-                Go home
-            </a>
+    <div class="ds-container my-auto grid items-center">
+        <section class="py-16 text-center">
+            <h1 class="text-heading-1 mb-4 font-bold">404</h1>
+            <p class="mb-8 text-body-lg text-ink-muted">{message}</p>
+            <Button as="a" href="/" variant="outline">Go home</Button>
         </section>
     </div>
 </BaseLayout>

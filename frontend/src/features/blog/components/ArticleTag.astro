@@ -1,5 +1,5 @@
 ---
-import { getTagColor } from "@lib/tag";
+import Badge from "@components/Badge.astro";
 import { storyblokEditable } from "@storyblok/astro";
 
 import type { IArticleTag } from "../blog.type";
@@ -14,36 +14,15 @@ interface Props {
 
 const { tag, blok, href, active = false, colorful = false } = Astro.props;
 const data = tag || blok;
-
-const color = data && colorful ? getTagColor(data._uid || data.title) : null;
-const colorClasses = color 
-    ? `${color.bg} ${color.bgDark} ${color.text} ${color.textDark}` 
-    : "bg-surface-secondary text-text-secondary";
-const activeClasses = active ? "ring-2 ring-primary ring-offset-1" : "";
-
-const Element = href ? "a" : "span";
 ---
 
 {data && (
-    <Element 
+    <Badge
+        label={data.title}
         href={href}
-        {...storyblokEditable(data)}
-        class:list={[
-            "inline-flex min-h-11 items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium transition-all",
-            colorClasses,
-            activeClasses,
-            href && "hover:opacity-80 cursor-pointer"
-        ]}
-    >
-        {data.icon?.filename && (
-            <img
-                src={data.icon.filename}
-                alt=""
-                aria-hidden="true"
-                class="w-3.5 h-3.5 dark:invert"
-                loading="lazy"
-            />
-        )}
-        <span>{data.title}</span>
-    </Element>
+        current={active}
+        tone={colorful ? "accent" : "neutral"}
+        icon={data.icon?.filename ? { src: data.icon.filename } : undefined}
+        editable={storyblokEditable(data)}
+    />
 )}

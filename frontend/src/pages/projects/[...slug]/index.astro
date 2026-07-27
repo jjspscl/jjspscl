@@ -93,7 +93,7 @@ const projectUrl = `${SITE_URL}/${project.story.full_slug}`;
         dateCreated={project.story.created_at || undefined}
         dateModified={project.story.updated_at || project.story.published_at || undefined}
     />
-    <div class="container mx-auto max-w-screen-md px-4">
+    <div class="ds-container">
         <ProjectDetail project={project} />
     </div>
 </BaseLayout>

@@ -1,5 +1,5 @@
 ---
-import { getTagColor } from "./tag.util";
+import Badge from "@components/Badge.astro";
 
 import type { ITag } from "./tag.type";
 
@@ -9,41 +9,20 @@ interface Props {
     href?: string;
     active?: boolean;
     colorful?: boolean;
+    external?: boolean;
 }
 
-const { tag, blok, href, active = false, colorful = false } = Astro.props;
+const { tag, blok, href, active = false, colorful = false, external = Boolean(href) } = Astro.props;
 const data = tag || blok;
-
-const color = data && colorful ? getTagColor(data._uid || data.title) : null;
-const colorClasses = color 
-    ? `${color.bg} ${color.bgDark} ${color.text} ${color.textDark}` 
-    : "bg-surface-secondary text-text-secondary";
-const activeClasses = active ? "ring-2 ring-primary ring-offset-1" : "";
-
-const Element = href ? "a" : "span";
 ---
 
 {data && (
-    <Element 
+    <Badge
+        label={data.title}
         href={href}
-        target={href ? "_blank" : undefined}
-        rel={href ? "noopener noreferrer" : undefined}
-        class:list={[
-            "inline-flex min-h-11 items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium transition-all",
-            colorClasses,
-            activeClasses,
-            href && "hover:opacity-80 cursor-pointer"
-        ]}
-    >
-        {data.icon?.filename && (
-            <img
-                src={data.icon.filename}
-                alt=""
-                aria-hidden="true"
-                class="w-3.5 h-3.5 dark:invert"
-                loading="lazy"
-            />
-        )}
-        <span>{data.title}</span>
-    </Element>
+        external={external}
+        current={active}
+        tone={colorful ? "accent" : "neutral"}
+        icon={data.icon?.filename ? { src: data.icon.filename } : undefined}
+    />
 )}

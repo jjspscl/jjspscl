@@ -1,4 +1,5 @@
 ---
+import Prose from "@components/Prose.astro";
 import { storyblokEditable, renderRichText } from "@storyblok/astro";
 
 import ArticleTag from "./ArticleTag.astro";
@@ -9,76 +10,32 @@ interface Props {
   blok: IArticleBlok;
   slug: string;
 }
+
 const { blok, slug } = Astro.props;
 const renderedRichText = renderRichText(blok.content)?.replace(/<h1(\s[^>]*)?>/gi, "<h2$1>").replace(/<\/h1>/gi, "</h2>") ?? "";
 const tags = blok.tags || [];
 ---
 
-<style is:global>
-  .blog-target:target {
-    background-color: #aaf;
-  }
-
-  @media (prefers-color-scheme: dark) {
-    .blog-target:target {
-      background-color: #ffa;
-      color: #000;
-    }
-  }
-
-  .prose-override * {
-    color: inherit !important;
-  }
-  
-  .prose-override a {
-    color: var(--theme-link) !important;
-    text-decoration: underline !important;
-  }
-  
-  .prose-override a:hover {
-    opacity: 0.8;
-  }
-
-  .prose-override code {
-    color: var(--color-vhs-red) !important;
-  }
-
-  .prose-override pre,
-  .prose-override pre * {
-    color: #d4d4d4 !important;
-  }
-
-  @media (prefers-color-scheme: dark) {
-    .prose-override code {
-      color: #fbbf24 !important;
-    }
-  }
-</style>
-
-<article {...storyblokEditable(blok)} class="blog-target rounded mb-28 text-text-primary">
+<article {...storyblokEditable(blok)} class="mb-28 text-ink">
     <div class="mb-12">
-        <h1
-            class="text-4xl md:text-5xl font-bold mt-12 mb-4 leading-tight"
-            transition:name={slug}
-        >
+        <h1 class="text-heading-1 mt-12 mb-4 font-bold" transition:name={slug}>
             {blok.title}
         </h1>
-        {blok.created_at && <time class="block text-base text-text-secondary mb-4" datetime={blok.created_at}>{blok.created_at}</time>}
+        {blok.created_at && <time class="mb-4 block text-base text-ink-muted" datetime={blok.created_at}>{blok.created_at}</time>}
         {tags.length > 0 && (
-            <div class="flex flex-wrap gap-2 mb-6">
+            <div class="mb-6 flex flex-wrap gap-2">
                 {tags.map((tag) => (
-                    <ArticleTag 
-                        tag={tag.content} 
+                    <ArticleTag
+                        tag={tag.content}
                         href={`/blog?tags=${encodeURIComponent(tag.content.title)}`}
-                        colorful 
+                        colorful
                     />
                 ))}
             </div>
         )}
-        {blok.subtitle && <h2 class="text-xl md:text-2xl font-semibold mb-6">{blok.subtitle}</h2>}
-        <div
-            class="prose-override prose prose-base md:prose-lg max-w-none dark:prose-invert prose-headings:font-bold prose-headings:mb-2 prose-p:leading-relaxed prose-pre:bg-[#1e1e1e] prose-code:text-sm"
-            set:html={renderedRichText}
-        />
+        {blok.subtitle && <h2 class="text-heading-3 mb-6 font-semibold">{blok.subtitle}</h2>}
+        <Prose size="large">
+            <Fragment set:html={renderedRichText} />
+        </Prose>
     </div>
 </article>

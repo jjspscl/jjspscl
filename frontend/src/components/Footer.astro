@@ -7,12 +7,12 @@ const socialLinks = [
     { name: "X", url: AUTHOR.sameAs[2], icon: "x" },
 ];
 ---
-<footer class="container mt-auto mx-auto max-w-screen-md px-4">
+<footer class="ds-container mt-auto">
     <div>
-        <hr aria-hidden="true" class="border-vhs-black dark:border-vhs-cream border-1" />
+        <hr aria-hidden="true" class="ds-rule" />
     </div>
     <div class="flex flex-col-reverse md:flex-row justify-between items-center gap-2 py-3">
-        <span class="text-sm text-text-secondary">
+        <span class="text-sm text-ink-muted">
             &copy; {new Date().getFullYear()} {AUTHOR.name}
         </span>
         <nav aria-label="Social links" class="flex items-center gap-4">
@@ -22,7 +22,7 @@ const socialLinks = [
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={name}
-                    class="inline-flex min-h-11 min-w-11 items-center justify-center rounded text-text-secondary hover:text-text-primary transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+                    class="inline-flex min-h-11 min-w-11 items-center justify-center rounded-control text-ink-muted transition-colors duration-200 hover:text-ink"
                 >
                     {icon === "github" && (
                         <svg aria-hidden="true" class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
