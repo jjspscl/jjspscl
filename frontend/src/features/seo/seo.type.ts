@@ -14,19 +14,12 @@ export interface WebSiteSchema {
   "@context": "https://schema.org";
   "@type": "WebSite";
   name: string;
+  alternateName?: string;
   url: string;
   description: string;
   author: {
     "@type": "Person";
     name: string;
-  };
-  potentialAction?: {
-    "@type": "SearchAction";
-    target: {
-      "@type": "EntryPoint";
-      urlTemplate: string;
-    };
-    "query-input": string;
   };
 }
 
@@ -55,5 +48,21 @@ export interface BlogPostingSchema {
   mainEntityOfPage: {
     "@type": "WebPage";
     "@id": string;
+  };
+}
+
+export interface ProjectStructuredData {
+  "@context": "https://schema.org";
+  "@type": "CreativeWork";
+  name: string;
+  description?: string;
+  image?: string;
+  dateCreated?: string;
+  dateModified?: string;
+  url: string;
+  author: {
+    "@type": "Person";
+    name: string;
+    url: string;
   };
 }

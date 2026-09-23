@@ -2,24 +2,24 @@
 import { createBlogPostingSchema } from "@features/seo";
 
 interface Props {
-  headline: string;
+  headline?: string;
   description?: string;
   image?: string;
-  datePublished: string;
+  datePublished?: string;
   dateModified?: string;
   url: string;
 }
 
 const { headline, description, image, datePublished, dateModified, url } = Astro.props;
 
-const blogPostingSchema = createBlogPostingSchema({
+const blogPostingSchema = headline && datePublished ? createBlogPostingSchema({
   headline,
   description,
   image,
   datePublished,
   dateModified,
   url,
-});
+}) : null;
 ---
 
-<script is:inline type="application/ld+json" set:html={JSON.stringify(blogPostingSchema)} />
+{blogPostingSchema && <script is:inline type="application/ld+json" set:html={JSON.stringify(blogPostingSchema)} />}

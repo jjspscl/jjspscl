@@ -1,47 +1,58 @@
-# Astro Starter Kit: Minimal
+# jjspscl portfolio frontend
+
+Astro SSR application deployed to Cloudflare Workers. Storyblok supplies CMS content, React provides interactive islands, Tailwind CSS provides styling, and Cloudflare D1 stores contact-pipeline data.
+
+## Runtime and package policy
+
+- Node.js `>=22.12.0`; CI currently pins Node `22.19.0`.
+- npm `>=10.9.0`; use npm only for this package.
+- `package-lock.json` is authoritative. Use `npm ci` for clean, reproducible installs.
+- `frontend/bun.lock` is intentionally untracked and is not used by CI.
+
+## Local development
+
+Run commands from `frontend/`:
 
 ```sh
-npm create astro@latest -- --template minimal
+npm ci
+npm run dev
 ```
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/withastro/astro/tree/latest/examples/minimal)
-[![Open with CodeSandbox](https://assets.codesandbox.io/github/button-edit-lime.svg)](https://codesandbox.io/p/sandbox/github/withastro/astro/tree/latest/examples/minimal)
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/withastro/astro?devcontainer_path=.devcontainer/minimal/devcontainer.json)
+Required local secrets are provided through Astro environment configuration and Cloudflare `.dev.vars`:
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+- `STORYBLOK_TOKEN`
+- `TURNSTILE_SITE_KEY`
+- `TURNSTILE_SECRET_KEY`
+- `RESEND_API_KEY` (optional)
 
-## 🚀 Project Structure
+## Commands
 
-Inside of your Astro project, you'll see the following folders and files:
+| Command | Action |
+| --- | --- |
+| `npm run dev` | Start Astro development server with Cloudflare workerd behavior |
+| `npm run lint` | Run ESLint with zero-warning policy |
+| `npm run typecheck` | Run `astro check` |
+| `npm run build` | Typecheck and build the Cloudflare Worker |
+| `npm run preview` | Preview the built Worker locally |
+| `npm run deploy` | Deploy through Wrangler using `wrangler.jsonc` |
+| `npx wrangler types` | Generate Cloudflare binding types after config changes |
 
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
-```
+## Cloudflare runtime
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+The application uses `output: "server"` and the entrypoint declared in `wrangler.jsonc`. Runtime bindings include D1 `DB`; the Cloudflare adapter also provisions image and session bindings used by the generated Worker. Production uses the `jjspscl.com` custom domain.
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+D1 migrations live in `db/migrations/` and must be applied with Wrangler before code that depends on a new schema is deployed. Migration workflow configuration currently distinguishes `preview` and `production` database names; verify the target environment before running a remote migration.
 
-Any static assets, like images, can be placed in the `public/` directory.
+Cloudflare compatibility behavior is controlled by `compatibility_date` and `nodejs_compat` in `wrangler.jsonc`. The deployed runtime is Cloudflare workerd, not the local Node.js process.
 
-## 🧞 Commands
+## Storyblok
 
-All commands are run from the root of the project, from a terminal:
+Development enables the Storyblok Bridge and live preview, including `article.tags` and `project.technology` relation resolution. Project detail preview routes validate the live payload and fall back to the CMS API. Production requests published content and does not enable the Bridge. Project editorial guidance lives in `frontend/docs/project-editorial-guide.md`.
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+Storyblok publish events trigger the deployment workflow so prerendered CMS pages can refresh. SSR blog routes fetch published content at request time.
 
-## 👀 Want to learn more?
+## Deployment
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+GitHub Actions performs sparse frontend checkout, `npm ci`, lint, environment-backed build, and Wrangler deployment. Pull requests build without deployment. Production deployment requires the configured Storyblok, Turnstile, Cloudflare, and indexing secrets.
+
+Do not commit `.env`, `.dev.vars`, credentials, lockfiles from another package manager, or generated `dist/` output.

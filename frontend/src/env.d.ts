@@ -4,6 +4,9 @@
 declare namespace Cloudflare {
   interface Env {
     DB: import("@cloudflare/workers-types").D1Database;
+    SESSION: import("@cloudflare/workers-types").KVNamespace;
+    IMAGES: import("@cloudflare/workers-types").ImagesBinding;
+    ASSETS: import("@cloudflare/workers-types").Fetcher;
   }
 }
 

@@ -1,0 +1,38 @@
+---
+interface Props {
+  src: string;
+  alt: string;
+  width?: number;
+  height?: number;
+  aspectRatio?: string;
+  caption?: string;
+  loading?: "eager" | "lazy";
+  fetchpriority?: "high" | "low" | "auto";
+  fit?: "contain" | "cover";
+  decorative?: boolean;
+  class?: string;
+}
+
+const {
+  src,
+  alt,
+  width,
+  height,
+  aspectRatio,
+  caption,
+  loading = "lazy",
+  fetchpriority,
+  fit = "cover",
+  decorative = false,
+  class: className = "",
+} = Astro.props;
+
+const frameStyle = aspectRatio ? `aspect-ratio: ${aspectRatio};` : undefined;
+---
+
+<figure class:list={["grid gap-2", className]}>
+  <div class="overflow-hidden rounded-media border border-border-muted bg-surface-muted" style={frameStyle}>
+    <img src={src} alt={decorative ? "" : alt} aria-hidden={decorative ? "true" : undefined} width={width} height={height} loading={loading} fetchpriority={fetchpriority} class:list={["size-full", fit === "cover" ? "object-cover" : "object-contain"]} />
+  </div>
+  {caption && <figcaption class="font-meta text-meta uppercase tracking-widest text-ink-muted">{caption}</figcaption>}
+</figure>

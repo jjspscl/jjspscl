@@ -7,7 +7,7 @@ export const AUTHOR = {
   alternateName: "jjspscl",
   jobTitle: "Software Engineer",
   url: SITE_URL,
-  image: `${SITE_URL}/me.png`,
+  image: `${SITE_URL}/og-me.png`,
   sameAs: [
     "https://github.com/jjspscl",
     "https://linkedin.com/in/jjspscl",
