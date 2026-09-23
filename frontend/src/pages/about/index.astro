@@ -3,16 +3,25 @@ export const prerender = true;
 
 import Me from "@components/assets/Me.astro";
 import Full from "@components/layouts/full.astro";
+import Prose from "@components/Prose.astro";
 import { getMe } from "@features/about/about.service";
 import { TRANSITION_NAMES } from "@lib/constants/transition";
 import { renderRichText } from "@storyblok/astro";
 
-const me = await getMe();
+let me;
+try {
+    me = await getMe();
+} catch (error) {
+    const status = typeof error === "object" && error !== null && "status" in error ? (error as { status: number }).status : 503;
+    Astro.response.status = status === 404 ? 404 : 503;
+    return Astro.rewrite(status === 404 ? "/404" : "/500");
+}
 
-const aboutMe = renderRichText(me.intro_description);
+const aboutMe = renderRichText(me.intro_description)?.replace(/<h1(\s[^>]*)?>/gi, "<h2$1>").replace(/<\/h1>/gi, "</h2>") ?? "";
 ---
 <Full title="About" description="Learn more about Joshua Pascual - Software Engineer passionate about building modern web applications and solving complex problems.">
-    <main class="h-full flex flex-col gap-y-7">
+    <div class="h-full flex flex-col gap-y-7">
+        <h1 class="sr-only">About Joshua Pascual</h1>
         <section class="h-full flex justify-center items-center py-10">
             <a aria-label="Go home" class="flex items-center" href="/">
                 <span transition:name={TRANSITION_NAMES.MY_IMAGE}>
@@ -20,15 +29,15 @@ const aboutMe = renderRichText(me.intro_description);
                 </span>
             </a>
         </section>
-        <section class="light bg-vhs-cream py-10">
-            <div class="container mx-auto max-w-screen-md px-4">
+        <section class="ds-paper py-10">
+            <div class="ds-container">
                 <div class="md:grid md:grid-cols-2 md:gap-x-10">
-                    <h2 class="text-xl md:text-2xl font-bold text-center md:text-right mb-4 md:mb-0 text-text-primary">{me.intro_label}</h2>
-                    <div class="prose prose-base md:prose-lg prose-headings:mb-1 text-center md:text-left text-text-primary prose-p:text-text-primary prose-strong:text-text-primary prose-a:text-link">
+                    <h2 class="text-heading-3 mb-4 text-center font-bold md:mb-0 md:text-right">{me.intro_label}</h2>
+                    <Prose size="large" class="text-center md:text-left prose-headings:mb-1">
                         <Fragment set:html={aboutMe}/>
-                    </div>
+                    </Prose>
                 </div>
             </div>
         </section>
-    </main>
+    </div>
 </Full>

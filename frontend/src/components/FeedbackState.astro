@@ -1,0 +1,25 @@
+---
+interface Props {
+  tone?: "neutral" | "info" | "success" | "warning" | "error";
+  title: string;
+  message?: string;
+  live?: "polite" | "assertive" | "off";
+  class?: string;
+}
+
+const { tone = "neutral", title, message, live = "off", class: className = "" } = Astro.props;
+
+const toneClasses = {
+  neutral: "border-border-muted bg-surface-muted text-ink",
+  info: "border-feedback-info bg-feedback-info-surface text-feedback-info",
+  success: "border-feedback-success bg-feedback-success-surface text-feedback-success",
+  warning: "border-feedback-warning bg-feedback-warning-surface text-feedback-warning",
+  error: "border-feedback-danger bg-feedback-danger-surface text-feedback-danger",
+};
+---
+
+<div class:list={["border-2 rounded-card p-6", toneClasses[tone], className]} role={live === "assertive" ? "alert" : undefined} aria-live={live === "off" ? undefined : live}>
+  <h2 class="text-heading-3 font-bold">{title}</h2>
+  {message && <p class="mt-2 text-ink-muted">{message}</p>}
+  <slot />
+</div>

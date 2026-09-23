@@ -32,16 +32,16 @@ jobs:
 
     steps:
       - name: 📥 Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           sparse-checkout: |
             frontend
           sparse-checkout-cone-mode: false
 
       - name: 📦 Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
-          node-version: '22'
+          node-version: '22.19.0'
           cache: 'npm'
           cache-dependency-path: frontend/package-lock.json
 
@@ -69,11 +69,13 @@ jobs:
         run: npm run build
 
       - name: 🔑 Generate IndexNow Key File
+        if: github.event_name != 'pull_request'
         working-directory: frontend
         run: echo "${{ secrets.INDEXNOW_KEY }}" > dist/client/${{ secrets.INDEXNOW_KEY }}.txt
 
       - name: 🚀 Deploy to Cloudflare Workers
         id: deploy
+        if: github.event_name != 'pull_request' && (github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch' || github.event_name == 'repository_dispatch')
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
@@ -115,24 +117,3 @@ jobs:
           since: 7
           since-unit: day
           endpoint: api.indexnow.org
-
-  index-google:
-    runs-on: ubuntu-latest
-    name: 🔍 Google Indexing API
-    needs: build-and-deploy
-    if: github.event_name != 'pull_request' && needs.build-and-deploy.outputs.deployed == 'true'
-    continue-on-error: true
-
-    steps:
-      - name: 📤 Submit Homepage to Google
-        uses: robingenz/action-google-indexing@v1.0.0
-        with:
-          siteUrl: 'https://jjspscl.com'
-          gcpServiceAccountKey: ${{ secrets.GCP_INDEXER_KEY }}
-          requestType: 'URL_UPDATED'
-          urls: |
-            https://jjspscl.com/
-            https://jjspscl.com/about
-            https://jjspscl.com/blog
-            https://jjspscl.com/projects
-            https://jjspscl.com/contact

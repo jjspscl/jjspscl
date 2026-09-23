@@ -1,0 +1,40 @@
+---
+interface Props {
+  href: string;
+  variant?: "inline" | "muted" | "standalone" | "navigation";
+  current?: "page" | "step" | "location";
+  external?: boolean;
+  prefetch?: boolean;
+  class?: string;
+  ariaLabel?: string;
+}
+
+const {
+  href,
+  variant = "inline",
+  current,
+  external = false,
+  prefetch = false,
+  class: className = "",
+  ariaLabel,
+} = Astro.props;
+
+const variantClasses = {
+  inline: "text-link underline decoration-1 underline-offset-4 hover:text-link-hover",
+  muted: "inline-flex min-h-11 items-center text-ink-muted hover:text-ink",
+  standalone: "inline-flex min-h-11 items-center font-medium text-link hover:text-link-hover",
+  navigation: `inline-flex min-h-11 items-center px-2 font-bold ${current ? "text-action" : "text-ink-muted hover:text-ink"}`,
+};
+---
+
+<a
+  href={href}
+  class:list={[variantClasses[variant], className]}
+  aria-current={current}
+  aria-label={ariaLabel}
+  target={external ? "_blank" : undefined}
+  rel={external ? "noopener noreferrer" : undefined}
+  data-astro-prefetch={prefetch || undefined}
+>
+  <slot />
+</a>

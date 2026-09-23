@@ -1,12 +1,6 @@
-export type TagColor = {
-    bg: string;
-    bgDark: string;
-    text: string;
-    textDark: string;
-};
-
 export interface ITag {
     _uid: string;
+    _editable?: string;
     title: string;
     icon?: ITagAsset;
     component: string;

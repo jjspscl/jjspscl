@@ -1,0 +1,23 @@
+---
+import { createProjectSchema } from "@features/seo";
+
+interface Props {
+    name: string;
+    description?: string;
+    image?: string;
+    dateCreated?: string;
+    dateModified?: string;
+    url: string;
+}
+
+const { name, description, image, dateCreated, dateModified, url } = Astro.props;
+const schema = createProjectSchema({ name, description, image, dateCreated, dateModified, url });
+const serializedSchema = JSON.stringify(schema)
+    .replace(/</g, "\\u003c")
+    .replace(/>/g, "\\u003e")
+    .replace(/&/g, "\\u0026")
+    .replace(/\u2028/g, "\\u2028")
+    .replace(/\u2029/g, "\\u2029");
+---
+
+<script is:inline type="application/ld+json" set:html={serializedSchema} />

@@ -14,10 +14,9 @@ const { blog, slug } = Astro.props;
 const href = `/blog/${slug}`;
 const tags = blog.tags || [];
 ---
-<a href={href} data-astro-prefetch class="block group">
-    <Card>
-        <h2 class="text-xl md:text-2xl font-bold mb-2 group-hover:text-accent transition-colors duration-200">{blog.title}</h2>
-        <p class="text-base text-text-secondary mb-4">{blog.headline}</p>
+<Card className="grid gap-4">
+        <h2 class="text-heading-3 font-bold"><a href={href} data-astro-prefetch class="hover:text-action">{blog.title}</a></h2>
+        {blog.headline && <p class="text-base text-ink-muted">{blog.headline}</p>}
         {tags.length > 0 && (
             <div class="flex flex-wrap gap-2">
                 {tags.map((tag) => (
@@ -29,5 +28,4 @@ const tags = blog.tags || [];
                 ))}
             </div>
         )}
-    </Card>
-</a>
+</Card>

@@ -1,0 +1,72 @@
+---
+interface BadgeIcon {
+  src: string;
+  alt?: string;
+  width?: number;
+  height?: number;
+}
+
+interface BadgeEditableAttributes {
+  "data-blok-c"?: string;
+  "data-blok-uid"?: string;
+}
+
+interface Props {
+  label: string;
+  tone?: "neutral" | "accent" | "info" | "success" | "warning" | "danger";
+  size?: "sm" | "md";
+  icon?: BadgeIcon;
+  href?: string;
+  external?: boolean;
+  current?: boolean;
+  class?: string;
+  editable?: BadgeEditableAttributes;
+}
+
+const {
+  label,
+  tone = "neutral",
+  size = "sm",
+  icon,
+  href,
+  external = false,
+  current = false,
+  class: className = "",
+  editable,
+} = Astro.props;
+
+const toneClasses = {
+  neutral: "border-border-muted bg-surface-muted text-ink",
+  accent: "border-action bg-action text-action-contrast",
+  info: "border-feedback-info bg-feedback-info-surface text-feedback-info",
+  success: "border-feedback-success bg-feedback-success-surface text-feedback-success",
+  warning: "border-feedback-warning bg-feedback-warning-surface text-feedback-warning",
+  danger: "border-feedback-danger bg-feedback-danger-surface text-feedback-danger",
+};
+
+const sizeClasses = {
+  sm: "min-h-11 gap-1.5 px-3 py-1 text-xs",
+  md: "min-h-11 gap-2 px-3.5 py-1.5 text-sm",
+};
+
+const Element = href ? "a" : "span";
+---
+
+<Element
+  href={href}
+  class:list={[
+    "inline-flex items-center rounded-pill border font-medium transition-[color,background-color,border-color] duration-200 ease-vhs",
+    toneClasses[tone],
+    sizeClasses[size],
+    current && "ring-2 ring-focus ring-offset-2 ring-offset-canvas",
+    href && "cursor-pointer hover:border-action-hover hover:bg-action-hover hover:text-action-contrast",
+    className,
+  ]}
+  aria-current={current && href ? "page" : undefined}
+  target={href && external ? "_blank" : undefined}
+  rel={href && external ? "noopener noreferrer" : undefined}
+  {...editable}
+>
+  {icon && <img src={icon.src} alt={icon.alt || ""} aria-hidden={icon.alt ? undefined : "true"} width={icon.width} height={icon.height} class="size-3.5 object-contain dark:invert" loading="lazy" />}
+  <span>{label}</span>
+</Element>

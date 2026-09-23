@@ -13,6 +13,8 @@ interface Props {
   type?: "website" | "article";
   publishedDate?: string;
   schemaType?: "home" | "page" | "article";
+  robots?: string;
+  canonical?: string;
 }
 
 const { 
@@ -21,13 +23,15 @@ const {
   image = "/og-me.png",
   type = "website",
   publishedDate,
-  schemaType = "page"
+  schemaType = "page",
+  robots = "index, follow",
+  canonical
 } = Astro.props;
 
 const language = Astro.url.searchParams.get("lang") as string;
 const defaultTitle = "Joshua Pascual | Software Engineer";
 const fullTitle = title ? `${title} | Joshua Pascual` : defaultTitle;
-const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const canonicalURL = canonical ? new URL(canonical, Astro.site) : new URL(Astro.url.pathname, Astro.site);
 const imageURL = new URL(image, Astro.site);
 
 const personSchema = createPersonSchema();
@@ -52,7 +56,7 @@ const webSiteSchema = createWebSiteSchema();
         <meta name="description" content={description} />
         <meta name="author" content={SITE_NAME} />
         <meta name="keywords" content="Joshua Pascual, jjspscl, software developer, web developer, full stack developer, portfolio, blog, projects" />
-        <link rel="canonical" href={canonicalURL} />
+        {canonical !== "" && <link rel="canonical" href={canonicalURL} />}
         
         <!-- Favicon -->
         <link href="/favicon.svg" rel="icon" type="image/svg+xml" />
@@ -77,8 +81,8 @@ const webSiteSchema = createWebSiteSchema();
         <meta name="twitter:image" content={imageURL} />
         
         <!-- Additional SEO -->
-        <meta name="robots" content="index, follow" />
-        <meta name="googlebot" content="index, follow, max-video-preview:-1, max-image-preview:large, max-snippet:-1" />
+        <meta name="robots" content={robots} />
+        <meta name="googlebot" content={robots === "index, follow" ? "index, follow, max-video-preview:-1, max-image-preview:large, max-snippet:-1" : robots} />
         
         <!-- Sitemap -->
         <link href="/sitemap-index.xml" rel="sitemap" />
@@ -98,31 +102,71 @@ const webSiteSchema = createWebSiteSchema();
         <slot name="head" />
     </head>
     <body class="flex flex-col min-h-screen">
-        <a href="#main-content" class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:rounded-lg focus:bg-primary focus:px-4 focus:py-2 focus:text-white focus:outline-none">
+        <a href="#main-content" class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:rounded-control focus:bg-action focus:px-4 focus:py-2 focus:text-action-contrast">
             Skip to content
         </a>
         <slot/>
         <script is:inline>
             (function initAnimations() {
+                if (window.__jjspsclAnimationCleanup) {
+                    window.__jjspsclAnimationCleanup();
+                }
+
+                var observer;
+                var timers = [];
+
+                function cleanup() {
+                    if (observer) {
+                        observer.disconnect();
+                        observer = undefined;
+                    }
+                    timers.forEach(function(timer) { window.clearTimeout(timer); });
+                    timers = [];
+                }
+
+                function reveal(target) {
+                    var delay = Number(target.getAttribute('data-delay') || 0);
+                    if (delay > 0) {
+                        timers.push(window.setTimeout(function() { target.classList.add('is-visible'); }, delay));
+                        return;
+                    }
+                    target.classList.add('is-visible');
+                }
+
                 function setup() {
-                    var mm = window.matchMedia('(prefers-reduced-motion: reduce)');
-                    if (mm.matches) return;
-                    var observer = new IntersectionObserver(function(entries) {
+                    cleanup();
+                    var targets = document.querySelectorAll('[data-animate], .highlight-text');
+                    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                        targets.forEach(function(target) {
+                            target.classList.remove('is-animated');
+                            target.classList.add('is-visible');
+                        });
+                        return;
+                    }
+
+                    observer = new IntersectionObserver(function(entries) {
                         entries.forEach(function(entry) {
                             if (entry.isIntersecting) {
-                                var delay = entry.target.getAttribute('data-delay');
-                                if (delay) {
-                                    setTimeout(function() { entry.target.classList.add('is-visible'); }, parseInt(delay));
-                                } else {
-                                    entry.target.classList.add('is-visible');
-                                }
+                                reveal(entry.target);
                                 observer.unobserve(entry.target);
                             }
                         });
                     }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
-                    document.querySelectorAll('[data-animate]').forEach(function(el) { observer.observe(el); });
-                    document.querySelectorAll('.highlight-text').forEach(function(el) { observer.observe(el); });
+
+                    targets.forEach(function(target) {
+                        if (target.hasAttribute('data-animate')) {
+                            target.classList.add('is-animated');
+                        }
+                        observer.observe(target);
+                    });
                 }
+
+                function dispose() {
+                    cleanup();
+                    document.removeEventListener('astro:page-load', setup);
+                }
+
+                window.__jjspsclAnimationCleanup = dispose;
                 setup();
                 document.addEventListener('astro:page-load', setup);
             })();

@@ -1,26 +1,25 @@
 ---
 import { links } from "@lib/constants/links";
 
+import HeaderLink from "./HeaderLink.astro";
+
 const currentPath = Astro.url.pathname;
-const filteredLinks = links.filter(link => link.href !== currentPath);
+const normalizePath = (path: string) => path === "/" ? path : path.replace(/\/$/, "");
+const normalizedCurrentPath = normalizePath(currentPath);
 ---
 
 <header>
     <nav aria-label="Main navigation" class="py-4">
-        <div class="container mx-auto flex justify-center">
-            <div class="flex justify-between items-center">
-                <div class="flex gap-x-10 py-5">
-                    {filteredLinks.map(({ href, text }) => (
-                            <a 
-                                class="text-xl md:text-2xl font-bold transition-colors duration-200 hover:text-accent" 
-                                data-astro-prefetch
-                                href={href}  
-                            >
-                                {text}
-                            </a>
+        <div class="ds-container-wide flex justify-center">
+            <div class="flex flex-wrap justify-center gap-x-4 gap-y-1 py-3 text-lg md:gap-x-8 md:text-2xl">
+                    {links.map(({ href, text }) => (
+                            <HeaderLink
+                                href={href}
+                                label={text}
+                                active={normalizedCurrentPath === normalizePath(href) || normalizedCurrentPath.startsWith(`${normalizePath(href)}/`)}
+                            />
                         ))
                     }
-                </div>
             </div>
         </div>
     </nav>

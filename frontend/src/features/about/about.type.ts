@@ -1,7 +1,7 @@
-import type { StoryblokRichTextNode } from "@storyblok/astro";
+import type { SbRichTextDoc } from "@storyblok/astro";
 
 
 export interface IMeResponse {
   intro_label: string;
-  intro_description: StoryblokRichTextNode<string>;
+  intro_description: SbRichTextDoc;
 }
